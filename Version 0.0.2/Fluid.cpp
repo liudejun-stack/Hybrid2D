@@ -25,7 +25,6 @@ void Fluid::InitCond() {
     }
 }
 
-//Changed in v. 0.0.2
 void Fluid::Collision() { 
     double tauInv = D->dt/tau;
     for (int j = 0; j < G->Ny; j++){
@@ -44,7 +43,6 @@ void Fluid::Collision() {
     }
 }
 
-//Changed in v. 0.0.2
 void Fluid::Stream() {
 
     for (int j = 0; j < G->Ny; j++){
@@ -93,14 +91,7 @@ void Fluid::BounceBack(){
                 }   
             }
         }
-    }
-
-    //Temp = f[G->MapFunction(i,j,1)]; f[G->MapFunction(i,j,1)] = f[G->MapFunction(i,j,3)]; f[G->MapFunction(i,j,3)] = Temp;
-    //Temp = f[G->MapFunction(i,j,2)]; f[G->MapFunction(i,j,2)] = f[G->MapFunction(i,j,4)]; f[G->MapFunction(i,j,4)] = Temp;
-    //Temp = f[G->MapFunction(i,j,5)]; f[G->MapFunction(i,j,5)] = f[G->MapFunction(i,j,7)]; f[G->MapFunction(i,j,7)] = Temp;
-    //Temp = f[G->MapFunction(i,j,6)]; f[G->MapFunction(i,j,6)] = f[G->MapFunction(i,j,8)]; f[G->MapFunction(i,j,8)] = Temp;
-
-   
+    } 
 }
 
 void Fluid::ZouHeBC()
