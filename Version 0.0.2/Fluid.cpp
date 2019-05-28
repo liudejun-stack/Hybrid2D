@@ -159,9 +159,9 @@ void Fluid::writeFluidVTK(std::string _Filename)
 	}
 	
 	Output << "VECTORS Velocity float\n" << std::endl;
-	for (int j = 0; j < G->Ny-1; j++) {
-		for (int i = 0; i < G->Nx-1; i++) {
-			Output << ux[G->MapGrid(i,j)] << " " << uy[G->MapGrid(i,j)] << 0 << "\n";
+	for (int j = 0; j < G->Ny; j++) {
+		for (int i = 0; i < G->Nx; i++) {
+			Output << ux[G->MapGrid(i,j)] << " " << uy[G->MapGrid(i,j)] << " " << 0 << "\n";
 		}
 	}
 	Output.close();
