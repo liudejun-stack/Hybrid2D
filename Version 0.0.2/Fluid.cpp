@@ -110,8 +110,8 @@ void Fluid::ZouHeBC()
 
 void Fluid::MacroUpdate() {
     
-    for (int j = 0; j <= G->Ny; j++){
-        for (int i = 0; i <= G->Nx; i++){
+    for (int j = 0; j < G->Ny; j++){
+        for (int i = 0; i < G->Nx; i++){
             if (!G->Boundary[G->MapGrid(i,j)]) {
                 rho[G->MapGrid(i,j)] = f[G->MapFunction(i,j,0)]+f[G->MapFunction(i,j,1)]+f[G->MapFunction(i,j,2)]+f[G->MapFunction(i,j,3)]+f[G->MapFunction(i,j,4)]+f[G->MapFunction(i,j,5)]+f[G->MapFunction(i,j,6)]+f[G->MapFunction(i,j,7)]+f[G->MapFunction(i,j,8)];
                 
@@ -124,7 +124,6 @@ void Fluid::MacroUpdate() {
             }
         }
     }
-}
 
 //RESCREVER ESTA FUNÇÃO!!
 void Fluid::writeFluidVTK(std::string _Filename)
@@ -144,8 +143,8 @@ void Fluid::writeFluidVTK(std::string _Filename)
     
     Output << "SCALARS Geom float 1\n";
     Output << "LOOKUP_TABLE default\n";
-    for (int j = 0; j <= G->Ny-1; j++){
-        for (int i = 0; i <= G->Nx-1; i++){
+    for (int j = 0; j < G->Ny; j++){
+        for (int i = 0; i < G->Nx; i++){
             int id = G->MapGrid(i,j);
             Output << G->Boundary[id] << "\n";
         }
@@ -153,15 +152,15 @@ void Fluid::writeFluidVTK(std::string _Filename)
     
 	Output << "SCALARS Density float 1\n";
 	Output << "LOOKUP_TABLE default\n";
-	for (int j = 0; j <= G->Ny-1; j++) {
-		for (int i = 0; i <= G->Nx-1; i++) {
+	for (int j = 0; j < G->Ny; j++) {
+		for (int i = 0; i < G->Nx; i++) {
 			Output << rho[G->MapGrid(i, j)] << "\n";
 		}
 	}
 	
 	Output << "VECTORS Velocity float\n" << std::endl;
-	for (int j = 0; j <= G->Ny-1; j++) {
-		for (int i = 0; i <= G->Nx-1; i++) {
+	for (int j = 0; j < G->Ny-1; j++) {
+		for (int i = 0; i < G->Nx-1; i++) {
 			Output << ux[G->MapGrid(i,j)] << " " << uy[G->MapGrid(i,j)] << 0 << "\n";
 		}
 	}

@@ -45,11 +45,11 @@ public:
 	double rho[101 * 101];
 	double ux[101 * 101];
 	double uy[101 * 101];
-    std::vector<int> rc = {0, 3, 4, 1, 2, 7, 8, 5, 6};
+    std::vector<int> op = {0, 3, 4, 1, 2, 7, 8, 5, 6};
 
 	//Distribution Functions
 	double f[101 * 101 * 9];			//f for initial condition and stream
-	double fPos[101 * 101 * 9];			//f for collision
+	double fTemp[101 * 101 * 9];			//f for collision
 	
 };
 
