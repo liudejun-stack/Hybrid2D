@@ -49,9 +49,6 @@ public:
 	//Distribution Functions
 	double f[101 * 101 * 9];				//f for initial condition and collision
 	double fTemp[101 * 101 * 9];			//f for steraming and bounce-back 
-
-	
-	
 };
 
 #endif // !_FLUID_
