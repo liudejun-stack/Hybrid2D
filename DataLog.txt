@@ -1,0 +1,11 @@
+Versão 0.0.2:
+- Modificações na função Collision:
+	| Trocado 1/tau por variável tauInv = dt/tau;
+	| Colisão da função f e não da fTemp;
+	| Modificado os limites de <= para <;
+
+- Modificações na função Stream:
+	| Modificado os limites de <= para <;
+	| Após propagação trocar as funções de distribuição são trocadas;
+
+- Otimização do BounceBack
