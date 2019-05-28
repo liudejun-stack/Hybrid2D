@@ -21,7 +21,9 @@ public:
     void InitCond();			                                    //Initialize distribution functio
 	void Collision();			                                    //Apply collision
 	void Stream();				                                    //Apply stream
-    void BounceBack();                                              //Apply BounceBack
+	void setVelBC();												//Sets velocity boundary condition
+	void setDensBC();												//Sets density boundary condition
+    void BounceBack();                                              //Apply Bounce-Back
     void ZouHeBC();                                                 //Apply Zou & He boundary conditions
 	void MacroUpdate();			                                    //Update macroscopic variables
     void writeFluidVTK(std::string _Filename);                      //Outputs VTK file for visualization
