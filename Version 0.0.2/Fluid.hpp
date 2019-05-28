@@ -30,7 +30,7 @@ public:
 	//Pointers and Vectors:
     std::shared_ptr<D2Q9> D = std::make_shared<D2Q9>();             //Smart pointer to class D2Q9
     std::shared_ptr<Grid> G = std::make_shared<Grid>();             //Smart pointer to class Grid
-	std::vector<int> op = {0, 3, 4, 1, 2, 7, 8, 5, 6};				//Opposing function vector
+	std::vector<int> op = {0, 3, 4, 1, 2, 7, 8, 5, 6};				//Opposing node on bounce-back 
 	
 	//Fluid variables:
 	double tau;
