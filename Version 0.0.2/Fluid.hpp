@@ -45,8 +45,8 @@ public:
 	double uy[101 * 101];
 
 	//Distribution Functions
-	double f[101 * 101 * 9];				//f for initial condition and stream
-	double fTemp[101 * 101 * 9];			//f for collision
+	double f[101 * 101 * 9];				//f for initial condition and collision
+	double fTemp[101 * 101 * 9];			//f for steraming and bounce-back 
 
 	
 	
