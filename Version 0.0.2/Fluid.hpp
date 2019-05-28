@@ -1,7 +1,7 @@
 #ifndef _FLUID_
 #define _FLUID_
 
-#include "D2Q9.hpp"
+#include "Lattice.hpp"
 #include "Grid.hpp"
 #include <memory>
 #include <iostream>
@@ -30,7 +30,7 @@ public:
     void solve(int nIter, std::string _Filename);                   //LBM solver
 
 	//Pointers and Vectors:
-    std::shared_ptr<D2Q9> D = std::make_shared<D2Q9>();             //Smart pointer to class D2Q9
+    std::shared_ptr<Lattice> D = std::make_shared<Lattice>();       //Smart pointer to class D2Q9
     std::shared_ptr<Grid> G = std::make_shared<Grid>();             //Smart pointer to class Grid
 	std::vector<int> op = {0, 3, 4, 1, 2, 7, 8, 5, 6};				//Opposing node on bounce-back 
 	

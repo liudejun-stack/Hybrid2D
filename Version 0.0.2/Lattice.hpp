@@ -7,8 +7,10 @@ class Lattice {
 public:
     
 	//Lattice Constructor:
-	
+
 	// Methods Declaration;
+	void MapGrid();
+	void MapFunction();
 
     // Model constants:
 	const int Q     = 9;													    //Discrete velocities
