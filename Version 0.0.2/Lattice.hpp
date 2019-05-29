@@ -7,15 +7,22 @@ class Lattice {
 public:
     
 	//Lattice Constructor:
+	Lattice(int _nx=100, int _ny=100, double _dx=1.0, double _dt=1.0) : nx(_nx), ny(_ny), dx(_dx), dt(_dt) {};
 
 	// Methods Declaration;
-	void MapGrid();
-	void MapFunction();
+	int MapGrid(int i, int j);
+	int MapFunction(int i, int j, int k);
+	void setBoundary(bool _Top, bool _Bottom, bool _Left, bool _Right);
 
     // Model constants:
-	const int Q     = 9;													    //Discrete velocities
-	const double dx = 1.0;														//Lattice spacing
-	const double dt = 1.0;														//Time step
+	int Q = 9;													   	 //Discrete velocities
+	double dx;														 //Lattice spacing
+	double dt;														 //Time step
+
+	//Grid Parameters:
+	int nx;
+	int ny;
+	int Boundary[100*100];
 
 	//Weights:
 	double w0 = 4.0 / 9.0; double ws = 1.0 / 9.0; double wi = 1.0 / 36.0;

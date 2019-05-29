@@ -9,15 +9,15 @@ double Fluid::EqFun(double _Rho, double _ux, double _uy, int k) {
 }
 
 void Fluid::InitCond() {
-    for (int j = 0; j < G->Ny; j++){
-        for (int i = 0; i < G->Nx; i++){
-            int id = G->MapGrid(i,j);
+    for (int j = 0; j < D->ny; j++){
+        for (int i = 0; i < D->nx; i++){
+            int id = D->MapGrid(i,j);
             rho[id] = RhoInit;
             ux[id]  = uxInit;
             uy[id]  = uyInit;
             
             for (int k = 0; k < D->Q; k++){
-                int idf = G->MapFunction(i,j,k);
+                int idf = D->MapFunction(i,j,k);
                 f[idf] = EqFun(rho[id], ux[id], uy[id], k);
                 //std::cout << rho[id] << " " << ux[id] << " " << uy[id] << " " << f[idf] << std::endl;
             }
@@ -27,12 +27,12 @@ void Fluid::InitCond() {
 
 void Fluid::Collision() { 
     double tauInv = D->dt/tau;
-    for (int j = 0; j < G->Ny; j++){
-        for (int i = 0; i < G->Nx; i++){
+    for (int j = 0; j < D->ny; j++){
+        for (int i = 0; i < D->nx; i++){
             for (int k = 0; k < D->Q; k++){
-                int id  = G->MapGrid(i,j);
-                int idf = G->MapFunction(i,j,k);
-                if (!G->Boundary[id]){
+                int id  = D->MapGrid(i,j);
+                int idf = D->MapFunction(i,j,k);
+                if (!D->Boundary[id]){
                     double EDF = EqFun(rho[id], ux[id], uy[id], k);     //Equi. Dist. Func.
                     f[idf] = (1 - tauInv)*f[idf] + tauInv*EDF;          
                     //fPos[idf] = f[idf] - (f[idf]-EDF)/tau;
@@ -45,23 +45,23 @@ void Fluid::Collision() {
 
 void Fluid::Stream() {
 
-    for (int j = 0; j < G->Ny; j++){
-        for (int i = 0; i < G->Nx; i++){
+    for (int j = 0; j < D->ny; j++){
+        for (int i = 0; i < D->nx; i++){
             for (int k = 0; k < D->Q; k++){
-                int idf = G->MapFunction(i,j,k);
+                int idf = D->MapFunction(i,j,k);
                 fTemp[idf] =  f[idf];
-                //f[G->MapFunction(i,j,k)] = fPos[G->MapFunction(id,jd,k)];
+                //f[D->MapFunction(i,j,k)] = fPos[D->MapFunction(id,jd,k)];
             }
         }
     }
 
 //Swap distribuition function
-    for (int j = 0; j < G->Ny; j++){
-        for (int i = 0; i < G->Nx; i++){
+    for (int j = 0; j < D->ny; j++){
+        for (int i = 0; i < D->nx; i++){
             for (int k = 0; k < D->Q; k++){
-                int idf = G->MapFunction(i,j,k);
+                int idf = D->MapFunction(i,j,k);
                 f[idf] =  fTemp[idf];
-                //f[G->MapFunction(i,j,k)] = fPos[G->MapFunction(id,jd,k)];
+                //f[D->MapFunction(i,j,k)] = fPos[D->MapFunction(id,jd,k)];
             }
         }
     }
@@ -69,25 +69,25 @@ void Fluid::Stream() {
 
 void Fluid::BounceBack(){
 
-    for (int j = 0; j < G->Ny; j++){
-        for (int i = 0; i < G->Nx; i++){
+    for (int j = 0; j < D->ny; j++){
+        for (int i = 0; i < D->nx; i++){
             for (int k = 0; k < D->Q; k++){
-                int id = G->MapGrid(i,j);
-                int idf = G->MapFunction(i,j,k);
-                if (G->Boundary[id]){
+                int id = D->MapGrid(i,j);
+                int idf = D->MapFunction(i,j,k);
+                if (D->Boundary[id]){
                     fTemp[idf] = f[idf];
                 }   
             }
         }
     }
 
-   for (int j = 0; j < G->Ny; j++){
-        for (int i = 0; i < G->Nx; i++){
+   for (int j = 0; j < D->ny; j++){
+        for (int i = 0; i < D->nx; i++){
             for (int k = 0; k < D->Q; k++){
-                int id = G->MapGrid(i,j);
-                int idf = G->MapFunction(i,j,k);
-                if (G->Boundary[id]){
-                    f[idf] = fTemp[G->MapFunction(i,j,op[k])];
+                int id = D->MapGrid(i,j);
+                int idf = D->MapFunction(i,j,k);
+                if (D->Boundary[id]){
+                    f[idf] = fTemp[D->MapFunction(i,j,op[k])];
                 }   
             }
         }
@@ -101,16 +101,16 @@ void Fluid::ZouHeBC()
 
 void Fluid::MacroUpdate() {
     
-    for (int j = 0; j < G->Ny; j++){
-        for (int i = 0; i < G->Nx; i++){
-            if (!G->Boundary[G->MapGrid(i,j)]) {
-                rho[G->MapGrid(i,j)] = f[G->MapFunction(i,j,0)]+f[G->MapFunction(i,j,1)]+f[G->MapFunction(i,j,2)]+f[G->MapFunction(i,j,3)]+f[G->MapFunction(i,j,4)]+f[G->MapFunction(i,j,5)]+f[G->MapFunction(i,j,6)]+f[G->MapFunction(i,j,7)]+f[G->MapFunction(i,j,8)];
+    for (int j = 0; j < D->ny; j++){
+        for (int i = 0; i < D->nx; i++){
+            if (!D->Boundary[D->MapGrid(i,j)]) {
+                rho[D->MapGrid(i,j)] = f[D->MapFunction(i,j,0)]+f[D->MapFunction(i,j,1)]+f[D->MapFunction(i,j,2)]+f[D->MapFunction(i,j,3)]+f[D->MapFunction(i,j,4)]+f[D->MapFunction(i,j,5)]+f[D->MapFunction(i,j,6)]+f[D->MapFunction(i,j,7)]+f[D->MapFunction(i,j,8)];
                 
-                ux[G->MapGrid(i,j)] = (f[G->MapFunction(i,j,1)] + f[G->MapFunction(i,j,5)] + f[G->MapFunction(i,j,8)] - f[G->MapFunction(i,j,3)] - f[G->MapFunction(i,j,6)] - f[G->MapFunction(i,j,7)])/rho[G->MapGrid(i,j)];
+                ux[D->MapGrid(i,j)] = (f[D->MapFunction(i,j,1)] + f[D->MapFunction(i,j,5)] + f[D->MapFunction(i,j,8)] - f[D->MapFunction(i,j,3)] - f[D->MapFunction(i,j,6)] - f[D->MapFunction(i,j,7)])/rho[D->MapGrid(i,j)];
                 
-                ux[G->MapGrid(i,j)] = (f[G->MapFunction(i,j,5)] + f[G->MapFunction(i,j,6)] + f[G->MapFunction(i,j,2)] - f[G->MapFunction(i,j,7)] - f[G->MapFunction(i,j,8)] - f[G->MapFunction(i,j,4)])/rho[G->MapGrid(i,j)];
+                ux[D->MapGrid(i,j)] = (f[D->MapFunction(i,j,5)] + f[D->MapFunction(i,j,6)] + f[D->MapFunction(i,j,2)] - f[D->MapFunction(i,j,7)] - f[D->MapFunction(i,j,8)] - f[D->MapFunction(i,j,4)])/rho[D->MapGrid(i,j)];
                 
-                //std::cout << rho[G->MapGrid(i,j)] << " " << ux[G->MapGrid(i,j)] << " " << uy[G->MapGrid(i,j)] << std::endl;
+                //std::cout << rho[D->MapGrid(i,j)] << " " << ux[D->MapGrid(i,j)] << " " << uy[D->MapGrid(i,j)] << std::endl;
                 }
             }
         }
@@ -119,7 +119,7 @@ void Fluid::MacroUpdate() {
 //RESCREVER ESTA FUNÇÃO!!
 void Fluid::writeFluidVTK(std::string _Filename)
 {
-    int size = G->Nx * G->Ny;
+    int size = D->nx * D->ny;
 	std::ofstream Output;
 	Output.open(_Filename + std::to_string(vtkCounter) + ".vtk");
 
@@ -127,32 +127,32 @@ void Fluid::writeFluidVTK(std::string _Filename)
 	Output << "Fluid_state\n";
 	Output << "ASCII\n";
 	Output << "DATASET STRUCTURED_POINTS\n";
-	Output << "DIMENSIONS " << G->Nx << " " << G->Ny << " " << 1 << "\n";
+	Output << "DIMENSIONS " << D->nx << " " << D->ny << " " << 1 << "\n";
 	Output << "ORIGIN "     << 0     << " " << 0     << " " << 0 << "\n";
     Output << "SPACING "    << 1     << " " << 1     << " " << 1 << "\n";
 	Output << "POINT_DATA " << size << "\n";
     
     Output << "SCALARS Geom float 1\n";
     Output << "LOOKUP_TABLE default\n";
-    for (int j = 0; j < G->Ny; j++){
-        for (int i = 0; i < G->Nx; i++){
-            int id = G->MapGrid(i,j);
-            Output << G->Boundary[id] << "\n";
+    for (int j = 0; j < D->ny; j++){
+        for (int i = 0; i < D->nx; i++){
+            int id = D->MapGrid(i,j);
+            Output << D->Boundary[id] << "\n";
         }
     }
     
 	Output << "SCALARS Density float 1\n";
 	Output << "LOOKUP_TABLE default\n";
-	for (int j = 0; j < G->Ny; j++) {
-		for (int i = 0; i < G->Nx; i++) {
-			Output << rho[G->MapGrid(i, j)] << "\n";
+	for (int j = 0; j < D->ny; j++) {
+		for (int i = 0; i < D->nx; i++) {
+			Output << rho[D->MapGrid(i, j)] << "\n";
 		}
 	}
 	
 	Output << "VECTORS Velocity float\n" << std::endl;
-	for (int j = 0; j < G->Ny; j++) {
-		for (int i = 0; i < G->Nx; i++) {
-			Output << ux[G->MapGrid(i,j)] << " " << uy[G->MapGrid(i,j)] << " " << 0 << "\n";
+	for (int j = 0; j < D->ny; j++) {
+		for (int i = 0; i < D->nx; i++) {
+			Output << ux[D->MapGrid(i,j)] << " " << uy[D->MapGrid(i,j)] << " " << 0 << "\n";
 		}
 	}
 	Output.close();
@@ -162,7 +162,7 @@ void Fluid::writeFluidVTK(std::string _Filename)
 
 void Fluid::solve(int nIter, std::string _Filename)
 {
-    G->setBoundary(true, true, false, false);
+    D->setBoundary(true, true, false, false);
     InitCond();
     for(int i = 0; i != nIter; i++){
         std::cout << i << std::endl;
