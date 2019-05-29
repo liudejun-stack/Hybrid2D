@@ -12,21 +12,23 @@ class Fluid {
 public:
 
 	//Fluid constructor:
-	Fluid(double _tau = 1.0, double _RhoInit = 1.0, double _uxInit = 0.0, double _uyInit = 0.0) :
-		tau(_tau), RhoInit(_RhoInit), uxInit(_uxInit), uyInit(_uyInit) {};
+	Fluid(double _tau = 1.0, double _rhoInit = 1.0, double _uxInit = 0.0, double _uyInit = 0.0) :
+		tau(_tau), rhoInit(_rhoInit), uxInit(_uxInit), uyInit(_uyInit) {};
 
-	//Methods declaration
-	double EqFun(double _Rho, double _ux, double _uy, int k);		//Equilibrium distribution function
+	//Engine declaration:
+	double EqFun(double _rho, double _ux, double _uy, int k);		//Equilibrium distribution function
     void InitCond();			                                    //Initialize distribution functio
 	void Collision();			                                    //Apply collision
 	void Stream();				                                    //Apply stream
-	void setVelBC(int i, int j, double _ux, double _uy);			//Sets velocity boundary condition
-	void setDensBC(int i, int j, double _rho);						//Sets density boundary condition
     void BounceBack();                                              //Apply Bounce-Back
     void ZouHeBC();                                                 //Apply Zou & He boundary conditions
 	void MacroUpdate();			                                    //Update macroscopic variables
     void writeFluidVTK(std::string _Filename);                      //Outputs VTK file for visualization
     void solve(int nIter, std::string _Filename);                   //LBM solver
+
+	//Set methods:
+	void setVelBC(int i, int j, double _ux, double _uy);			//Sets velocity boundary condition
+	void setDensBC(int i, int j, double _rho);						//Sets density boundary condition
 
 	//Pointers and Vectors:
     std::shared_ptr<Lattice> D = std::make_shared<Lattice>();       //Smart pointer to class Lattice
@@ -34,7 +36,7 @@ public:
 	
 	//Variables:
 	double tau;
-	double RhoInit;
+	double rhoInit;
 	double uxInit;
 	double uyInit;
     int vtkCounter = 1;

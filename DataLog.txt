@@ -8,4 +8,6 @@ Versão 0.0.2:
 	| Modificado os limites de <= para <;
 	| Após propagação trocar as funções de distribuição são trocadas;
 
-- Otimização do BounceBack
+- Otimização do BounceBack;
+- Implementado métodos para setar Vel & Den BC;
+- Implementado as condições de contorno Zou & He;

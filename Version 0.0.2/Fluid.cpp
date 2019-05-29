@@ -1,18 +1,18 @@
 #include "Fluid.hpp"
 #include <iostream>
 
-double Fluid::EqFun(double _Rho, double _ux, double _uy, int k) {
+double Fluid::EqFun(double _rho, double _ux, double _uy, int k) {
     double cdotu = D->cx[k]*_ux + D->cy[k]*_uy;
     double udotu = _ux*_ux + _uy*_uy;
     
-    return D->w[k]*_Rho*(1 + 3*cdotu + 4.5*cdotu*cdotu - 1.5*udotu);
+    return D->w[k]*_rho*(1 + 3*cdotu + 4.5*cdotu*cdotu - 1.5*udotu);
 }
 
 void Fluid::InitCond() {
     for (int j = 0; j < D->ny; j++){
         for (int i = 0; i < D->nx; i++){
             int id = D->MapGrid(i,j);
-            rho[id] = RhoInit;
+            rho[id] = rhoInit;
             ux[id]  = uxInit;
             uy[id]  = uyInit;
             
@@ -70,14 +70,18 @@ void Fluid::Stream() {
 void Fluid::setVelBC(int i, int j, double _ux, double _uy){
     
     int id = D->MapGrid(i,j);
-    ux[id] = _ux;
-    uy[id] = _uy;
+    if (!D->Boundary[D->MapGrid(i,j)]){
+        ux[id] = _ux;
+        uy[id] = _uy;
+    }
 }
 
 void Fluid::setDensBC(int i, int j, double _rho)
 {
     int id = D->MapGrid(i,j);
-    rho[id] = _rho;
+    if (!D->Boundary[id]){
+        rho[id] = _rho;
+    }
 }
 
 void Fluid::BounceBack(){
@@ -107,9 +111,63 @@ void Fluid::BounceBack(){
     } 
 }
 
-void Fluid::ZouHeBC()
+void Fluid::ZouHeBC() 
 {
-   
+    //Prescribed velocity:
+    //Left side
+    for (int j = 0; j < D->ny; j++){
+        int i = 0;
+        if (!D->Boundary[D->MapGrid(i,j)]){
+
+            double rho = (f[D->MapFunction(i,j,0)] + f[D->MapFunction(i,j,2)] + f[D->MapFunction(i,j,4)] + 
+            2.0*(f[D->MapFunction(i,j,3)]+f[D->MapFunction(i,j,6)]+f[D->MapFunction(i,j,7)])) / (1.0 - ux[D->MapGrid(i,j)]);
+
+            f[D->MapFunction(i,j,1)] = f[D->MapFunction(i,j,3)] + (2.0/3.0)*rho*ux[D->MapGrid(i,j)];
+
+            f[D->MapFunction(i,j,5)] = f[D->MapFunction(i,j,7)] + (1.0/6.0)*rho*ux[D->MapGrid(i,j)] +
+            0.5*rho*uy[D->MapGrid(i,j)] - 0.5*(f[D->MapFunction(i,j,2)] - f[D->MapFunction(i,j,4)]);
+
+            f[D->MapFunction(i,j,8)] = f[D->MapFunction(i,j,6)] + (1.0/6.0)*rho*ux[D->MapGrid(i,j)] -
+            0.5*rho*uy[D->MapGrid(i,j)] + 0.5*(f[D->MapFunction(i,j,2)] - f[D->MapFunction(i,j,4)]);
+        }
+    }
+
+    //Right Side:
+    for (int j = 0; j < D->ny; j++){
+        int i = D->nx-1;
+        if (!D->Boundary[D->MapGrid(i,j)]){
+
+            double rho = (f[D->MapFunction(i,j,0)] + f[D->MapFunction(i,j,2)] + f[D->MapFunction(i,j,4)] + 
+            2.0*(f[D->MapFunction(i,j,1)]+f[D->MapFunction(i,j,5)]+f[D->MapFunction(i,j,8)])) / (1.0 + ux[D->MapGrid(i,j)]);
+
+            f[D->MapFunction(i,j,3)] = f[D->MapFunction(i,j,1)] - (2.0/3.0)*rho*ux[D->MapGrid(i,j)];
+
+            f[D->MapFunction(i,j,7)] = f[D->MapFunction(i,j,5)] - (1.0/6.0)*rho*ux[D->MapGrid(i,j)] + 
+            0.5*(f[D->MapFunction(i,j,2)] - f[D->MapFunction(i,j,4)]);
+
+            f[D->MapFunction(i,j,6)] = f[D->MapFunction(i,j,8)] - (1.0/6.0)*rho*ux[D->MapGrid(i,j)] - 
+            0.5*(f[D->MapFunction(i,j,2)] - f[D->MapFunction(i,j,4)]);
+        }
+    }
+
+    //Prescribed density:
+    //Right side
+    for (int j = 0; j < D->ny; j++){
+        int i = D->nx-1;
+        if (!D->Boundary[D->MapGrid(i,j)]){
+
+            double vx = -1.0 + (f[D->MapFunction(i,j,0)] + f[D->MapFunction(i,j,2)] + f[D->MapFunction(i,j,4)] + 
+            2.0*(f[D->MapFunction(i,j,1)] + f[D->MapFunction(i,j,5)] + f[D->MapFunction(i,j,8)])) / rho[D->MapGrid(i,j)];
+
+            f[D->MapFunction(i,j,3)] = f[D->MapFunction(i,j,1)] - (2.0/3.0)*rho[D->MapGrid(i,j)]*vx;
+
+            f[D->MapFunction(i,j,7)] = f[D->MapFunction(i,j,5)] - (1.0/6.0)*rho[D->MapGrid(i,j)]*vx +
+            0.5*(f[D->MapFunction(i,j,2)] + f[D->MapFunction(i,j,4)]);
+
+            f[D->MapFunction(i,j,6)] = f[D->MapFunction(i,j,8)] - (1.0/6.0)*rho[D->MapGrid(i,j)]*vx -
+            0.5*(f[D->MapFunction(i,j,2)] + f[D->MapFunction(i,j,4)]);
+        }
+    }
 }
 
 void Fluid::MacroUpdate() {
