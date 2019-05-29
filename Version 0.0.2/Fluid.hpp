@@ -20,8 +20,8 @@ public:
     void InitCond();			                                    //Initialize distribution functio
 	void Collision();			                                    //Apply collision
 	void Stream();				                                    //Apply stream
-	void setVelBC();												//Sets velocity boundary condition
-	void setDensBC();												//Sets density boundary condition
+	void setVelBC(int i, int j, double _ux, double _uy);			//Sets velocity boundary condition
+	void setDensBC(int i, int j, double _rho);						//Sets density boundary condition
     void BounceBack();                                              //Apply Bounce-Back
     void ZouHeBC();                                                 //Apply Zou & He boundary conditions
 	void MacroUpdate();			                                    //Update macroscopic variables
@@ -29,7 +29,7 @@ public:
     void solve(int nIter, std::string _Filename);                   //LBM solver
 
 	//Pointers and Vectors:
-    std::shared_ptr<Lattice> D = std::make_shared<Lattice>();       //Smart pointer to class D2Q9
+    std::shared_ptr<Lattice> D = std::make_shared<Lattice>();       //Smart pointer to class Lattice
 	std::vector<int> op = {0, 3, 4, 1, 2, 7, 8, 5, 6};				//Opposing node on bounce-back 
 	
 	//Variables:

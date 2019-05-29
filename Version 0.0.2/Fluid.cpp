@@ -67,6 +67,19 @@ void Fluid::Stream() {
     }
 }
 
+void Fluid::setVelBC(int i, int j, double _ux, double _uy){
+    
+    int id = D->MapGrid(i,j);
+    ux[id] = _ux;
+    uy[id] = _uy;
+}
+
+void Fluid::setDensBC(int i, int j, double _rho)
+{
+    int id = D->MapGrid(i,j);
+    rho[id] = _rho;
+}
+
 void Fluid::BounceBack(){
 
     for (int j = 0; j < D->ny; j++){
