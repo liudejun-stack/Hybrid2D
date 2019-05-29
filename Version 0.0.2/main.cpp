@@ -6,7 +6,7 @@ int main(int argc, char **argv) {
 
     Fluid F;
     
-    F.solve(1000, "Resultado");
+    F.solve(100, "Resultado");
 
   
 }

@@ -20,7 +20,7 @@ void Lattice::setBoundary(bool _Top, bool _Bottom, bool _Left, bool _Right)
 
 	if (_Top) {
 		for (int i = 0; i < nx; i++) {
-			Boundary[MapGrid(i, ny)] = 1;
+			Boundary[MapGrid(i, ny-1)] = 1;
 		}
 	}
 
@@ -38,7 +38,7 @@ void Lattice::setBoundary(bool _Top, bool _Bottom, bool _Left, bool _Right)
 
 	if (_Right) {
 		for (int j = 0; j < ny; j++) {
-			Boundary[MapGrid(nx, j)] = 1;
+			Boundary[MapGrid(nx-1, j)] = 1;
 		}
 	}
 }

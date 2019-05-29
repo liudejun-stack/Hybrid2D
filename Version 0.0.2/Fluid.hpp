@@ -2,7 +2,6 @@
 #define _FLUID_
 
 #include "Lattice.hpp"
-#include "Grid.hpp"
 #include <memory>
 #include <iostream>
 #include <math.h>

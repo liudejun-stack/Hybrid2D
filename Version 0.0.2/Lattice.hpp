@@ -22,7 +22,7 @@ public:
 	//Grid Parameters:
 	int nx;
 	int ny;
-	int Boundary[100*100];
+	int Boundary[101*101];
 
 	//Weights:
 	double w0 = 4.0 / 9.0; double ws = 1.0 / 9.0; double wi = 1.0 / 36.0;
