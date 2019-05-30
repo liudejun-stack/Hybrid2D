@@ -29,6 +29,7 @@ public:
 	//Set methods:
 	void setVelBC(int i, int j, double _ux, double _uy);			//Sets velocity boundary condition
 	void setDensBC(int i, int j, double _rho);						//Sets density boundary condition
+	void setObstacle(int _obsX, int _obsY, int _radius);			//Sets obstacle
 
 	//Pointers and Vectors:
     std::shared_ptr<Lattice> D = std::make_shared<Lattice>();       //Smart pointer to class Lattice

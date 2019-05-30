@@ -67,7 +67,7 @@ void Fluid::Stream() {
     }
 }
 
-void Fluid::setVelBC(int i, int j, double _ux, double _uy){
+void Fluid::setVelBC(int i, int j, double _ux, double _uy) {
     
     int id = D->MapGrid(i,j);
     if (!D->Boundary[D->MapGrid(i,j)]){
@@ -76,14 +76,24 @@ void Fluid::setVelBC(int i, int j, double _ux, double _uy){
     }
 }
 
-void Fluid::setDensBC(int i, int j, double _rho)
-{
+void Fluid::setDensBC(int i, int j, double _rho) {
     int id = D->MapGrid(i,j);
     if (!D->Boundary[id]){
         rho[id] = _rho;
     }
 }
 
+void Fluid::setObstacle(int _obsX, int _obsY, int _radius) {
+
+    for (int j = 0; j < D->ny; j++){
+        for (int i = 0; i < D->nx; i++){
+            if (((i-_obsX)*(i-_obsX) + (j - _obsY)*(j - _obsY)) <= _radius*_radius){
+                D->Boundary[D->MapGrid(i,j)] = 1;
+            }
+        }
+    }
+
+}
 void Fluid::BounceBack(){
 
     for (int j = 0; j < D->ny; j++){
@@ -187,7 +197,6 @@ void Fluid::MacroUpdate() {
         }
     }
 
-//RESCREVER ESTA FUNÇÃO!!
 void Fluid::writeFluidVTK(std::string _Filename)
 {
     int size = D->nx * D->ny;
@@ -229,7 +238,6 @@ void Fluid::writeFluidVTK(std::string _Filename)
 	Output.close();
 	vtkCounter++;
 }
-
 
 void Fluid::solve(int nIter, std::string _Filename)
 {
