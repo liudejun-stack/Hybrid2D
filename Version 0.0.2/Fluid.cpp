@@ -49,7 +49,9 @@ void Fluid::Stream() {
         for (int i = 0; i < D->nx; i++){
             for (int k = 0; k < D->Q; k++){
                 int idf = D->MapFunction(i,j,k);
-                fTemp[idf] =  f[idf];
+                int idx_i = (i + D->cx[k]) % D->nx;
+                int idx_j = (j + D->cy[k]) % D->ny;
+                fTemp[D->MapFunction(idx_i, idx_j, k)] = f[idf];
                 //f[D->MapFunction(i,j,k)] = fPos[D->MapFunction(id,jd,k)];
             }
         }

@@ -11,3 +11,5 @@ Versão 0.0.2:
 - Otimização do BounceBack;
 - Implementado métodos para setar Vel & Den BC;
 - Implementado as condições de contorno Zou & He;
+- Implementação da função setObstacle;
+- Modificação na função de propagação;
