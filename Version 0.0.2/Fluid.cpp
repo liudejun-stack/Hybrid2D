@@ -2,13 +2,13 @@
 #include <iostream>
 
 double Fluid::EqFun(double _rho, double _ux, double _uy, int k) {
+
     double cdotu = D->cx[k]*_ux + D->cy[k]*_uy;
     double udotu = _ux*_ux + _uy*_uy;
-    
     return D->w[k]*_rho*(1 + 3*cdotu + 4.5*cdotu*cdotu - 1.5*udotu);
 }
 
-void Fluid::InitCond() {
+void Fluid::setInitCond(double _rhoInit, double _uxInit, double _uyInit) {
     for (int j = 0; j < D->ny; j++){
         for (int i = 0; i < D->nx; i++){
             int id = D->MapGrid(i,j);
@@ -67,6 +67,10 @@ void Fluid::Stream() {
             }
         }
     }
+}
+
+void Fluid::setTau(double _tau){
+    tau = _tau;
 }
 
 void Fluid::setVelBC(int i, int j, double _ux, double _uy) {
