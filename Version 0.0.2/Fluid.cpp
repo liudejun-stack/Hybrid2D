@@ -243,8 +243,6 @@ void Fluid::writeFluidVTK(std::string _Filename)
 
 void Fluid::solve(int nIter, std::string _Filename)
 {
-    D->setBoundary(/*Top*/false,/*Bot*/false,/*Left*/ true,/*Right*/ true);
-    InitCond();
     for(int i = 0; i != nIter; i++){
         std::cout << i << std::endl;
         Collision();
