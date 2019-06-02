@@ -45,12 +45,12 @@ void Fluid::setObstacle(int _obsX, int _obsY, int _radius) {
     }
 }
 
-double Fluid::Density(){
+void Fluid::Density(){
     for (int j = 0; j < D->ny; j++)
     for (int i = 0; i < D->nx; i++){
         int id = D->MapGrid(i,j);
         if (D->Boundary[id]==isSolid){
-            return 0.0;
+            rho[id] = 0.0
         }
         else{
             double rho = 0.0;
@@ -58,7 +58,7 @@ double Fluid::Density(){
                 int idf = D->MapFunction(i,j,k);
                 rho += f[idf];
             }
-            return rho;
+            rho[id] = rho;
         }
     }
 }
@@ -68,14 +68,19 @@ void Fluid::Velocity(){
     for (int i = 0; i < D->nx; i++){
         int id = D->MapGrid(i,j);
         if (D->Boundary[id]==isSolid){
-            uxMacro = 0.0;
-            uyMacro = 0.0;
+            ux[id] = 0.0;
+            uy[id] = 0.0;
         }
-        rho = Density();
+        Density();
+        double uxTemp = 0.0;
+        double uyTemp = 0.0;
         for (int k = 0; k < D->Q; k++){
-            uxMacro += (f[D->MapFuncion(i,j,k)]*D->cx[k])/rho;
-            uyMacro += (f[D->MapFuncion(i,j,k)]*D->cx[k])/rho;
+            uxTemp += (f[D->MapFunction(i,j,k)]*D->cx[k])/rho[id];
+            uyTemp += (f[D->MapFunction(i,j,k)]*D->cx[k])/rho[id];
         }
+        ux[id] = uxTemp;
+        uy[id] = uyTemp;
+
     }
 }
 
@@ -86,7 +91,7 @@ void Fluid::Collision() {
     for (int k = 0; k < D->Q;  k++){
         int id  = D->MapGrid(i,j);
         int idf = D->MapFunction(i,j,k);
-        rhoMacro = Density();
+        Density();
         Velocity();
         if (D->Boundary[id]==notSolid) {
             double EDF = setEqFun(rhoMacro,uxMacro, uyMacro, k);
@@ -112,15 +117,8 @@ void Fluid::Stream() {
         int idf = D->MapFunction(i,j,k);
         f[idf] =  fTemp[idf];
     }
-    
-    for (int j = 0; j < D->ny; j++)
-    for (int i = 0; i < D->nx; i++){
-        int id = D->MapGrid(i,j);
-        Velocity();
-        rho[id] = Density();
-        ux[id] = uxMacro;
-        uy[id] = uyMacro;
-    }
+    Density();
+    Velocity();
 }
 
 void Fluid::BounceBack(){
@@ -255,7 +253,6 @@ void Fluid::solve(int nIter, std::string _Filename)
 {
     for(int i = 0; i != nIter; i++){
         std::cout << i << std::endl;
-        MacroUpdate();
         ZouHeBC();
         Collision();
         BounceBack();

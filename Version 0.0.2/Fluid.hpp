@@ -20,7 +20,7 @@ public:
 	void   setObstacle(int _obsX, int _obsY, int _radius);					    //Sets obstacle
     
 	//Engine declaration:
-    double Density();
+    void Density();
     void Velocity();
 	void Collision();			                                    		    //Apply collision
 	void Stream();				                                    		    //Apply stream
