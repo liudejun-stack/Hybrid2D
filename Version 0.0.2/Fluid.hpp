@@ -40,9 +40,9 @@ public:
 	bool notSolid = false;
     
     //Macroscopic variables:
-    double rhoMacro;
-    double uxMacro;
-    double uyMacro;
+    double rhoMacro = 0.0;
+    double uxMacro = 0.0;
+    double uyMacro = 0.0;
 
 	//Macroscopic Variables
 	double rho[101*101];

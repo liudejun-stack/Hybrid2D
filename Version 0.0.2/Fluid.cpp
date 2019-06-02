@@ -71,8 +71,6 @@ void Fluid::Velocity(){
             uxMacro = 0.0;
             uyMacro = 0.0;
         }
-        uxMacro = 0.0; 
-        uyMacro = 0.0;
         rho = Density();
         for (int k = 0; k < D->Q; k++){
             uxMacro += (f[D->MapFuncion(i,j,k)]*D->cx[k])/rho;
@@ -89,6 +87,7 @@ void Fluid::Collision() {
         int id  = D->MapGrid(i,j);
         int idf = D->MapFunction(i,j,k);
         rhoMacro = Density();
+        Velocity();
         if (D->Boundary[id]==notSolid) {
             double EDF = setEqFun(rhoMacro,uxMacro, uyMacro, k);
             f[idf] = (1 - tauInv)*f[idf] + tauInv*EDF;
