@@ -20,8 +20,7 @@ public:
 	void   setObstacle(int _obsX, int _obsY, int _radius);					    //Sets obstacle
     
 	//Engine declaration:
-    void Density();
-    void Velocity();
+    void MacroUpdate();
 	void Collision();			                                    		    //Apply collision
 	void Stream();				                                    		    //Apply stream
     void BounceBack();                                              		    //Apply Bounce-Back

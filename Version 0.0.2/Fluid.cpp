@@ -39,48 +39,29 @@ void Fluid::setDensBC(int i, int j, double _rho) {
 void Fluid::setObstacle(int _obsX, int _obsY, int _radius) {
     for (int j = 0; j < D->ny; j++)
     for (int i = 0; i < D->nx; i++){
-        if (((i-_obsX)*(i-_obsX) + (j - _obsY)*(j - _obsY)) <= _radius*_radius) {
+        int cir = (i-_obsX)*(i-_obsX) + (j - _obsY)*(j - _obsY);
+        if (cir <= (_radius*_radius)) {
             D->Boundary[D->MapGrid(i,j)] = isSolid;
         }
     }
 }
 
-void Fluid::Density(){
-    for (int j = 0; j < D->ny; j++)
-    for (int i = 0; i < D->nx; i++){
+void Fluid::MacroUpdate() {
+    for (int j = 0; j <= D->ny; j++)
+    for (int i = 0; i <= D->nx; i++){
         int id = D->MapGrid(i,j);
-        if (D->Boundary[id]==isSolid){
-            rho[id] = 0.0
+        if (D->Boundary[id]==notSolid) {
+            rho[id] = f[D->MapFunction(i,j,0)]+f[D->MapFunction(i,j,1)]+f[D->MapFunction(i,j,2)]+f[D->MapFunction(i,j,3)]+f[D->MapFunction(i,j,4)]+f[D->MapFunction(i,j,5)]+f[D->MapFunction(i,j,6)]+f[D->MapFunction(i,j,7)]+f[D->MapFunction(i,j,8)];
+                
+            ux[id]  = (f[D->MapFunction(i,j,1)] + f[D->MapFunction(i,j,5)] + f[D->MapFunction(i,j,8)] - f[D->MapFunction(i,j,3)] - f[D->MapFunction(i,j,6)] - f[D->MapFunction(i,j,7)])/rho[id];
+                
+            uy[id]  = (f[D->MapFunction(i,j,5)] + f[D->MapFunction(i,j,6)] + f[D->MapFunction(i,j,2)] - f[D->MapFunction(i,j,7)] - f[D->MapFunction(i,j,8)] - f[D->MapFunction(i,j,4)])/rho[id];
         }
-        else{
-            double rho = 0.0;
-            for (int k = 0; k < D->Q; k++){
-                int idf = D->MapFunction(i,j,k);
-                rho += f[idf];
-            }
-            rho[id] = rho;
+        else {
+            rho[id] = 0.0;
+            ux[id]  = 0.0;
+            uy[id]  = 0.0;
         }
-    }
-}
-
-void Fluid::Velocity(){
-    for (int j = 0; j < D->ny; j++)
-    for (int i = 0; i < D->nx; i++){
-        int id = D->MapGrid(i,j);
-        if (D->Boundary[id]==isSolid){
-            ux[id] = 0.0;
-            uy[id] = 0.0;
-        }
-        Density();
-        double uxTemp = 0.0;
-        double uyTemp = 0.0;
-        for (int k = 0; k < D->Q; k++){
-            uxTemp += (f[D->MapFunction(i,j,k)]*D->cx[k])/rho[id];
-            uyTemp += (f[D->MapFunction(i,j,k)]*D->cx[k])/rho[id];
-        }
-        ux[id] = uxTemp;
-        uy[id] = uyTemp;
-
     }
 }
 
@@ -91,10 +72,8 @@ void Fluid::Collision() {
     for (int k = 0; k < D->Q;  k++){
         int id  = D->MapGrid(i,j);
         int idf = D->MapFunction(i,j,k);
-        Density();
-        Velocity();
         if (D->Boundary[id]==notSolid) {
-            double EDF = setEqFun(rhoMacro,uxMacro, uyMacro, k);
+            double EDF = setEqFun(rho[id],ux[id], uy[id], k);
             f[idf] = (1 - tauInv)*f[idf] + tauInv*EDF;
         }
     }
@@ -117,35 +96,28 @@ void Fluid::Stream() {
         int idf = D->MapFunction(i,j,k);
         f[idf] =  fTemp[idf];
     }
-    Density();
-    Velocity();
 }
 
 void Fluid::BounceBack(){
-
-    for (int j = 0; j < D->ny; j++){
-        for (int i = 0; i < D->nx; i++){
-            for (int k = 0; k < D->Q; k++){
-                int id = D->MapGrid(i,j);
-                int idf = D->MapFunction(i,j,k);
-                if (D->Boundary[id]){
-                    fTemp[idf] = f[idf];
-                }   
-            }
-        }
+    for (int j = 0; j < D->ny; j++)
+    for (int i = 0; i < D->nx; i++)
+    for (int k = 0; k < D->Q; k++){
+        int id = D->MapGrid(i,j);
+        int idf = D->MapFunction(i,j,k);
+        if (D->Boundary[id]){
+            fTemp[idf] = f[idf];
+        }   
     }
-
-   for (int j = 0; j < D->ny; j++){
-        for (int i = 0; i < D->nx; i++){
-            for (int k = 0; k < D->Q; k++){
-                int id = D->MapGrid(i,j);
-                int idf = D->MapFunction(i,j,k);
-                if (D->Boundary[id]){
-                    f[idf] = fTemp[D->MapFunction(i,j,op[k])];
-                }   
-            }
-        }
-    } 
+    
+    for (int j = 0; j < D->ny; j++)
+    for (int i = 0; i < D->nx; i++)
+    for (int k = 0; k < D->Q; k++){
+        int id = D->MapGrid(i,j);
+        int idf = D->MapFunction(i,j,k);
+        if (D->Boundary[id]){
+            f[idf] = fTemp[D->MapFunction(i,j,op[k])];
+        }   
+    }
 }
 
 void Fluid::ZouHeBC() 
