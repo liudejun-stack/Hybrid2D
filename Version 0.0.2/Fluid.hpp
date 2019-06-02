@@ -37,6 +37,7 @@ public:
 	double tau;
     int vtkCounter = 1;
     bool isSolid = true;
+	bool notSolid = false;
     
     //Macroscopic variables:
     double rhoMacro;

@@ -40,9 +40,9 @@ void Fluid::setObstacle(int _obsX, int _obsY, int _radius) {
     for (int j = 0; j < D->ny; j++)
     for (int i = 0; i < D->nx; i++){
         if (((i-_obsX)*(i-_obsX) + (j - _obsY)*(j - _obsY)) <= _radius*_radius) {
-                D->Boundary[D->MapGrid(i,j)] = isSolid;
-            }
+            D->Boundary[D->MapGrid(i,j)] = isSolid;
         }
+    }
 }
 
 double Fluid::Density(){
@@ -63,6 +63,24 @@ double Fluid::Density(){
     }
 }
 
+void Fluid::Velocity(){
+    for (int j = 0; j < D->ny; j++)
+    for (int i = 0; i < D->nx; i++){
+        int id = D->MapGrid(i,j);
+        if (D->Boundary[id]==isSolid){
+            uxMacro = 0.0;
+            uyMacro = 0.0
+        }
+        uxMacro = 0.0; 
+        uyMacro = 0.0;
+        rho = Density();
+        for (int k = 0; k < D->Q; k++){
+            uxMacro += (f[D->MapFuncion(i,j,k)]*D->cx[k])/rho;
+            uyMacro += (f[D->MapFuncion(i,j,k)]*D->cx[k])/rho;
+        }
+    }
+}
+
 void Fluid::Collision() {
     double tauInv = D->dt/tau;
     for (int j = 0; j < D->ny; j++)
@@ -70,8 +88,9 @@ void Fluid::Collision() {
     for (int k = 0; k < D->Q;  k++){
         int id  = D->MapGrid(i,j);
         int idf = D->MapFunction(i,j,k);
-        if (D->Boundary[id]==false) {
-            double EDF = setEqFun(rho[id], ux[id], uy[id], k);
+        rhoMacro = Density();
+        if (D->Boundary[id]==notSolid) {
+            double EDF = setEqFun(rhoMacro,uxMacro, uyMacro, k);
             f[idf] = (1 - tauInv)*f[idf] + tauInv*EDF;
         }
     }
