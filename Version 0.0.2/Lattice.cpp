@@ -14,31 +14,31 @@ void Lattice::setBoundary(bool _Top, bool _Bottom, bool _Left, bool _Right)
 {
 	for (int j = 0; j < ny; j++) {
 		for (int i = 0; i < nx; i++) {
-			Boundary[MapGrid(i, j)] = 0;
+			Boundary[MapGrid(i, j)] = false;
 		}
 	}
 
 	if (_Top) {
 		for (int i = 0; i < nx; i++) {
-			Boundary[MapGrid(i, ny-1)] = 1;
+			Boundary[MapGrid(i, ny-1)] = true;
 		}
 	}
 
 	if (_Bottom) {
 		for (int i = 0; i < nx; i++) {
-			Boundary[MapGrid(i, 0)] = 1;
+			Boundary[MapGrid(i, 0)] = true;
 		}
 	}
 
 	if (_Left) {
 		for (int j = 0; j < ny; j++) {
-			Boundary[MapGrid(0, j)] = 1;
+			Boundary[MapGrid(0, j)] = true;
 		}
 	}
 
 	if (_Right) {
 		for (int j = 0; j < ny; j++) {
-			Boundary[MapGrid(nx-1, j)] = 1;
+			Boundary[MapGrid(nx-1, j)] = true;
 		}
 	}
 }
