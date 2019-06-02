@@ -69,7 +69,7 @@ void Fluid::Velocity(){
         int id = D->MapGrid(i,j);
         if (D->Boundary[id]==isSolid){
             uxMacro = 0.0;
-            uyMacro = 0.0
+            uyMacro = 0.0;
         }
         uxMacro = 0.0; 
         uyMacro = 0.0;
@@ -97,7 +97,6 @@ void Fluid::Collision() {
 }
 
 void Fluid::Stream() {
-    
     for (int j = 0; j < D->ny; j++)
     for (int i = 0; i < D->nx; i++)
     for (int k = 0; k < D->Q;  k++){
@@ -113,7 +112,15 @@ void Fluid::Stream() {
     for (int k = 0; k < D->Q;  k++){
         int idf = D->MapFunction(i,j,k);
         f[idf] =  fTemp[idf];
-        //std::cout << f[idf] << std::endl;
+    }
+    
+    for (int j = 0; j < D->ny; j++)
+    for (int i = 0; i < D->nx; i++){
+        int id = D->MapGrid(i,j);
+        Velocity();
+        rho[id] = Density();
+        ux[id] = uxMacro;
+        uy[id] = uyMacro;
     }
 }
 
