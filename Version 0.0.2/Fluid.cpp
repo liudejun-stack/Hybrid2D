@@ -97,7 +97,7 @@ void Fluid::Stream() {
         f[idf] =  fTemp[idf];
     }
 }
-
+/*
 void Fluid::BounceBack(){
     for (int j = 0; j < D->ny; j++)
     for (int i = 0; i < D->nx; i++)
@@ -119,7 +119,18 @@ void Fluid::BounceBack(){
         }   
     }
 }
+*/
 
+void Fluid::BounceBack(){
+    for (int j = 0; j < D->ny; j++)
+    for (int i = 0; i < D->nx; i++){
+        int id = D->MapGrid(i,j);
+        if (D->Boundary[id]==isSolid){
+            for (int k = 0; k < D->Q; k++)  fTemp[D->MapFunction(i,j,k)] = f[D->MapFunction(i,j,k)];
+            for (int k = 0; k < D->Q; k++)  f[D->MapFunction(i,j,k)] = fTemp[D->MapFunction(i,j,op[k])];
+        }
+    }
+}
 void Fluid::ZouHeBC() {
     //Prescribed velocity:
     //Left side
