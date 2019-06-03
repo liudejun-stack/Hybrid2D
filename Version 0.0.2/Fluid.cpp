@@ -101,7 +101,7 @@ void Fluid::Stream() {
 void Fluid::BounceBack(){
     for (int j = 0; j < D->ny; j++)
     for (int i = 0; i < D->nx; i++)
-    for (int k = 0; k < D->Q; k++){
+    for (int k = 0; k < D->Q;  k++){
         int id = D->MapGrid(i,j);
         int idf = D->MapFunction(i,j,k);
         if (D->Boundary[id]){
@@ -111,7 +111,7 @@ void Fluid::BounceBack(){
     
     for (int j = 0; j < D->ny; j++)
     for (int i = 0; i < D->nx; i++)
-    for (int k = 0; k < D->Q; k++){
+    for (int k = 0; k < D->Q;  k++){
         int id = D->MapGrid(i,j);
         int idf = D->MapFunction(i,j,k);
         if (D->Boundary[id]){
@@ -120,8 +120,7 @@ void Fluid::BounceBack(){
     }
 }
 
-void Fluid::ZouHeBC() 
-{
+void Fluid::ZouHeBC() {
     //Prescribed velocity:
     //Left side
     for (int j = 0; j < D->ny; j++){
@@ -225,6 +224,7 @@ void Fluid::solve(int nIter, std::string _Filename)
 {
     for(int i = 0; i != nIter; i++){
         std::cout << i << std::endl;
+        MacroUpdate();
         ZouHeBC();
         Collision();
         BounceBack();
