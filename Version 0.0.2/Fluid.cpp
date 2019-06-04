@@ -97,29 +97,6 @@ void Fluid::Stream() {
         f[idf] =  fTemp[idf];
     }
 }
-/*
-void Fluid::BounceBack(){
-    for (int j = 0; j < D->ny; j++)
-    for (int i = 0; i < D->nx; i++)
-    for (int k = 0; k < D->Q;  k++){
-        int id = D->MapGrid(i,j);
-        int idf = D->MapFunction(i,j,k);
-        if (D->Boundary[id]){
-            fTemp[idf] = f[idf];
-        }   
-    }
-    
-    for (int j = 0; j < D->ny; j++)
-    for (int i = 0; i < D->nx; i++)
-    for (int k = 0; k < D->Q;  k++){
-        int id = D->MapGrid(i,j);
-        int idf = D->MapFunction(i,j,k);
-        if (D->Boundary[id]){
-            f[idf] = fTemp[D->MapFunction(i,j,op[k])];
-        }   
-    }
-}
-*/
 
 void Fluid::BounceBack(){
     for (int j = 0; j < D->ny; j++)
