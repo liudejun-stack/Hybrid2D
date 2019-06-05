@@ -15,12 +15,9 @@ void Fluid::setInitCond(double _rhoInit, double _uxInit, double _uyInit) {
     for (int j = 0; j < D->ny; j++)
     for (int i = 0; i < D->nx; i++){
         int id = D->MapGrid(i,j);
-        rho[id] = _rhoInit;
-        ux[id]  = _uxInit;
-        uy[id]  = _uyInit;
         for (int k = 0; k < D->Q; k++){
             int idf = D->MapFunction(i,j,k);
-            f[idf] = setEqFun(rho[id], ux[id], uy[id], k);
+            f[idf] = setEqFun(_rhoInit, _uxInit, _uyInit, k);
         }
     }
 }
@@ -40,7 +37,7 @@ void Fluid::setObstacle(int _obsX, int _obsY, int _radius) {
     for (int j = 0; j < D->ny; j++)
     for (int i = 0; i < D->nx; i++){
         int cir = (i-_obsX)*(i-_obsX) + (j - _obsY)*(j - _obsY);
-        if (cir <= (_radius*_radius)) {
+        if (cir < (_radius*_radius)) {
             D->Boundary[D->MapGrid(i,j)] = isSolid;
         }
     }
@@ -50,6 +47,12 @@ void Fluid::MacroUpdate() {
     for (int j = 0; j <= D->ny; j++)
     for (int i = 0; i <= D->nx; i++){
         int id = D->MapGrid(i,j);
+        int idf = D->MapFunction(i,j,k);
+        for (int k = 0; k < D->Q; k++){
+            if(std::isnan(f[idf])){
+                f[idf = 1.0e-12;];
+            }
+        }
         if (D->Boundary[id]==notSolid) {
             rho[id] = f[D->MapFunction(i,j,0)]+f[D->MapFunction(i,j,1)]+f[D->MapFunction(i,j,2)]+f[D->MapFunction(i,j,3)]+f[D->MapFunction(i,j,4)]+f[D->MapFunction(i,j,5)]+f[D->MapFunction(i,j,6)]+f[D->MapFunction(i,j,7)]+f[D->MapFunction(i,j,8)];
                 
@@ -213,7 +216,6 @@ void Fluid::solve(int nIter, std::string _Filename)
     for(int i = 0; i != nIter; i++){
         std::cout << i << std::endl;
         MacroUpdate();
-        ZouHeBC();
         Collision();
         BounceBack();
         Stream();

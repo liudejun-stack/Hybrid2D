@@ -1,15 +1,15 @@
-Versão 0.0.2:
-- Modificações na função Collision:
-	| Trocado 1/tau por variável tauInv = dt/tau;
-	| Colisão da função f e não da fTemp;
+VersÃ£o 0.0.2:
+- Modificaï¿½ï¿½es na funï¿½ï¿½o Collision:
+	| Trocado 1/tau por variï¿½vel tauInv = dt/tau;
+	| Colisï¿½o da funï¿½ï¿½o f e nï¿½o da fTemp;
 	| Modificado os limites de <= para <;
 
-- Modificações na função Stream:
+- Modificaï¿½ï¿½es na funï¿½ï¿½o Stream:
 	| Modificado os limites de <= para <;
-	| Após propagação trocar as funções de distribuição são trocadas;
+	| Apï¿½s propagaï¿½ï¿½o trocar as funï¿½ï¿½es de distribuiï¿½ï¿½o sï¿½o trocadas;
 
-- Otimização do BounceBack;
-- Implementado métodos para setar Vel & Den BC;
-- Implementado as condições de contorno Zou & He;
-- Implementação da função setObstacle;
-- Modificação na função de propagação;
+- Otimizaï¿½ï¿½o do BounceBack;
+- Implementado mï¿½todos para setar Vel & Den BC;
+- Implementado as condiï¿½ï¿½es de contorno Zou & He;
+- Implementaï¿½ï¿½o da funï¿½ï¿½o setObstacle;
+- Modificaï¿½ï¿½o na funï¿½ï¿½o de propagaï¿½ï¿½o;
