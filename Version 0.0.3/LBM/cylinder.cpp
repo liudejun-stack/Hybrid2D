@@ -1,45 +1,42 @@
-#include "Fluid.hpp"
+#include "Fluid.h"
+#include <iostream>
 
-double uMax   = 0.1;
-double Re     = 5;
-int    nx     = 100;
-int    ny     = 100;
-int    radius = ny/20 + 1;
+int main() {
 
+	double uMax = 0.1;
+	double re = 100;
+	Vec3i n = { 400, 100, 1 };
+	int radius = n[0] / 10 + 1;
+	double dx = 1.0;
+	double dt = 1.0;
+	double nu = uMax * (2 * radius) / re;
+	int obsX = n[1] / 2;
+	int obsY = n[1] / 2 + 3;
 
-double calcVisc() { 
+	Fluid F(nu, n, dx, dt);
+	int ncells = n[0] * n[1] * n[2];
+	F.defGeom(true, true, false, false);
+	
 
-    double kinVisc = uMax * (2*radius)/Re;
-    return 3.0*kinVisc + 0.5;
-}
+	F.setObstacle(obsX, obsY, radius);
+	for (int j = 0; j < n[1]; j++) {
+		double L = n[1] - 2;
+		double yp = j - 1.5;
+		double vx = uMax * 4 / (L*L)*(L*yp - yp * yp);
+		double vy = 0.0;
+		Vec3d v = { vx, vy, 0.0 };
+		F.setVelBC(0, j, v);
+		F.setDensBC(n[1], j, 1.0);
+	}
 
-void calcInitSpeed(int _x, int _y, double& vx, double& vy){
-    double L = ny - 2;
-    double yp = _y - 1.5;
-    vx = uMax*4/(L*L)*(L*yp - yp*yp);
-    vy = 0.0;
-}
+	for (int j = 0; j < n[1]; j++)
+	for (int i = 0; i < n[0]; i++) {
+		double rhoInit = 0.0;
+		Vec3d vInit = { 0.08, 0.0, 0.0 };
+		int id = F.GetCell(i, j);
+		F.c[id]->setInitCond(rhoInit, vInit);
+	}
 
-
-int main(int argc, char **argv) {
-/*
-    int obsX = ny/2;
-    int obsY = ny/2 + 3;
-
-    Fluid F;
-    F.setTau(1.0);
-    F.D->setBoundary(true, true, false, false);
-    F.setObstacle(obsX, obsY, radius);
-    
-    for (int j = 0; j < F.D->ny; j++){
-        double vx, vy;
-        calcInitSpeed(0,j,vx,vy);
-        F.setVelBC(0,j,vx,vy);
-        F.setDensBC(nx-1,j,1.0);
-    }
-    */
-    Fluid F;
-    F.setInitCond(1.0, 0.08, 0.0);
-    //F.solve(1000, "Resultado");
+	F.solve(10000, "resultado");
 
 }

@@ -2,36 +2,69 @@
 #define _LATTICE_H
 
 #include <vector>
+#include "Math.h"
 
 class Lattice {
 public:
-    
+
 	//Lattice Constructor:
-	Lattice(int _nx=100, int _ny=100, double _dx=1.0, double _dt=1.0) : nx(_nx), ny(_ny), dx(_dx), dt(_dt) {};
+	Lattice(Vec3i _index, Vec3i _dim, double _cs, double _tau) {
+		isSolid = false;
+		Index = _index;
+		dim   = _dim;
+		cs    = _cs;
+		tau   = _tau;
+
+		//Neighbor node:
+		for (int k = 0; k < Q; k++) {
+			Vec3i nNode;
+			nNode[0] = Index[0] + cx[k];
+			nNode[1] = Index[1] + cy[k];
+			nNode[2] = 0;
+			if (nNode[0] == -1)	nNode[0] = dim[0] - 1;
+			if (nNode[0] == dim[0])	nNode[0] = 0;
+			if (nNode[1] == -1)	nNode[1] = dim[1] - 1;
+			if (nNode[1] == dim[1])	nNode[1] = 0;
+			if (nNode[2] == -1)	nNode[2] = dim[2] - 1;
+			if (nNode[2] == dim[2])	nNode[2] = 0;
+
+			nQ.reserve(Q);
+			nQ.push_back(nNode[0] + nNode[1] * dim[0] + nNode[2] * dim[0] * dim[1]);
+		}
+	}
 
 	// Methods Declaration;
-	int MapGrid(int i, int j);
-	int MapFunction(int i, int j, int k);
-	void setBoundary(bool _Top, bool _Bottom, bool _Left, bool _Right);
+	double Density();
+	void Velocity(Vec3d& _vel);
+	double setEqFun(double _rho, Vec3d& _vel, int k);
+	void setInitCond(double _rho, Vec3d& _vel);
 
-    // Model constants:
-	int Q = 9;													   	 //Discrete velocities
-	double dx;														 //Lattice spacing
-	double dt;														 //Time step
+	//Parameters:,
+	Vec3i Index;
+	Vec3i dim;
+	Vec3d vel;
+	double cs;
+	double tau;
+	double rho;
+	bool isSolid;
 
-	//Grid Parameters:
-	int nx;
-	int ny;
-	bool Boundary[101*101];
 
-	//Weights:
-	double w0 = 4.0 / 9.0; double ws = 1.0 / 9.0; double wi = 1.0 / 36.0;
-	std::vector<double> w = { w0, ws, ws, ws, ws, wi, wi, wi, wi };			    //Weights:
+	//D2Q9 parameters:
+	int    Q = 9;
+	double w0 = 4.0 / 9.0;
+	double ws = 1.0 / 9.0;
+	double wi = 1.0 / 36.0;
+	std::vector<double> w = { w0, ws, ws, ws, ws, wi, wi, wi, wi };
+	std::vector<int>    cx = { 0, 1, 0, -1, 0, 1, -1, -1, 1 };
+	std::vector<int>    cy = { 0, 0, 1, 0, -1, 1, 1, -1, -1 };
+	std::vector<int>    op = { 0, 3, 4, 1, 2, 7, 8, 5, 6 };
+	std::vector<double> f = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	std::vector<double> fTemp = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	std::vector<int>    nQ;
 
-	//Velocities:
-	std::vector<int> cx    = { 0, 1, 0, -1, 0, 1, -1, -1, 1 };					//X-discrete velocity
-	std::vector<int> cy    = { 0, 0, 1, 0, -1, 1, 1, -1, -1 };					//Y-discrete velocity
-	std::vector<double> uw = { 0,0 };										    //Boundary velocity
+
+
+
 };
 
 #endif // !_LATTICE_H
