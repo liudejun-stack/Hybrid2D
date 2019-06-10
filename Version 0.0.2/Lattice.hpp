@@ -22,7 +22,7 @@ public:
 	//Grid Parameters:
 	int nx;
 	int ny;
-	bool Boundary[101*101];
+	std::vector<bool> Boundary;
 
 	//Weights:
 	double w0 = 4.0 / 9.0; double ws = 1.0 / 9.0; double wi = 1.0 / 36.0;

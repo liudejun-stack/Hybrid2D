@@ -1,6 +1,23 @@
 #include "Fluid.hpp"
 #include <iostream>
 
+void Fluid::initVar(){
+    int lenM = (D->nx+1)*(D->ny+1);
+    int lenF = lenM*D->Q;
+    rho.reserve(lenM); ux.reserve(lenM); uy.reserve(lenM);
+    f.reserve(lenF); fTemp.reserve(lenF);
+    for (int j = 0; j < D->ny; j++)
+    for (int i = 0; i < D->nx; i++){
+        rho.emplace_back(0.0);
+        ux.emplace_back(0.0);
+        uy.emplace_back(0.0);
+        for (int k = 0; k < D->Q; k++){
+            f.emplace_back(0.0);
+            fTemp.emplace_back(0.0);
+        }
+    }
+}
+
 void Fluid::setTau(double _tau) {
     tau = _tau;
 }
@@ -15,6 +32,7 @@ void Fluid::setInitCond(double _rhoInit, double _uxInit, double _uyInit) {
     for (int j = 0; j < D->ny; j++)
     for (int i = 0; i < D->nx; i++){
         int id = D->MapGrid(i,j);
+        if(D->Boundary[id]==isSolid)    continue;
         for (int k = 0; k < D->Q; k++){
             int idf = D->MapFunction(i,j,k);
             f[idf] = setEqFun(_rhoInit, _uxInit, _uyInit, k);
@@ -47,12 +65,14 @@ void Fluid::MacroUpdate() {
     for (int j = 0; j <= D->ny; j++)
     for (int i = 0; i <= D->nx; i++){
         int id = D->MapGrid(i,j);
-        int idf = D->MapFunction(i,j,k);
+        /*
         for (int k = 0; k < D->Q; k++){
+            int idf = D->MapFunction(i,j,k);
             if(std::isnan(f[idf])){
                 f[idf] = 1.0e-12;
             }
         }
+        */
         if (D->Boundary[id]==notSolid) {
             rho[id] = f[D->MapFunction(i,j,0)]+f[D->MapFunction(i,j,1)]+f[D->MapFunction(i,j,2)]+f[D->MapFunction(i,j,3)]+f[D->MapFunction(i,j,4)]+f[D->MapFunction(i,j,5)]+f[D->MapFunction(i,j,6)]+f[D->MapFunction(i,j,7)]+f[D->MapFunction(i,j,8)];
                 

@@ -1,8 +1,8 @@
 #include "Fluid.hpp"
 
 double uMax   = 0.1;
-double Re     = 5;
-int    nx     = 100;
+double Re     = 100;
+int    nx     = 400;
 int    ny     = 100;
 int    radius = ny/20 + 1;
 
@@ -22,24 +22,25 @@ void calcInitSpeed(int _x, int _y, double& vx, double& vy){
 
 
 int main(int argc, char **argv) {
-/*
+
     int obsX = ny/2;
-    int obsY = ny/2 + 3;
+    int obsY = ny/2;
 
     Fluid F;
-    F.setTau(1.0);
+    F.D->nx = nx;
+    F.D->ny = ny;
+    F.setTau(calcVisc());
     F.D->setBoundary(true, true, false, false);
     F.setObstacle(obsX, obsY, radius);
-    
+    F.initVar();
+    F.setInitCond(1.0, 0.08, 0.0);
     for (int j = 0; j < F.D->ny; j++){
         double vx, vy;
         calcInitSpeed(0,j,vx,vy);
         F.setVelBC(0,j,vx,vy);
         F.setDensBC(nx-1,j,1.0);
     }
-    */
-    Fluid F;
-    F.setInitCond(1.0, 0.08, 0.0);
-    //F.solve(1000, "Resultado");
+    F.ZouHeBC();
+    F.solve(10000, "Resultado");
 
 }

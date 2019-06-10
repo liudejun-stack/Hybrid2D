@@ -12,6 +12,7 @@ class Fluid {
 public:
     
 	//Set methods:
+    void initVar();
 	void   setTau(double _tau);
     double setEqFun(double _rho, double _ux, double _uy, int k);				//Equilibrium distribution function
 	void   setInitCond(double _rhoInit, double _uxInit, double _uyInit);		//Initialize distribution functio
@@ -37,20 +38,15 @@ public:
     int vtkCounter = 1;
     bool isSolid = true;
 	bool notSolid = false;
-    
-    //Macroscopic variables:
-    double rhoMacro = 0.0;
-    double uxMacro = 0.0;
-    double uyMacro = 0.0;
 
 	//Macroscopic Variables
-	double rho[101*101];
-	double ux[101 * 101];
-	double uy[101 * 101];
+    std::vector<double> rho;
+    std::vector<double> ux;
+    std::vector<double> uy;
 
 	//Distribution Functions
-	double f[101 * 101 * 9];				//f for initial condition and collision
-	double fTemp[101 * 101 * 9];			//f for steraming and bounce-back 
+	std::vector<double> f;
+    std::vector<double> fTemp;
 };
 
 #endif // !_FLUID_

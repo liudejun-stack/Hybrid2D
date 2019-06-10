@@ -12,9 +12,11 @@ int Lattice::MapFunction(int i, int j, int k)
 
 void Lattice::setBoundary(bool _Top, bool _Bottom, bool _Left, bool _Right)
 {
+	int length = (nx+1)*(ny+1);
+	Boundary.reserve(length);
 	for (int j = 0; j < ny; j++) {
 		for (int i = 0; i < nx; i++) {
-			Boundary[MapGrid(i, j)] = false;
+			Boundary.emplace_back(false);
 		}
 	}
 
