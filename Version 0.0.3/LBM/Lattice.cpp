@@ -1,4 +1,4 @@
-#include "Lattice.h"
+#include "Lattice.hpp"
 
 double Lattice::Density() {
 	if (isSolid)	return 0.0;

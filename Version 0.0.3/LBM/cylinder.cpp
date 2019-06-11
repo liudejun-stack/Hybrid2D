@@ -1,4 +1,4 @@
-#include "Fluid.h"
+#include "Fluid.hpp"
 #include <iostream>
 
 int main() {
@@ -6,7 +6,7 @@ int main() {
 	double uMax = 0.1;
 	double re = 100;
 	Vec3i n = { 400, 100, 1 };
-	int radius = n[0] / 10 + 1;
+	int radius = n[1] / 10 + 1;
 	double dx = 1.0;
 	double dt = 1.0;
 	double nu = uMax * (2 * radius) / re;
@@ -31,7 +31,7 @@ int main() {
 
 	for (int j = 0; j < n[1]; j++)
 	for (int i = 0; i < n[0]; i++) {
-		double rhoInit = 0.0;
+		double rhoInit = 1.0;
 		Vec3d vInit = { 0.08, 0.0, 0.0 };
 		int id = F.GetCell(i, j);
 		F.c[id]->setInitCond(rhoInit, vInit);

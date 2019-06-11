@@ -1,8 +1,8 @@
-#ifndef _LATTICE_H
-#define _LATTICE_H
+#ifndef LATTICE_H
+#define LATTICE_H
 
 #include <vector>
-#include "Math.h"
+#include "Math.hpp"
 
 class Lattice {
 public:

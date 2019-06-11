@@ -1,4 +1,4 @@
-#include "Fluid.h"
+#include "Fluid.hpp"
 
 int Fluid::GetCell(int i, int j) {
 	return i + nDim[0] * j;

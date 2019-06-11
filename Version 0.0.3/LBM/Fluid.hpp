@@ -1,6 +1,6 @@
-#ifndef _FLUID_H
-#define _FLUID_H
-#include "Lattice.h"
+#ifndef FLUID_H
+#define FLUID_H
+#include "Lattice.hpp"
 #include <memory>
 #include <string>
 #include <fstream>
@@ -16,6 +16,7 @@ public:
 		dt = _dt;
 		cs = dx / dt;
 		tau = 3.0*nu*dt / (dx*dx) + 0.5;
+        Ncells = nDim[0]*nDim[1]*nDim[2];
 		
 		for (int k = 0; k < nDim[2]; k++)
 		for (int j = 0; j < nDim[1]; j++)
@@ -44,7 +45,7 @@ public:
 	double cs;
 	double tau;
 	Vec3i nDim;
-	double Ncells = nDim[0] * nDim[1]*nDim[2];
+	double Ncells;
 	std::vector<std::shared_ptr<Lattice>> c;
 	int vtkCounter = 1;
 };
