@@ -32,11 +32,7 @@ int main() {
     for (int j = 0; j < n[1]; j++)
 	for (int i = 0; i < n[0]; i++) {
 		double rhoInit = 1.0;
-<<<<<<< HEAD
 		Vec3d vInit = { 0.1, 0.0, 0.0 };
-=======
-		Vec3d vInit = { 0.08, 0.0, 0.0 };
->>>>>>> 0a3f611cb59ffa7067adf92b5f8a8d64cd2e8eb8
 		int id = F.GetCell(i, j);
 		F.c[id]->setInitCond(rhoInit, vInit);
 	}
