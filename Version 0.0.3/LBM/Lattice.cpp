@@ -1,23 +1,29 @@
-#include "Lattice.h"
+#include "Lattice.hpp"
 
-double Lattice::Density() {
-	if (isSolid)	return 0.0;
-	double rho = 0.0;
-	for (int k = 0; k < Q; k++)	rho += f[k];
-	return rho;
+void Lattice::cellInfo(){
+	std::cout << "Relaxation time: " << tau << std::endl;
+	std::cout << "Lattice speed: " << cs << std::endl;
+	if(Boundary){
+		std::cout << "Solid boundary";
+	}
+	else{
+		std::cout << "Fluid boundary";
+	}
 }
 
-void Lattice::Velocity(Vec3d& _vel) {
-	if (isSolid) {
-		for (int i = 0; i < _vel.size(); i++)	_vel[i] = 0.0;
-	}
-	double rho = Density();
-	for (int k = 0; k < Q; k++) {
-		_vel[0] += f[k] * cx[k];
-		_vel[1] += f[k] * cy[k];
-		_vel[2] = 0.0;
-	}
-	for (int i = 0; i < _vel.size(); i++)	_vel[i] = _vel[i] / rho;
+double Lattice::macroUpdate(Vec3d& _vel)
+{
+    if(Boundary)    return 0.0;
+    double rho = 0.0;
+    _vel = {0.0, 0.0, 0.0};
+    for (int k = 0; k < Q; k++){
+        _vel[0] += f[k]*cx[k];
+        _vel[1] += f[k];
+        rho += f[k];
+    }
+    _vel[0] = _vel[0]/rho;
+    _vel[1] = _vel[1]/rho;
+    return rho;
 }
 
 double Lattice::setEqFun(double _rho, Vec3d& _vel, int k) {

@@ -1,35 +1,35 @@
-#include "Fluid.h"
+#include "Fluid.hpp"
 
 int Fluid::GetCell(int i, int j) {
 	return i + nDim[0] * j;
 }
 
-void Fluid::defGeom(bool _top, bool _bot, bool _left, bool _right) {
+void Fluid::setGeom(bool _top, bool _bot, bool _left, bool _right) {
 	if (_top) {
 		for (int i = 0; i < nDim[0]; i++) {
 			int id = GetCell(i, nDim[1]-1);
-			c[id]->isSolid = true;
+			c[id]->Boundary = isSolid;
 		}
 	}
 
 	if (_bot) {
 		for (int i = 0; i < nDim[0]; i++) {
 			int id = GetCell(i, 0);
-			c[id]->isSolid = true;
+			c[id]->Boundary = isSolid;
 		}
 	}
 
 	if (_left) {
 		for (int j = 0; j < nDim[1]; j++) {
 			int id = GetCell(0, j);
-			c[id]->isSolid = true;
+			c[id]->Boundary = isSolid;
 		}
 	}
 
 	if (_right) {
 		for (int j = 0; j < nDim[1]; j++) {
 			int id = GetCell(nDim[0]-1, j);
-			c[id]->isSolid = true;
+			c[id]->Boundary = isSolid;
 		}
 	}
 }
@@ -41,7 +41,7 @@ void Fluid::setObstacle(int _obsX, int _obsY, int _radius) {
         int cir = (i-_obsX)*(i-_obsX) + (j - _obsY)*(j - _obsY);
         if (cir < (_radius*_radius)) {
 			int id = GetCell(i, j);
-			c[id]->isSolid = true;
+			c[id]->Boundary = isSolid;
         }
     }
 }
@@ -56,44 +56,60 @@ void Fluid::setVelBC(int i, int j, Vec3d& _vel) {
 	c[id]->vel[0] = _vel[0];
 	c[id]->vel[1] = _vel[1];
 }
+/*
+void Fluid::macroUpdate(){
+	for (int i = 0; i < Ncells; i++){
 
+		if(c[i]->Boundary==isFluid){
+			c[i]->rho    = c[i]->f[0] + c[i]->f[1] + c[i]->f[2] + c[i]->f[3] + c[i]->f[4] + c[i]->f[5] + c[i]->f[6] + c[i]->f[7] + c[i]->f[8];
+			c[i]->vel[0] = (c[i]->f[5] + c[i]->f[1] + c[i]->f[8] - c[i]->f[6] - c[i]->f[2] - c[i]->f[7])/c[i]->rho;
+			c[i]->vel[1] = (c[i]->f[5] + c[i]->f[2] + c[i]->f[6] - c[i]->f[7] - c[i]->f[4] - c[i]->f[8])/c[i]->rho;
+		}
+		else{
+			c[i]->rho    = 0.0;
+			c[i]->vel[0] = 0.0;
+			c[i]->vel[1] = 0.0;
+		}
+	}
+}
+*/
 void Fluid::Collision() {
-	double tauInv = dt / tau;
 	for (int i = 0; i < Ncells; i++) {
-		if (c[i]->isSolid)	continue;
-		double rho = c[i]->Density();
-		Vec3d v;  c[i]->Velocity(v);
-		for (int k = 0; k < c[i]->Q; k++) {
+		if (c[i]->Boundary==isSolid)	continue;
+		for (int k = 0; k < c[0]->Q; k++) {
+			Vec3d  v;
+            double rho = c[i]->macroUpdate(v);
 			double EDF = c[i]->setEqFun(rho, v, k);
-			c[i]->f[k] = (1 - tauInv)*c[i]->f[k] + tauInv * EDF;
+			c[i]->f[k] = (1 - omega)*c[i]->f[k] + omega * EDF;
 		}
 	}
 }
 
 void Fluid::BounceBack() {
 	for (int i = 0; i < Ncells; i++) {
-		if (c[i]->isSolid)	continue;
-		for (int k = 0; k < c[i]->Q; k++)	c[i]->fTemp[k] = c[i]->f[k];
-		for (int k = 0; k < c[i]->Q; k++)	c[i]->f[k] = c[i]->fTemp[c[i]->op[k]];
+		if (c[i]->Boundary==isFluid)	continue;
+		for (int k = 0; k < c[0]->Q; k++)	c[i]->fTemp[k] = c[i]->f[k];
+		for (int k = 0; k < c[0]->Q; k++)	c[i]->f[k] = c[i]->fTemp[c[i]->op[k]];
 	}
 }
 
 void Fluid::Stream() {
 	for (int i = 0; i < Ncells; i++) {
-		if (c[i]->isSolid)	continue;
-		for (int k = 0; k < c[i]->Q; k++) {
+		//if (c[id]->Boundary==isSolid)	continue;
+		for (int k = 0; k < c[0]->Q; k++) {
 			c[c[i]->nQ[k]]->fTemp[k] = c[i]->f[k];
 		}
 	}
 
 	for (int i = 0; i < Ncells; i++) {
-		std::vector<double> Ftemp = c[i]->f;
-		c[i]->f = c[i]->fTemp;
-		c[i]->fTemp = Ftemp;
-
-		c[i]->rho = c[i]->Density();
-		c[i]->Velocity(c[i]->vel);
+		for (int k = 0; k < c[0]->Q; k++){
+            c[i]->f[k] = c[i]->fTemp[k];
+        }
 	}
+	
+	for (int i = 0; i < Ncells; i++){
+        c[i]->rho = c[i]->macroUpdate(c[i]->vel);
+    }
 }
 
 void Fluid::writeFVTK(std::string _filename){
@@ -113,7 +129,7 @@ void Fluid::writeFVTK(std::string _filename){
 	Output << "SCALARS Geom float 1\n";
 	Output << "LOOKUP_TABLE default\n";
 	for (int i = 0; i < Ncells; i++) {
-		Output << c[i]->isSolid << "\n";
+		Output << c[i]->Boundary << "\n";
 	}
 
 	Output << "SCALARS Density float 1\n";

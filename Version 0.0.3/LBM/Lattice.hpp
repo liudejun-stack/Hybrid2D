@@ -1,20 +1,22 @@
-#ifndef _LATTICE_H
-#define _LATTICE_H
+#ifndef LATTICE_H
+#define LATTICE_H
 
 #include <vector>
-#include "Math.h"
+#include <iostream>
+#include "Math.hpp"
 
 class Lattice {
 public:
 
 	//Lattice Constructor:
 	Lattice(Vec3i _index, Vec3i _dim, double _cs, double _tau) {
-		isSolid = false;
-		Index = _index;
-		dim   = _dim;
-		cs    = _cs;
-		tau   = _tau;
+		Boundary = false;
+		Index    = _index;
+		dim      = _dim;
+		cs       = _cs;
+		tau      = _tau;
 
+		nQ.reserve(Q);
 		//Neighbor node:
 		for (int k = 0; k < Q; k++) {
 			Vec3i nNode;
@@ -28,26 +30,24 @@ public:
 			if (nNode[2] == -1)	nNode[2] = dim[2] - 1;
 			if (nNode[2] == dim[2])	nNode[2] = 0;
 
-			nQ.reserve(Q);
 			nQ.push_back(nNode[0] + nNode[1] * dim[0] + nNode[2] * dim[0] * dim[1]);
 		}
 	}
 
 	// Methods Declaration;
-	double Density();
-	void Velocity(Vec3d& _vel);
+	void   cellInfo();
+    double   macroUpdate(Vec3d& _vel);
+	void   setInitCond(double _rho, Vec3d& _vel);
 	double setEqFun(double _rho, Vec3d& _vel, int k);
-	void setInitCond(double _rho, Vec3d& _vel);
 
 	//Parameters:,
-	Vec3i Index;
-	Vec3i dim;
-	Vec3d vel;
-	double cs;
-	double tau;
-	double rho;
-	bool isSolid;
-
+	Vec3i  Index;			//index i, j, k 
+	Vec3i  dim;				//Grid size (nx, ny, nz)
+	Vec3d  vel;				//Velocity vector
+	double cs;				//Lattice speed (dx/dt)
+	double tau;				//Relaxation time
+	double rho;				//Cell density
+	bool   Boundary;		//Boundary condition (solid or fluid)	
 
 	//D2Q9 parameters:
 	int    Q = 9;
@@ -61,10 +61,6 @@ public:
 	std::vector<double> f = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	std::vector<double> fTemp = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	std::vector<int>    nQ;
-
-
-
-
 };
 
 #endif // !_LATTICE_H
