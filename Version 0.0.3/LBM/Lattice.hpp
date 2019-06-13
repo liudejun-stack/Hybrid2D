@@ -2,7 +2,10 @@
 #define LATTICE_H
 
 #include <vector>
+<<<<<<< HEAD
 #include <iostream>
+=======
+>>>>>>> 0a3f611cb59ffa7067adf92b5f8a8d64cd2e8eb8
 #include "Math.hpp"
 
 class Lattice {

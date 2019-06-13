@@ -1,5 +1,5 @@
-#ifndef _FLUID_
-#define _FLUID_
+#ifndef FLUID_H
+#define FLUID_H
 
 #include "Lattice.hpp"
 #include <memory>

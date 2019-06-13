@@ -19,8 +19,12 @@ public:
 		cs = dx / dt;
 		tau = 3.0*nu*dt / (dx*dx) + 0.5;
         Ncells = nDim[0]*nDim[1]*nDim[2];
+<<<<<<< HEAD
 
 		c.reserve(Ncells);
+=======
+		
+>>>>>>> 0a3f611cb59ffa7067adf92b5f8a8d64cd2e8eb8
 		for (int k = 0; k < nDim[2]; k++)
 		for (int j = 0; j < nDim[1]; j++)
 		for (int i = 0; i < nDim[0]; i++) {
@@ -46,7 +50,18 @@ public:
 	void writeFVTK(std::string _filename);
 	void solve(int nIter, std::string _filename);
 
+<<<<<<< HEAD
 	//Container for cells
+=======
+	//Variables:
+	double nu;
+	double dx;
+	double dt;
+	double cs;
+	double tau;
+	Vec3i nDim;
+	double Ncells;
+>>>>>>> 0a3f611cb59ffa7067adf92b5f8a8d64cd2e8eb8
 	std::vector<std::shared_ptr<Lattice>> c;
 
 	//Variables:
