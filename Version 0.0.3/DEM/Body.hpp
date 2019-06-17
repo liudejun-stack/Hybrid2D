@@ -3,7 +3,7 @@
 
 class Body{
     public:
-    Body(_mass, _radius, Vec2d _pos, Vec2d _vel, int _id) : 
+    Body(double _mass, double  _radius, Vec2d _pos, Vec2d _vel, int _id) : 
     mass(_mass), radius(_radius), pos(_pos), vel(_vel), id(_id), inertiaMoment(_mass*_mass*_radius*0.5)
     {};
 
