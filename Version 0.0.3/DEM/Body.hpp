@@ -1,6 +1,8 @@
 #ifndef BODY_H
 #define BODY_H
 
+#include "Math.hpp"
+
 class Body{
     public:
     Body(double _mass, double  _radius, Vec2d _pos, Vec2d _vel, int _id) : 

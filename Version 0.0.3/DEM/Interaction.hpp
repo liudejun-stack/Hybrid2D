@@ -28,7 +28,6 @@ class Interaction{
     double phi         = 30;
     double kn          = 1e6;
     double ks          = 0.5e6;
-
 };
 
 #endif //INTERACTION_H
