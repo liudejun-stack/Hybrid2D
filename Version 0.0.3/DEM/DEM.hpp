@@ -16,7 +16,12 @@ class DEM{
     void  outputSVTK(std::string _fileName);
     void  solve(int _nIter, std::string _fileName);
 
-    Vec2d  gravity        = {0, -9.81};
+    //Smart pointers to classes:
+    std::vector<std::shared_ptr<Body>> bodies;
+    std::vector<std::shared_ptr<Interaction>> interactions;
+
+    //Model variables:
+    Vec2d  gravity        = {0.0, -9.81};
     double localDamping   = 0.8;
     double frictionAngle  = 30;
     double borderStifness = 1e6;
