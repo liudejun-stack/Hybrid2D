@@ -13,3 +13,6 @@ Versão 0.0.2:
 - Implementado as condi��es de contorno Zou & He;
 - Implementa��o da fun��o setObstacle;
 - Modifica��o na fun��o de propaga��o;
+
+Versão 0.0.3:
+- Implementação dos headers: body, interaction e DEM para o ciclo de cálculo no método dos elementos discretos (Cundall & Strack, 1979)
