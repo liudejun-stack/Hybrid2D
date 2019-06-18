@@ -9,8 +9,8 @@ class DEM{
     public:
     
     void  addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
-    void  setTimeStep(double _FoS, double _maxMass, double _maxStiffness);
-    void  setBoundary(double _xoLim, double _xfLim, double _yoLim, double _yfLim);
+    void  set_TimeStep(double _FoS, double _maxMass, double _maxStiffness);
+    void  set_Boundary(Vec2i _xLim, Vec2i _yLim);
     Vec2d applyBorderForce(std::shared_ptr<Body> _body);
     void  demCycle();
     void  outputSVTK(std::string _fileName);
@@ -21,6 +21,8 @@ class DEM{
     std::vector<std::shared_ptr<Interaction>> interactions;
 
     //Model variables:
+    Vec2i  xLim = Vec2i::Zero();
+    Vec2i  yLim = Vec2i::Zero();
     Vec2d  gravity        = {0.0, -9.81};
     double localDamping   = 0.8;
     double frictionAngle  = 30;
@@ -28,7 +30,6 @@ class DEM{
     double dt             = 0.0;
     double time           = 0.0;
     int    vtkCounter     = 0;
-
 };
 
 #endif //DEM_H

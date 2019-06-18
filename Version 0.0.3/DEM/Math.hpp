@@ -8,6 +8,9 @@
 template<typename Scalar> using Vector2 = Eigen::Matrix<Scalar, 2, 1>;
 using Vec2d = Vector2<double>;
 
+template<typename Scalar> using Vector2 = Eigen::Matrix<Scalar, 2, 1>;
+using Vec2i = Vector2<int>;
+
 template<typename Scalar> using Vector3 = Eigen::Matrix<Scalar, 3, 1>;
 using Vec3d = Vector3<double>;
 
