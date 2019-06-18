@@ -2,6 +2,8 @@
 #define BODY_H
 
 #include "Math.hpp"
+#include "Interaction.hpp"
+#include <vector>
 
 class Body{
     public:
@@ -14,6 +16,9 @@ class Body{
     double inertiaMoment;                           
     int    id;                                      
 
+    //Smart pointers:
+    std::vector<std::weak_ptr<Interaction>> inter;
+    
     //Vectors:
     Vec2d pos         = Vec2d::Zero();              
     Vec2d vel         = Vec2d::Zero();              
