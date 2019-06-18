@@ -30,6 +30,7 @@ class DEM{
     double dt             = 0.0;
     double time           = 0.0;
     int    vtkCounter     = 0;
+    int    nIter          = 0;
 };
 
 #endif //DEM_H

@@ -67,12 +67,41 @@ void demCycle(){
                 B->force  += Il->shearForce  * Il->unitShear;
                 B->moment += -shearForce * (Il->contact - B->pos).norm();
             }
-        
+        }
+
         //Body and border force:
         B->force += B->mass*gravity;
         B->force += applyBorderForce(B);
 
+        //Calculate accelaration from forces:
+        Vec2d  linAccel = {0.0, 0.0};
+        Vec2d  f        = B->force;
+        double m        = B->moment;
+        double rotAccel = 0.0;
+        int    signV;
+        int    signM;
 
+        for (int i = 0; i < linAccel.size(); i++){
+            if(B->vel[i] > 0)   signV =  1; 
+            if(B->vel[i] < 0)   signV = -1;
+            linAccel[i] = ((f[i] - localDamping*abs(f[i])*signV)/B->mass)*B->BlockedDOFs[i];
         }
+
+        if(B->rotVel > 0)   signM =  1; 
+        if(B->rotVel < 0)   signM = -1;
+        rotAccel = ((m - localDamping*abs(m)*signM)/B->inertiaMoment)*B->BlockedMDOFs;
+
+        //Update velocity and position (LeapFrog method):
+        if(nIter == 0){
+            B->vel    += linAccel*dt*0.5;
+            B->rotVel += rotAccel*dt*0.5; 
+        }
+        else {
+            B->vel    += linAccel*dt;
+            B->rotVel += rotAccel*dt;
+        }
+        B->pos += B->vel*dt;
+        B->rot += B->rotVel*dt;
     }
+    
 }
