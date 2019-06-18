@@ -9,8 +9,8 @@ class Interaction{
 
     //Methods:
     bool checkContact();
-    void calculateUnitVectorandContact();
-    void calculateForceAndShearIncrements(double _dt);
+    void set_UnitVectorandContact();
+    void set_ForceAndShearIncrements(double _dt);
     void applyFrictionLaw();
 
     //Smart pointers:
