@@ -2,8 +2,10 @@
 #define BODY_H
 
 #include "Math.hpp"
-#include "Interaction.hpp"
+#include <memory>
 #include <vector>
+
+class Interaction;
 
 class Body{
     public:

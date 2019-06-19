@@ -17,10 +17,11 @@ void DEM::set_Boundary(Vec2i _xLim, Vec2i _yLim){
 
 Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body){
     //Vectors:
-    Vec2i unitUp    = { 0, 1};
-    Vec2i unitDown  = { 0,-1};
-    Vec2i unitRight = { 1, 0};
-    Vec2i unitLeft  = {-1, 0};
+    Vec2d unitUp    = { 0, 1};
+    Vec2d unitDown  = { 0,-1};
+    Vec2d unitRight = { 1, 0};
+    Vec2d unitLeft  = {-1, 0};
+    Vec2d force     = Vec2d::Zero();
     if(_body->pos[0] < xLim[0]) force += borderStifness*abs(xLim[0] - _body->pos[0])*unitRight;
     if(_body->pos[0] > xLim[1]) force += borderStifness*abs(xLim[1] - _body->pos[0])*unitLeft;
     if(_body->pos[1] < yLim[0]) force += borderStifness*abs(yLim[0] - _body->pos[1])*unitUp;
@@ -28,7 +29,7 @@ Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body){
     return force;
 }
 
-void demCycle(){
+void DEM::demCycle(){
     int bodySize = bodies.size();
     //Contact verification (Brute force method):
     for (int i = 0;   i < bodySize-1; i++)
@@ -60,12 +61,12 @@ void demCycle(){
             if(B->id == iBody1->id){
                 B->force  += -Il->normalForce * Il->unitNormal;
                 B->force  += -Il->shearForce  * Il->unitShear;
-                B->moment += shearForce * (Il->contact - B->pos).norm();
+                B->moment +=  Il->shearForce  * (Il->contact - B->pos).norm();
             }
             if(B->id == iBody2->id){
-                B->force  += Il->normalForce * Il->unitNormal;
-                B->force  += Il->shearForce  * Il->unitShear;
-                B->moment += -shearForce * (Il->contact - B->pos).norm();
+                B->force  +=  Il->normalForce * Il->unitNormal;
+                B->force  +=  Il->shearForce  * Il->unitShear;
+                B->moment += -Il->shearForce  * (Il->contact - B->pos).norm();
             }
         }
 
@@ -84,12 +85,12 @@ void demCycle(){
         for (int i = 0; i < linAccel.size(); i++){
             if(B->vel[i] > 0)   signV =  1; 
             if(B->vel[i] < 0)   signV = -1;
-            linAccel[i] = ((f[i] - localDamping*abs(f[i])*signV)/B->mass)*B->BlockedDOFs[i];
+            linAccel[i] = ((f[i] - localDamping*abs(f[i])*signV)/B->mass)*B->blockedDOFs[i];
         }
 
         if(B->rotVel > 0)   signM =  1; 
         if(B->rotVel < 0)   signM = -1;
-        rotAccel = ((m - localDamping*abs(m)*signM)/B->inertiaMoment)*B->BlockedMDOFs;
+        rotAccel = ((m - localDamping*abs(m)*signM)/B->inertiaMoment)*B->blockedMDOFs;
 
         //Update velocity and position (LeapFrog method):
         if(nIter == 0){
@@ -132,6 +133,6 @@ void DEM::solve(int _nIter, std::string _fileName){
     for (int i = 0; i != _nIter; i++){
         std::cout << "It: " << i << std::endl;
         demCycle();
-        if (i % 100 == 0)   outputSVTK;
+        if (i % 100 == 0)   outputSVTK(_fileName);
     }
 }
