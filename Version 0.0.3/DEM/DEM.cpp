@@ -53,7 +53,7 @@ void demCycle(){
         B->moment = 0.0;
 
         //Contact force
-        for (auto& I : inter){
+        for (auto& I : B->inter){
             auto Il     = I.lock();
             auto iBody1 = Il->body1.lock();
             auto iBody2 = Il->body2.lock();
@@ -103,5 +103,35 @@ void demCycle(){
         B->pos += B->vel*dt;
         B->rot += B->rotVel*dt;
     }
-    
+    interactions.erase(std::remove_if(std::begin(interactions), std::end(interactions), [](std::shared_ptr<Interaction> I) {return !I->checkContact(); }), std::end(interactions));
+	for (auto& B : bodies) {
+		B->inter.erase(std::remove_if(std::begin(B->inter), std::end(B->inter), [](std::weak_ptr<Interaction> I) {return I.expired(); }), std::end(B->inter));
+	}
+
+	++nIter;
+	time += dt;
+}
+
+void DEM::outputSVTK(std::string _fileName){
+    std::ofstream outPut;
+    outPut.open(_fileName + std::to_string(vtkCounter) + ".vtk");
+    outPut << "# vtk DataFile Version 3.0\n";
+    outPut << "DEM\n";
+    outPut << "ASCII\n";
+    outPut << " \n";
+    outPut << "DATASET POLYDATA\n";
+    outPut << "POINTS " << std::to_string((int)bodies.size()) << " float\n";
+    for (auto& B : bodies){
+        outPut << B->pos[0] << " " << B->pos[1] << " " << 0 << std::endl;
+    }
+    outPut.close();
+    vtkCounter++;
+}
+
+void DEM::solve(int _nIter, std::string _fileName){
+    for (int i = 0; i != _nIter; i++){
+        std::cout << "It: " << i << std::endl;
+        demCycle();
+        if (i % 100 == 0)   outputSVTK;
+    }
 }
