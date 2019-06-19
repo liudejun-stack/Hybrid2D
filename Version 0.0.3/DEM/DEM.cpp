@@ -1,5 +1,15 @@
 #include "DEM.hpp"
 
+void DEM::demInfo(){
+    std::cout << "DEM: SIMULATION PARAMETERS" << std::endl;
+    std::cout << "# of added bodies: " << bodies.size() << std::endl;
+    std::cout << "Timestep: " << dt << std::endl;
+    std::cout << "BODY INFO"  << std::endl;
+    std::cout << "Mass" << " " << "Radius" << " " << "Position" << " " << "Velocity" << std::endl;
+    for (auto& B : bodies){
+        std::cout << B->mass << " " << B->radius << " " << B->pos[0] << " " << B->pos[1] << " " << B->vel[0] << " " << B->vel[1] << std::endl;
+    }
+}
 
 void DEM::addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel){
     int _id = bodies.size();

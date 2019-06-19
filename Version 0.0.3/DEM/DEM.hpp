@@ -10,6 +10,7 @@
 class DEM{
     public:
     
+    void  demInfo();
     void  addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
     void  set_TimeStep(double _FoS, double _maxMass, double _maxStiffness);
     void  set_Boundary(Vec2i _xLim, Vec2i _yLim);
