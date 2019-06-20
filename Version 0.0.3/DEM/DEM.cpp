@@ -7,7 +7,7 @@ void DEM::demInfo(){
     std::cout << "BODY INFO"  << std::endl;
     std::cout << "Mass" << " " << "Radius" << " " << "Position" << " " << "Velocity" << std::endl;
     for (auto& B : bodies){
-        std::cout << B->mass << " " << B->radius << " " << B->pos[0] << " " << B->pos[1] << " " << B->vel[0] << " " << B->vel[1] << std::endl;
+        std::cout << B->id << " " << B->mass << " " << B->radius << " " << B->pos[0] << " " << B->pos[1] << " " << B->vel[0] << " " << B->vel[1] << std::endl;
     }
 }
 
@@ -37,6 +37,19 @@ Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body){
     if(_body->pos[1] < yLim[0]) force += borderStifness*abs(yLim[0] - _body->pos[1])*unitUp;
     if(_body->pos[1] > yLim[1]) force += borderStifness*abs(yLim[1] - _body->pos[1])*unitDown;
     return force;
+}
+
+void DEM::demEnergy(){
+    double _kinEnergy = 0.0;
+    double _potEnergy = 0.0;
+    for (auto& B : bodies){
+        double v   = B->vel.norm();
+        double h   = B->pos[1] - yLim[0];
+        _kinEnergy += B->mass*v*v/2;
+        _potEnergy += B->mass*abs(gravity[1])*h;
+    }
+    kinEnergy.push_back(_kinEnergy);
+    potEnergy.push_back(_potEnergy);
 }
 
 void DEM::demCycle(){
@@ -121,6 +134,18 @@ void DEM::demCycle(){
 
 	++nIter;
 	time += dt;
+}
+
+void DEM::outputECSV(int _nIter, std::string _fileName){
+    int j;
+    double t = 0.0;
+    std::ofstream out;
+    out.open(_fileName + ".csv");
+    out << "Time" << " " << "kinEnergy" << " " << "potEnergy" << std::endl;
+    for (int i = 0; i < kinEnergy.size(); ++i){
+        i == 0 ? t = 0.0 : t += dt;
+        out << t << " " << kinEnergy[i] << " " << potEnergy[i] << std::endl;
+    }
 }
 
 void DEM::outputSVTK(std::string _fileName){

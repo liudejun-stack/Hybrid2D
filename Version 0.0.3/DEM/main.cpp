@@ -13,7 +13,9 @@ int main(){
     D.frictionAngle = 30;
     
     for (int i = 0; i != 30000; i++){
+        D.demEnergy();
         D.demCycle();
         if(i%100 == 0)  D.outputSVTK("resultado");
     }
+    D.outputECSV();
 }
