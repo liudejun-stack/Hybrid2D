@@ -155,10 +155,16 @@ void DEM::outputSVTK(std::string _fileName){
     outPut << "DEM\n";
     outPut << "ASCII\n";
     outPut << " \n";
-    outPut << "DATASET POLYDATA\n";
+    outPut << "DATASET UNSTRUCTURED_GRID\n";
     outPut << "POINTS " << std::to_string((int)bodies.size()) << " float\n";
     for (auto& B : bodies){
         outPut << B->pos[0] << " " << B->pos[1] << " " << 0 << std::endl;
+    }
+    outPut << "POINT_DATA " << std::to_string((int)bodies.size()) << std::endl;
+    outPut << "SCALARS radii double\n";
+    outPut << "LOOKUP_TABLE default\n";
+    for (auto& B : bodies){
+        outPut << B->radius << std::endl;
     }
     outPut.close();
     vtkCounter++;
