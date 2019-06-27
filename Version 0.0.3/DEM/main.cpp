@@ -24,5 +24,5 @@ int main(){
         D.demCycle();
         if(i%100 == 0)  D.outputSVTK("resultado");
     }
-    D.outputECSV();
+    D.outputECSV(30000, "Energia");
 }

@@ -32,6 +32,8 @@ class DEM{
     Vec2i  xLim = Vec2i::Zero();
     Vec2i  yLim = Vec2i::Zero();
     Vec2d  gravity        = {0.0, -9.81};
+    double kn             = 1e6;
+    double ks             = 0.5e6;
     double localDamping   = 0.8;
     double frictionAngle  = 30;
     double borderStifness = 1e6;

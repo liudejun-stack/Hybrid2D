@@ -12,6 +12,8 @@ class Body{
     Body(double _mass, double  _radius, Vec2d _pos, Vec2d _vel, int _id) : 
     mass(_mass), radius(_radius), pos(_pos), vel(_vel), id(_id), inertiaMoment(_mass*_mass*_radius*0.5){};
 
+    bool checkInteraction(int _bodyId);
+
     //Body variables:
     double mass;                                                        
     double radius;                                  

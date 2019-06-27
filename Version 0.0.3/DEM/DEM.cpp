@@ -61,7 +61,7 @@ void DEM::demCycle(){
     //Contact verification (Brute force method):
     for (int i = 0;   i < bodySize-1; i++)
     for (int j = i+1; j < bodySize;   j++){
-        if((bodies[i]->pos - bodies[j]->pos).norm() < bodies[i]->radius + bodies[j]->radius){
+        if((bodies[i]->pos - bodies[j]->pos).norm() < (bodies[i]->radius + bodies[j]->radius)){
             interactions.push_back(std::make_shared<Interaction>(bodies[i], bodies[j]));
             bodies[i]->inter.push_back(interactions[interactions.size()-1]);
             bodies[j]->inter.push_back(interactions[interactions.size()-1]);
@@ -71,8 +71,8 @@ void DEM::demCycle(){
     //Loop through interactions:
     for (auto& I : interactions){
         I->set_UnitVectorandContact();
-        I->set_ForceAndShearIncrements(dt);
-        I->applyFrictionLaw();
+        I->set_ForceAndShearIncrements(dt, kn, ks);
+        I->applyFrictionLaw(frictionAngle);
     }
 
     //Force calculation:

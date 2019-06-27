@@ -10,8 +10,8 @@ class Interaction{
     //Methods:
     bool checkContact();
     void set_UnitVectorandContact();
-    void set_ForceAndShearIncrements(double _dt);
-    void applyFrictionLaw();
+    void set_ForceAndShearIncrements(double _dt, double _kn, double _ks);
+    void applyFrictionLaw(double _phi);
 
     //Smart pointers:
     std::weak_ptr<Body> body1;
@@ -23,11 +23,6 @@ class Interaction{
     Vec2d  contact     = Vec2d::Zero();
     double normalForce = 0.0;
     double shearForce  = 0.0;
-
-    //Friction parameters:
-    double phi         = 30;
-    double kn          = 1e6;
-    double ks          = 0.5e6;
 };
 
 #endif //INTERACTION_H

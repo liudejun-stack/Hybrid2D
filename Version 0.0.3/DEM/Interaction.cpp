@@ -19,7 +19,7 @@ void Interaction::set_UnitVectorandContact(){
     contact    = (b1->pos + b2->pos)*0.5;
 }
 
-void Interaction::set_ForceAndShearIncrements(double _dt){
+void Interaction::set_ForceAndShearIncrements(double _dt, double _kn, double _ks){
     auto b1 = body1.lock();
     auto b2 = body2.lock();
 
@@ -29,12 +29,12 @@ void Interaction::set_ForceAndShearIncrements(double _dt){
     double normalIncrement = (RelVel.dot(unitNormal))*_dt;
     double shearIncrement  = (RelVel.dot(unitShear)) *_dt;
 
-    normalForce += kn * normalIncrement;
-    shearForce  += ks * shearIncrement;
+    normalForce += _kn * normalIncrement;
+    shearForce  += _ks * shearIncrement;
 }
 
-void Interaction::applyFrictionLaw(){
-    double maxShearForce = normalForce*tan(phi*M_PI/180);
+void Interaction::applyFrictionLaw(double _phi){
+    double maxShearForce = normalForce*tan(_phi*M_PI/180);
     if(abs(shearForce) > maxShearForce){
         if(shearForce > 0)  shearForce =  maxShearForce;
         if(shearForce < 0)  shearForce = -maxShearForce;
