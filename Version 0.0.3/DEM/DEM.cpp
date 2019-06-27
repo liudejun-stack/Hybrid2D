@@ -36,12 +36,10 @@ Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body){
     Vec2d unitRight = { 1, 0};
     Vec2d unitLeft  = {-1, 0};
     Vec2d force     = Vec2d::Zero();
-    double posX = _body->pos[0] + _body->radius;
-    double posY = _body->pos[1] + _body->radius;
-    if(posX < xLim[0]) force += borderStifness*abs(xLim[0] - posX)*unitRight;
-    if(posX > xLim[1]) force += borderStifness*abs(xLim[1] - posX)*unitLeft;
-    if(posY < yLim[0]) force += borderStifness*abs(yLim[0] - posY)*unitUp;
-    if(posY > yLim[1]) force += borderStifness*abs(yLim[1] - posY)*unitDown;
+    if((_body->pos[0] - _body->radius) < xLim[0]) force += borderStifness*abs(_body->radius - _body->pos[0])*unitRight;
+    if((_body->pos[0] + _body->radius) > xLim[1]) force += borderStifness*abs(_body->radius - (xLim[1] - _body->pos[0]))*unitLeft;
+    if((_body->pos[1] - _body->radius) < yLim[0]) force += borderStifness*abs(_body->radius - _body->pos[1])*unitUp;
+    if((_body->pos[1] + _body->radius) > yLim[1]) force += borderStifness*abs(_body->radius - (yLim[1] - _body->pos[1]))*unitDown;
     return force;
 }
 
