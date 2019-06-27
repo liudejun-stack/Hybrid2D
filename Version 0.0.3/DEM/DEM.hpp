@@ -12,14 +12,13 @@ class DEM{
     
     void  demInfo();
     void  addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
-    void  set_TimeStep(double _FoS, double _maxMass, double _maxStiffness);
+    void  set_TimeStep(double _FoS, double _maxStiffness);
     void  set_Boundary(Vec2i _xLim, Vec2i _yLim);
     Vec2d applyBorderForce(std::shared_ptr<Body> _body);
     void  demEnergy();
     void  demCycle();
     void  outputECSV(int _nIter, std::string _fileName);
     void  outputSVTK(std::string _fileName);
-    void  solve(int _nIter, std::string _fileName);
 
     //Smart pointers to classes:
     std::vector<std::shared_ptr<Body>> bodies;

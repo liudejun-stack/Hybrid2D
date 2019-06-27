@@ -18,9 +18,9 @@ class Interaction{
     std::weak_ptr<Body> body2;
 
     //Variables:
-    Vec2d unitNormal   = Vec2d::Zero();
-    Vec2d unitShear    = Vec2d::Zero();
-    Vec2d contact      = Vec2d::Zero();
+    Vec2d  unitNormal  = Vec2d::Zero();
+    Vec2d  unitShear   = Vec2d::Zero();
+    Vec2d  contact     = Vec2d::Zero();
     double normalForce = 0.0;
     double shearForce  = 0.0;
 

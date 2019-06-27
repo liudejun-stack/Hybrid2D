@@ -16,8 +16,12 @@ void DEM::addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel){
     bodies.push_back(std::make_shared<Body>(_mass, _radius, _pos, _vel, _id));
 }
 
-void DEM::set_TimeStep(double _FoS, double _maxMass, double _maxStiffness){
-    dt = _FoS*std::sqrt(_maxMass/_maxStiffness);
+void DEM::set_TimeStep(double _FoS, double _maxStiffness){
+    double maxMass = 0.0;
+    for (auto& B : bodies){
+        if(B->mass > maxMass)   maxMass = B->mass;
+    }
+    dt = _FoS*std::sqrt(maxMass/_maxStiffness);
 }
 
 void DEM::set_Boundary(Vec2i _xLim, Vec2i _yLim){
@@ -55,7 +59,7 @@ void DEM::demEnergy(){
 }
 
 void DEM::demCycle(){
-    int bodySize = bodies.size();
+    int bodySize = (int)bodies.size();
     //Contact verification (Brute force method):
     for (int i = 0;   i < bodySize-1; i++)
     for (int j = i+1; j < bodySize;   j++){
@@ -172,10 +176,3 @@ void DEM::outputSVTK(std::string _fileName){
     vtkCounter++;
 }
 
-void DEM::solve(int _nIter, std::string _fileName){
-    for (int i = 0; i != _nIter; i++){
-        std::cout << "It: " << i << std::endl;
-        demCycle();
-        if (i % 100 == 0)   outputSVTK(_fileName);
-    }
-}
