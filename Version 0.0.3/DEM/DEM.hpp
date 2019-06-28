@@ -13,7 +13,6 @@ class DEM{
     void  demInfo();
     void  addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
     void  set_TimeStep(double _FoS, double _maxStiffness);
-    void  set_Boundary(Vec2i _xLim, Vec2i _yLim);
     Vec2d applyBorderForce(std::shared_ptr<Body> _body);
     void  demEnergy();
     void  demCycle();
@@ -38,6 +37,7 @@ class DEM{
     double frictionAngle  = 30;
     double borderStifness = 1e6;
     double dt             = 0.0;
+    double dtCrit         = 0.0;
     double time           = 0.0;
     int    vtkCounter     = 0;
     int    nIter          = 0;

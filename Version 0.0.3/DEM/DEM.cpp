@@ -2,12 +2,13 @@
 
 void DEM::demInfo(){
     std::cout << "DEM: SIMULATION PARAMETERS" << std::endl;
+    std::cout << "Critical Timestep " << dtCrit << std::endl;
+    std::cout << "Simulation Timestep: " << dt << std::endl;
     std::cout << "# of added bodies: " << bodies.size() << std::endl;
-    std::cout << "Timestep: " << dt << std::endl;
     std::cout << "BODY INFO"  << std::endl;
     std::cout << "Mass" << " " << "Radius" << " " << "Position" << " " << "Velocity" << std::endl;
     for (auto& B : bodies){
-        std::cout << B->id << " " << B->mass << " " << B->radius << " " << B->pos[0] << " " << B->pos[1] << " " << B->vel[0] << " " << B->vel[1] << std::endl;
+        std::cout << B->id << "  " << B->mass << "  " << B->radius << "  " << B->pos[0] << "  " << B->pos[1] << "  " << B->vel[0] << "  " << B->vel[1] << std::endl;
     }
 }
 
@@ -21,12 +22,9 @@ void DEM::set_TimeStep(double _FoS, double _maxStiffness){
     for (auto& B : bodies){
         if(B->mass > maxMass)   maxMass = B->mass;
     }
-    dt = _FoS*std::sqrt(maxMass/_maxStiffness);
-}
-
-void DEM::set_Boundary(Vec2i _xLim, Vec2i _yLim){
-    xLim = _xLim;
-    yLim = _yLim;
+    ASSERT(maxMass > 0);
+    dtCrit = std::sqrt(maxMass/_maxStiffness)
+    dt     = _FoS*dtCrit;
 }
 
 Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body){
