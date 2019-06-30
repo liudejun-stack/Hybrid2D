@@ -5,14 +5,22 @@
 #include <Eigen/Core>
 
 
-template<typename Scalar> using Vector2 = Eigen::Matrix<Scalar, 2, 1>;
+template<typename Scalar> using Vector2 = Eigen::Matrix<Scalar, 2, 1, Eigen::DontAlign>;
 using Vec2d = Vector2<double>;
 
-template<typename Scalar> using Vector3 = Eigen::Matrix<Scalar, 3, 1>;
+template<typename Scalar> using Vector3 = Eigen::Matrix<Scalar, 3, 1, Eigen::DontAlign>;
 using Vec3d = Vector3<double>;
 
-template<typename Scalar> using Vector3 = Eigen::Matrix<Scalar, 3, 1>;
+template<typename Scalar> using Vector9 = Eigen::Matrix<Scalar, 9, 1, Eigen::DontAlign>;
+using Vec9d = Vector9<double>;
+
+template<typename Scalar> using Vector2 = Eigen::Matrix<Scalar, 2, 1, Eigen::DontAlign>;
+using Vec2i = Vector2<int>;
+
+template<typename Scalar> using Vector3 = Eigen::Matrix<Scalar, 3, 1, Eigen::DontAlign>;
 using Vec3i = Vector3<int>;
+
+
 
 
 #define ASSERT(x) \
