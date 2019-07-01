@@ -34,6 +34,17 @@ void LBM::setBoundary(bool _top, bool _bot, bool _left, bool _right) {
 	}
 }
 
+void LBM::setObstacle(int _obsX, int _obsY, int _radius) {
+	for (int j = 0; j < dim[1]; j++)
+	for (int i = 0; i < dim[0]; i++) {
+		int cir = (i - _obsX) * (i - _obsX) + (j - _obsY) * (j - _obsY);
+		if (cir < _radius * _radius) {
+			int id = getCell(i, j);
+			cells[id]->Boundary = isSolid;
+		}
+	}
+}
+
 void LBM::setinitCond(double _rhoInit, Vec2d _vel) {
 	for (auto& C : cells) {
 		if (C->Boundary == isSolid)	continue;
@@ -52,6 +63,10 @@ void LBM::setvelBC(int i, int j, Vec2d _vel) {
 void LBM::setdenBC(int i, int j, double _rho) {
 	int id = getCell(i, j);
 	cells[id]->rho = _rho;
+}
+
+void LBM::setzouBC() {
+
 }
 
 void LBM::updateMacro() {
@@ -107,7 +122,7 @@ void LBM::stream() {
 	}
 }
 
-void LBM::outputFVTK(int _nIter, std::string _fileName) {
+void LBM::outputFVTK(std::string _fileName) {
 	std::ofstream out;
 	out.open(_fileName + std::to_string(vtkCounter) + ".vtk");
 	out << "# vtk DataFile Version 3.0\n";

@@ -29,16 +29,18 @@ public:
 
 	//Setters:
 	void setBoundary(bool _top, bool _bot, bool _left, bool _right);
+	void setObstacle(int _obsX, int _obsY, int _radius);
 	void setinitCond(double _rhoInit, Vec2d _vel);
 	void setvelBC(int i, int j, Vec2d _vel);
 	void setdenBC(int i, int j, double _rho);
+	void setzouBC();
 
 	//Engine;
 	void updateMacro();
 	void collision();
 	void bounceback();
 	void stream();
-	void outputFVTK(int _nInter, std::string _fileName);
+	void outputFVTK(std::string _fileName);
 
 	std::vector<std::shared_ptr<Lattice>> cells;
 
