@@ -105,14 +105,16 @@ void LBM::updateMacro() {
 	for (auto& C : cells) {
 		if (C->Boundary == isFluid) {
 			C->rho    =  C->f[0] + C->f[1] + C->f[2] + C->f[3] + C->f[4] + C->f[5] + C->f[6] + C->f[7] + C->f[8];
-			C->vel[0] = (C->f[1] + C->f[5] + C->f[8] - C->f[3] - C->f[6] + C->f[7]) / C->rho;
-			C->vel[1] = (C->f[2] + C->f[5] + C->f[6] - C->f[4] - C->f[7] + C->f[8]) / C->rho;
+			C->vel[0] = (C->f[1] + C->f[5] + C->f[8] - C->f[3] - C->f[6] - C->f[7]) / C->rho;
+			C->vel[1] = (C->f[2] + C->f[5] + C->f[6] - C->f[4] - C->f[7] - C->f[8]) / C->rho;
 		}
 		else {
 			C->rho = 0.0;
 			C->vel = Vec2d::Zero();
 		}
-		//std::cout << C->rho << "  " << C->vel[0] << "  " << C->vel[1] << std::endl;
+	}
+	for (auto& C : cells) {
+		std::cout << C->rho << "  " << C->vel[0] << "  " << C->vel[1] << std::endl;
 	}
 }
 
@@ -133,6 +135,7 @@ void LBM::bounceback() {
 		for (int k = 0; k < C->Q; k++)	C->fTemp[k] = C->f[k];
 		for (int k = 0; k < C->Q; k++)	C->f[k] = C->fTemp[C->op[k]];
 	}
+
 }
 
 void LBM::stream() {
@@ -147,6 +150,7 @@ void LBM::stream() {
 	for (auto& C : cells) {
 		for (int k = 0; k < C->Q; k++) {
 			C->f[k] = C->fTemp[k];
+			//std::cout << C->f[k] << std::endl;
 		}
 	}
 }
