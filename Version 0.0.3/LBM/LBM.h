@@ -11,6 +11,7 @@ public:
 	//Constructor:
 	LBM(Vec2d _dim, double _dx, double _dt, double _tau) {
 		dim    = _dim;
+		Ncells = _dim[0] * _dim[1];
 		dx     = _dx;
 		dt     = _dt;
 		tau    = _tau;
@@ -19,8 +20,9 @@ public:
 
 		for (int j = 0; j < _dim[1]; j++)
 		for (int i = 0; i < _dim[0]; i++) {
+			Vec2d index = { i,j };
 			int id = cells.size();
-			cells.emplace_back(std::make_shared<Lattice>(id, cs, _tau));
+			cells.emplace_back(std::make_shared<Lattice>(id, cs, tau, dim, index));
 		}
 	}
 
@@ -41,6 +43,7 @@ public:
 	void bounceback();
 	void stream();
 	void outputFVTK(std::string _fileName);
+	void solver(int _nIter, std::string _fileName);
 
 	std::vector<std::shared_ptr<Lattice>> cells;
 

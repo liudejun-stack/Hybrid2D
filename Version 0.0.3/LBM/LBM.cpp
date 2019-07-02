@@ -66,7 +66,39 @@ void LBM::setdenBC(int i, int j, double _rho) {
 }
 
 void LBM::setzouBC() {
+	double div = 1.0 / 6.0;
+	double aux = 2.0 / 3.0;
+	for (auto& C : cells) {
+		//Prescribed velocity (Left & Right sides)
+		for (int j = 0; j < dim[1]; j++) {
+			if (C->ID == getCell(0, j)) {
+				//Left side:
+				double rho = (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[3] + C->f[6] + C->f[7])) / (1.0 - C->vel[0]);
 
+				C->f[1] = C->f[3] + aux * rho * C->vel[0];
+				C->f[5] = C->f[7] + div * rho * C->vel[0] + 0.5 * rho * C->vel[1] - 0.5 * (C->f[2] - C->f[4]);
+				C->f[8] = C->f[6] + div * rho * C->vel[0] - 0.5 * rho * C->vel[1] + 0.5 * (C->f[2] - C->f[4]);
+			}
+			if (C->ID == getCell(dim[0] - 1, j)) {
+				//Right side:
+				double rho = (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[1] + C->f[5] + C->f[8])) / (1.0 + C->vel[0]);
+
+				C->f[3] = C->f[1] - aux * rho * C->vel[0];
+				C->f[7] = C->f[5] - div * rho * C->vel[0] + 0.5 * (C->f[2] - C->f[4]);
+				C->f[6] = C->f[8] - div * rho * C->vel[0] - 0.5 * (C->f[2] - C->f[4]);
+			}
+		}
+		//Prescribed density
+		for (int j = 0; j < dim[1]; j++) {
+			if (C->ID == getCell(dim[0] - 1, j)) {
+				double vx = -1.0 + (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[1] + C->f[5] + C->f[8])) / C->rho;
+
+				C->f[3] = C->f[1] - aux * C->rho * vx;
+				C->f[7] = C->f[5] - div * C->rho * vx + 0.5 * (C->f[2] + C->f[4]);
+				C->f[6] = C->f[8] - div * C->rho * vx - 0.5 * (C->f[2] + C->f[4]);
+			}
+		}
+	}
 }
 
 void LBM::updateMacro() {
@@ -104,15 +136,12 @@ void LBM::bounceback() {
 }
 
 void LBM::stream() {
-	for (int j = 0; j < dim[1]; j++)
-	for (int i = 0; i < dim[0]; i++)
+	Vec2d index = Vec2d::Zero();
+	for (int i = 0; i < Ncells; i++) 
 	for (int k = 0; k < cells[0]->Q; k++) {
-		int idx_i = (i + cells[0]->cx[k]) % (int)dim[0];
-		int idx_j = (j + cells[0]->cy[k]) % (int)dim[1];
-		int idf = getCell(i, j);
-		int id  = getCell(i, j);
-		cells[idf]->fTemp[k] = cells[id]->f[k];
+		cells[cells[i]->nCell[k]]->fTemp[k] = cells[i]->f[k];
 	}
+	
 
 	//Swap distribution function:
 	for (auto& C : cells) {
@@ -149,5 +178,15 @@ void LBM::outputFVTK(std::string _fileName) {
 	}
 	out.close();
 	vtkCounter++;
+}
+
+void LBM::solver(int _nIter, std::string _fileName) {
+	for (int i = 0; i != _nIter; i++) {
+		std::cout << i << std::endl;
+		collision();
+		bounceback();
+		stream();
+		if (i % 100 == 0)	outputFVTK(_fileName);
+	}
 }
 
