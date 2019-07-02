@@ -3,7 +3,7 @@
 
 double uMax = 0.1;
 double re = 100;
-Vec2d dim = { 100, 100 };
+Vec2d dim = { 400, 100 };
 int radius = (int)dim[1] / 20 + 1;
 int obsX = (int)dim[1] / 2;
 int obsY = (int)dim[1] / 2;
@@ -20,28 +20,19 @@ void calcInitSpeed(int x, int y, Vec2d& _vel) {
 	_vel[1] = 0.0;
 }
 
-int main() {/*
+int main() {
 	double tau = calcVisc();
 	LBM L(dim, 1, 1, tau);
 	L.setBoundary(true, true, false, false);
 	L.setObstacle(obsX, obsY, radius);
-	L.setinitCond(1.0, { 0.08, 0.0 });
 	
 	for (int j = 0; j < dim[1]; j++) {
 		Vec2d vel;
 		calcInitSpeed(0, j, vel);
+		//L.setdenBC(dim[0] - 1, j, 1.0);
 		L.setvelBC(0, j, vel);
 		L.setdenBC(dim[0] - 1, j, 1.0);
 	}
-	L.setzouBC();
-	L.solver(10000, "LBM");
-	*/
-	LBM L(dim, 1, 1, 0.8);
-	L.setBoundary(false, false, false, false);
 	L.setinitCond(1.0, { 0.08, 0.0 });
-	L.updateMacro();
-	//L.collision();
-	//L.bounceback();
-	//L.stream();
-
+	L.solver(10000, "LBM");
 }

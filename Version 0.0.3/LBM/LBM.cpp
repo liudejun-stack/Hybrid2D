@@ -113,9 +113,6 @@ void LBM::updateMacro() {
 			C->vel = Vec2d::Zero();
 		}
 	}
-	for (auto& C : cells) {
-		std::cout << C->rho << "  " << C->vel[0] << "  " << C->vel[1] << std::endl;
-	}
 }
 
 void LBM::collision() {
@@ -135,7 +132,6 @@ void LBM::bounceback() {
 		for (int k = 0; k < C->Q; k++)	C->fTemp[k] = C->f[k];
 		for (int k = 0; k < C->Q; k++)	C->f[k] = C->fTemp[C->op[k]];
 	}
-
 }
 
 void LBM::stream() {
@@ -144,8 +140,6 @@ void LBM::stream() {
 	for (int k = 0; k < cells[0]->Q; k++) {
 		cells[cells[i]->nCell[k]]->fTemp[k] = cells[i]->f[k];
 	}
-	
-
 	//Swap distribution function:
 	for (auto& C : cells) {
 		for (int k = 0; k < C->Q; k++) {
@@ -187,6 +181,7 @@ void LBM::outputFVTK(std::string _fileName) {
 void LBM::solver(int _nIter, std::string _fileName) {
 	for (int i = 0; i != _nIter; i++) {
 		std::cout << i << std::endl;
+		updateMacro();
 		collision();
 		bounceback();
 		stream();

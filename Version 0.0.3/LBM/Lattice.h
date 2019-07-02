@@ -25,7 +25,7 @@ public:
 			if (aux[0] == (int)dim[0])	aux[0] = 0;
 			if (aux[1] == (int)dim[1])	aux[1] = 0;
 
-			nCell[k] = aux[0] + dim[0] * aux[1];
+			nCell.push_back(aux[0] + dim[0] * aux[1]);
 		}
 	}
 
@@ -50,9 +50,12 @@ public:
 	const std::vector<int> cy   = { 0, 0, 1, 0, -1, 1, 1, -1, -1 };
 	const std::vector<int> op   = { 0, 3, 4, 1, 2, 7, 8, 5, 6 };
 	const std::vector<double> w = { 4.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0, 1.0 / 36.0, 1.0 / 36.0, 1.0 / 36.0, 1.0 / 36.0 };
-	Vec9d f      = Vec9d::Zero();
-	Vec9d fTemp  = Vec9d::Zero();
-	Vec9d nCell  = Vec9d::Zero();
+	//Vec9d f      = Vec9d::Zero();
+	//Vec9d fTemp  = Vec9d::Zero();
+	//Vec9d nCell  = Vec9d::Zero();
+	std::vector<double> f = { 0,0,0,0,0,0,0,0,0 };
+	std::vector<double> fTemp = { 0,0,0,0,0,0,0,0,0 };
+	std::vector<double> nCell;
 
 
 };
