@@ -1,18 +1,15 @@
-Versão 0.0.2:
-- Modifica��es na fun��o Collision:
-	| Trocado 1/tau por vari�vel tauInv = dt/tau;
-	| Colis�o da fun��o f e n�o da fTemp;
-	| Modificado os limites de <= para <;
-
-- Modifica��es na fun��o Stream:
-	| Modificado os limites de <= para <;
-	| Ap�s propaga��o trocar as fun��es de distribui��o s�o trocadas;
-
-- Otimiza��o do BounceBack;
-- Implementado m�todos para setar Vel & Den BC;
-- Implementado as condi��es de contorno Zou & He;
-- Implementa��o da fun��o setObstacle;
-- Modifica��o na fun��o de propaga��o;
+﻿Versão 0.0.2:
+- Modificação na função collision;
+- Modificação na função stream;
+- Otimização do Bounce-back;
+- Implementado métodos para setar Vel & Den BC;
+- Implementado as condições de contorno Zou & He;
+- Implementação da função setObstacle;
+- Modificação na função de propagação.
 
 Versão 0.0.3:
-- Implementação dos headers: body, interaction e DEM para o ciclo de cálculo no método dos elementos discretos (Cundall & Strack, 1979)
+- Reprogramação do LBM por meio de ponteiros inteligentes;
+- Programação completa do DEM.
+
+Versão 0.0.4:
+
