@@ -1,4 +1,7 @@
-﻿Versão 0.0.2:
+﻿Versão 0.0.1:
+- Programação inicial do LBM.
+
+Versão 0.0.2:
 - Modificação na função collision;
 - Modificação na função stream;
 - Otimização do Bounce-back;

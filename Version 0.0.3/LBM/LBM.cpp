@@ -69,6 +69,7 @@ void LBM::setzouBC() {
 	double div = 1.0 / 6.0;
 	double aux = 2.0 / 3.0;
 	for (auto& C : cells) {
+		if (C->Boundary == isSolid)	continue;
 		//Prescribed velocity (Left & Right sides)
 		for (int j = 0; j < dim[1]; j++) {
 			if (C->ID == getCell(0, j)) {
@@ -79,6 +80,7 @@ void LBM::setzouBC() {
 				C->f[5] = C->f[7] + div * rho * C->vel[0] + 0.5 * rho * C->vel[1] - 0.5 * (C->f[2] - C->f[4]);
 				C->f[8] = C->f[6] + div * rho * C->vel[0] - 0.5 * rho * C->vel[1] + 0.5 * (C->f[2] - C->f[4]);
 			}
+			/*
 			if (C->ID == getCell(dim[0] - 1, j)) {
 				//Right side:
 				double rho = (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[1] + C->f[5] + C->f[8])) / (1.0 + C->vel[0]);
@@ -87,6 +89,7 @@ void LBM::setzouBC() {
 				C->f[7] = C->f[5] - div * rho * C->vel[0] + 0.5 * (C->f[2] - C->f[4]);
 				C->f[6] = C->f[8] - div * rho * C->vel[0] - 0.5 * (C->f[2] - C->f[4]);
 			}
+			*/
 		}
 		//Prescribed density
 		for (int j = 0; j < dim[1]; j++) {
@@ -135,7 +138,6 @@ void LBM::bounceback() {
 }
 
 void LBM::stream() {
-	Vec2d index = Vec2d::Zero();
 	for (int i = 0; i < Ncells; i++) 
 	for (int k = 0; k < cells[0]->Q; k++) {
 		cells[cells[i]->nCell[k]]->fTemp[k] = cells[i]->f[k];
