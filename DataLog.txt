@@ -1,0 +1,18 @@
+﻿Versão 0.0.1:
+- Programação inicial do LBM.
+
+Versão 0.0.2:
+- Modificação na função collision;
+- Modificação na função stream;
+- Otimização do Bounce-back;
+- Implementado métodos para setar Vel & Den BC;
+- Implementado as condições de contorno Zou & He;
+- Implementação da função setObstacle;
+- Modificação na função de propagação.
+
+Versão 0.0.3:
+- Reprogramação do LBM por meio de ponteiros inteligentes;
+- Programação completa do DEM.
+
+Versão 0.0.4:
+
