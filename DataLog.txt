@@ -15,4 +15,8 @@ Versão 0.0.3:
 - Programação completa do DEM.
 
 Versão 0.0.4:
+- Redefinição de variáveis;
+- adição da função f(r) para o cálculo do força e momento hidrostático (DEM);
+- Adição dos parâmetros solidFraction & solidFunction para calculo de força e momento hidrostático (LBM);
+
 

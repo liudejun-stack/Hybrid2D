@@ -133,7 +133,7 @@ void LBM::bounceback() {
 	for (auto& C : cells) {
 		if (C->Boundary == isFluid)	continue;
 		for (int k = 0; k < C->Q; k++)	C->fTemp[k] = C->f[k];
-		for (int k = 0; k < C->Q; k++)	C->f[k] = C->fTemp[C->op[k]];
+		for (int k = 0; k < C->Q; k++)	C->f[k] = C->fTemp[C->opNode[k]];
 	}
 }
 
