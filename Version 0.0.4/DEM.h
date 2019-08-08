@@ -10,9 +10,8 @@
 class DEM {
 public:
 
-	//setters:
-	void  setTimeStep(double _FoS, double _maxStiffness);
-	void  setBoundary(Vec2i _xLim, Vec2i _yLim);
+	//Constructor:
+	DEM(Vec2d _domainSize) : domainSize(_domainSize) {};
 
 	//Engine:
 	Vec2d applyBorderForce(std::shared_ptr<Body> _body);
@@ -32,8 +31,8 @@ public:
 	std::vector<double> potEnergy;
 
 	//Model variables:
-	Vec2i  xLim = Vec2i::Zero();
-	Vec2i  yLim = Vec2i::Zero();
+	Vec2d  domainSize;
+	Vec2d  domainReference = Vec2d::Zero();
 	Vec2d  gravity = { 0.0, -9.81 };
 	double kn = 1e6;
 	double ks = 0.5e6;

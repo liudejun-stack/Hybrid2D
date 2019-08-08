@@ -18,5 +18,4 @@ void Scene::setTimeStep(double _FoS, double _maxStiffness) {
 	}
 	D.dtCrit = std::sqrt(maxMass / _maxStiffness);
 	D.dt = _FoS * D.dtCrit;
-
 }
