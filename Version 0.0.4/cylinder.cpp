@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+#include <iostream>
+>>>>>>> f2f35b365bc86032c55e2f1f3dbd40ff2c2ddf3c
 #include "Scene.h"
 
 double uMax = 0.1;
@@ -24,6 +28,7 @@ int main() {
 	double tau = calcVisc();
 	
 	Scene S(dim, 1, 1, tau);
+<<<<<<< HEAD
 	//S.addBody(1, 1, { 3,5 }, { 0,0 });
 	S.fluid.setBoundary(true, true, false, false);
 	S.fluid.setObstacle(obsX, obsY, radius);
@@ -36,6 +41,19 @@ int main() {
 	}
 	S.fluid.setzouBC();
 	S.fluid.solver(10000, "LBM");
+=======
+	S.L.setBoundary(true, true, false, false);
+	S.L.setObstacle(obsX, obsY, radius);
+	S.L.setinitCond(1.0, { 0.08, 0.0 });
+	for (int j = 0; j < dim[1]; j++) {
+		Vec2d vel;
+		calcInitSpeed(0, j, vel);
+		S.L.setvelBC(0, j, vel);
+		S.L.setdenBC(dim[0] - 1, j, 1.0);
+	}
+	S.L.setzouBC();
+	S.L.solver(10000, "LBM");
+>>>>>>> f2f35b365bc86032c55e2f1f3dbd40ff2c2ddf3c
 
 	return 0;
 }

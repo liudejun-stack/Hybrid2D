@@ -15,4 +15,7 @@ Versão 0.0.3:
 - Programação completa do DEM.
 
 Versão 0.0.4:
+- Redefinção das variáveis no LBM;
+- Adição da função f(r) para o DEM;
+- Criação da Classe Scene para acoplamento LBM-DEM;
 
