@@ -1,41 +1,33 @@
-/*#include "DEM.h"
-#include "LBM.h"
+/*
+#include "Scene.h"
 
 
 int main() {
 	
-	
-	DEM D;
+	Scene S({ 10,10 }, 1, 1, 1);
 	
 	//Parameters:
-	D.gravity = { 0, -9.81 };
-	D.localDamping = 0;
-	D.frictionAngle = 30;
-	Vec2i xLim = { 0, 10 };
-	Vec2i yLim = { 0, 10 };
+	S.D.gravity = { 0, -9.81 };
+	S.D.localDamping = 0;
+	S.D.frictionAngle = 30;
 
 	//Body addition:
-	D.addBody(1, 0.5, { 5,9 }, { 0,0 });
-	D.addBody(1, 1, { 3,9 }, { 0,0 });
+	S.addBody(1, 1, { 5,9 }, { 0,0 });
+	//S.addBody(1, 1, { 3,9 }, { 0,0 });
 	//D.addBody(1, 0.5, { 7,9 }, { 0,0 });
 
 	//Set simulation:
-	D.setTimeStep(0.5, 1e6);
-	D.setBoundary(xLim, yLim);
+	S.setTimeStep(0.2, 1e6);
+
 
 	//Engine
 	for (int i = 0; i != 30000; i++) {
-		D.demEnergy();
-		D.demCycle();
-		if (i % 100 == 0)  D.outputSVTK("resultado");
+		S.D.demEnergy();
+		S.D.demCycle();
+		if (i % 100 == 0)  S.D.outputSVTK("resultado");
 	}
-	D.outputECSV("Energia");
+	S.D.outputECSV("Energia");
 
-	for (auto& B : D.bodies) {
-		std::cout << B->functionR << std::endl;;
-	}
-	
 	return 0;
-	
 }
 */

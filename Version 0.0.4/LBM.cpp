@@ -119,10 +119,12 @@ void LBM::updateMacro() {
 }
 
 void LBM::collision() {
+	ASSERT(tau > 0.5);
 	for (auto& C : cells) {
 		if (C->Boundary == isSolid)	continue;
 		for (int k = 0; k < C->Q; k++) {
 			double EDF = C->set_eqFun(C->rho, C->vel, k);
+			//C->f[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
 			C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
 			//std::cout << C->f[k] << std::endl;
 		}
@@ -182,7 +184,7 @@ void LBM::outputFVTK(std::string _fileName) {
 
 void LBM::solver(int _nIter, std::string _fileName) {
 	for (int i = 0; i != _nIter; i++) {
-		std::cout << i << std::endl;
+		std::cout << i << "\n";
 		updateMacro();
 		collision();
 		bounceback();

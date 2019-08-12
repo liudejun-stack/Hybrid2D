@@ -1,20 +1,5 @@
 #include "DEM.h"
 
-void DEM::setBoundary(Vec2i _xLim, Vec2i _yLim) {
-	xLim = _xLim;
-	yLim = _yLim;
-}
-
-void DEM::setTimeStep(double _FoS, double _maxStiffness) {
-	double maxMass = 0.0;
-	for (auto& B : bodies) {
-		if (B->mass > maxMass)   maxMass = B->mass;
-	}
-	ASSERT(maxMass > 0);
-	dtCrit = std::sqrt(maxMass / _maxStiffness);
-	dt = _FoS * dtCrit;
-}
-
 Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body) {
 	//Vectors:
 	Vec2d unitUp = { 0, 1 };
@@ -22,10 +7,10 @@ Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body) {
 	Vec2d unitRight = { 1, 0 };
 	Vec2d unitLeft = { -1, 0 };
 	Vec2d force = Vec2d::Zero();
-	if ((_body->pos[0] - _body->radius) < xLim[0]) force += borderStifness * abs(_body->radius - _body->pos[0]) * unitRight;
-	if ((_body->pos[0] + _body->radius) > xLim[1]) force += borderStifness * abs(_body->radius - (xLim[1] - _body->pos[0])) * unitLeft;
-	if ((_body->pos[1] - _body->radius) < yLim[0]) force += borderStifness * abs(_body->radius - _body->pos[1]) * unitUp;
-	if ((_body->pos[1] + _body->radius) > yLim[1]) force += borderStifness * abs(_body->radius - (yLim[1] - _body->pos[1])) * unitDown;
+	if ((_body->pos[0] - _body->radius) < domainReference[0]) force += borderStifness * abs(_body->radius - _body->pos[0]) * unitRight;
+	if ((_body->pos[0] + _body->radius) > domainSize[0]) force += borderStifness * abs(_body->radius - (domainSize[0] - _body->pos[0])) * unitLeft;
+	if ((_body->pos[1] - _body->radius) < domainReference[1]) force += borderStifness * abs(_body->radius - _body->pos[1]) * unitUp;
+	if ((_body->pos[1] + _body->radius) > domainSize[1]) force += borderStifness * abs(_body->radius - (domainSize[1] - _body->pos[1])) * unitDown;
 	return force;
 }
 
@@ -34,7 +19,7 @@ void DEM::demEnergy() {
 	double _potEnergy = 0.0;
 	for (auto& B : bodies) {
 		double v = B->vel.norm();
-		double h = B->pos[1] - yLim[0];
+		double h = B->pos[1] - domainReference[1];
 		_kinEnergy += B->mass * v * v / 2;
 		_potEnergy += B->mass * abs(gravity[1]) * h;
 	}

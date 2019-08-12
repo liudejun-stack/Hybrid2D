@@ -15,14 +15,14 @@ public:
 		dx           = _dx;
 		dt           = _dt;
 		tau          = _tau;
-		tauInv       = _dt / _tau;
+		tauInv       = 1.0 / _tau;
 		latticeSpeed = _dx / _dt;
 
 		for (int j = 0; j < _dim[1]; j++)
 		for (int i = 0; i < _dim[0]; i++) {
-			Vec2d index = { i,j };
+			Vec2d cellPos = { i,j };
 			int id = cells.size();
-			cells.emplace_back(std::make_shared<Lattice>(id, latticeSpeed, tau, dim, index));
+			cells.emplace_back(std::make_shared<Lattice>(id, latticeSpeed, dim, cellPos));
 		}
 	}
 

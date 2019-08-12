@@ -8,17 +8,16 @@
 class Lattice {
 public:
 	//Constructor:
-	Lattice(int _ID, double _latticeSpeed, double _tau, Vec2d _dim, Vec2d _index) {
+	Lattice(int _ID, double _latticeSpeed, Vec2d _dim, Vec2d _cellPos) {
 		latticeSpeed  = _latticeSpeed;
 		ID            = _ID;
-		tau           = _tau;
 		dim           = _dim;
-		index         = _index;
+		cellPos       = _cellPos;
 		solidFraction = 0.0;
 
 		//Set neighbor node
 		for (int k = 0; k < Q; k++) {
-			aux = index + discreteVelocity[k];
+			aux = cellPos + discreteVelocity[k];
 			
 			if (aux[0] == -1)	aux[0] = dim[0] - 1;
 			if (aux[1] == -1)	aux[1] = dim[1] - 1;
@@ -36,11 +35,10 @@ public:
 	//Cell variables:
 	Vec2d  aux;
 	Vec2d  dim;
-	Vec2d  index;
+	Vec2d  cellPos;
 	int    ID;
 	double solidFraction;
 	double latticeSpeed;
-	double tau;
 
 	Vec2d  vel           = Vec2d::Zero();
 	double solidFunction = 0.0;
