@@ -23,10 +23,10 @@ int main() {
 	Timer Time;
 	double tau = calcVisc();
 	Scene S(dim, 1, 1, tau);
-	//S.addBody(1, 1, { 3,5 }, { 0,0 });
 	S.fluid.setBoundary(true, true, false, false);
 	S.fluid.setObstacle(obsX, obsY, radius);
 	S.fluid.setinitCond(1.0, { 0.08, 0.0 });
+	
 	for (int j = 0; j < dim[1]; j++) {
 		Vec2d vel;
 		calcInitSpeed(0, j, vel);
@@ -35,6 +35,6 @@ int main() {
 	}
 	S.fluid.setzouBC();
 	S.fluid.solver(10000, "LBM");
-
+	
 	return 0;
 }

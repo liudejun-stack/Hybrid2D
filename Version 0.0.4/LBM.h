@@ -32,6 +32,7 @@ public:
 	//Setters:
 	void setBoundary(bool _top, bool _bot, bool _left, bool _right);
 	void setObstacle(int _obsX, int _obsY, int _radius);
+	void setSquare(Vec2d _coordInit, Vec2d _coordFinal);
 	void setinitCond(double _rhoInit, Vec2d _vel);
 	void setvelBC(int i, int j, Vec2d _vel);
 	void setdenBC(int i, int j, double _rho);

@@ -40,7 +40,7 @@ private:
 
 
 //Defines:
-#define ASSERT_FLAG 1		//PROBABLY CHANGE THIS FOR BE TURNED OFF IN RELEASE MODE
+#define ASSERT_FLAG 1		//PROBABLY CHANGE THIS TO BE TURNED OFF IN RELEASE MODE
 #if ASSERT_FLAG == 1
 #define ASSERT(x) \
                  if (! (x)) \
