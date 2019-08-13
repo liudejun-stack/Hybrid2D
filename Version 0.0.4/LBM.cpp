@@ -184,7 +184,7 @@ void LBM::outputFVTK(std::string _fileName) {
 
 void LBM::solver(int _nIter, std::string _fileName) {
 	for (int i = 0; i != _nIter; i++) {
-		std::cout << i << "\n";
+		print(i);
 		updateMacro();
 		collision();
 		bounceback();
