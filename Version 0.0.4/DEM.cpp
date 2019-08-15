@@ -29,6 +29,7 @@ void DEM::demEnergy() {
 
 void DEM::demCycle() {
 	int bodySize = (int)bodies.size();
+	ASSERT(bodySize > 0);
 	//Contact verification (Brute force method):
 	for (int i = 0; i < bodySize - 1; i++)
 		for (int j = i + 1; j < bodySize; j++) {

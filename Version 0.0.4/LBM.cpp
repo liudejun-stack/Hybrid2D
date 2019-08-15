@@ -1,8 +1,6 @@
 #include "LBM.h"
 
-int LBM::getCell(int i, int j) {
-	return i + dim[0] * j;
-}
+int LBM::getCell(int i, int j) {return i + dim[0] * j;}
 
 void LBM::setBoundary(bool _top, bool _bot, bool _left, bool _right) {
 	if (_top) {
@@ -45,12 +43,19 @@ void LBM::setObstacle(int _obsX, int _obsY, int _radius) {
 	}
 }
 
+void LBM::setSquare(Vec2d _coordInit, Vec2d _coordFinal) {
+	for (int j = _coordInit[1]; j < _coordFinal[1]; j++)
+	for (int i = _coordInit[0]; i < _coordFinal[0]; i++) {
+		int id = getCell(i, j);
+		cells[id]->Boundary = isSolid;
+	}
+}
+
 void LBM::setinitCond(double _rhoInit, Vec2d _vel) {
 	for (auto& C : cells) {
 		if (C->Boundary == isSolid)	continue;
 		for (int k = 0; k < C->Q; k++) {
 			C->f[k] = C->set_eqFun(_rhoInit, _vel, k);
-			//std::cout << C->f[k] << std::endl;
 		}
 	}
 }
@@ -115,6 +120,7 @@ void LBM::updateMacro() {
 			C->rho = 0.0;
 			C->vel = Vec2d::Zero();
 		}
+		ASSERT(!(std::isnan(C->rho) || std::isnan(C->vel.norm())));
 	}
 }
 
@@ -124,9 +130,10 @@ void LBM::collision() {
 		if (C->Boundary == isSolid)	continue;
 		for (int k = 0; k < C->Q; k++) {
 			double EDF = C->set_eqFun(C->rho, C->vel, k);
-			//C->f[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
-			C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
-			//std::cout << C->f[k] << std::endl;
+			C->solidFunction = (C->solidFraction * (tau - 0.5)) / ((1 - C->solidFraction) + tau - 0.5);
+			ASSERT(C->solidFunction >= 0.0 && C->solidFunction <= 1.0);
+			C->f[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
+			//C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
 		}
 	}
 }
@@ -148,7 +155,6 @@ void LBM::stream() {
 	for (auto& C : cells) {
 		for (int k = 0; k < C->Q; k++) {
 			C->f[k] = C->fTemp[k];
-			//std::cout << C->f[k] << std::endl;
 		}
 	}
 }
@@ -192,4 +198,3 @@ void LBM::solver(int _nIter, std::string _fileName) {
 		if (i % 100 == 0)	outputFVTK(_fileName);
 	}
 }
-
