@@ -130,10 +130,15 @@ void LBM::collision() {
 		if (C->Boundary == isSolid)	continue;
 		for (int k = 0; k < C->Q; k++) {
 			double EDF = C->set_eqFun(C->rho, C->vel, k);
+<<<<<<< HEAD
 			C->solidFunction = (C->solidFraction * (tau - 0.5)) / ((1 - C->solidFraction) + tau - 0.5);
 			ASSERT(C->solidFunction >= 0.0 && C->solidFunction <= 1.0);
 			C->f[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
 			//C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
+=======
+			//C->f[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
+			C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
+>>>>>>> 3aa013c6578e08f47f83e2c2d9c64f8ec3f73e4e
 		}
 	}
 }

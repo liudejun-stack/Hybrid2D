@@ -35,10 +35,14 @@ int main() {
 		S.fluid.setdenBC(dim[0] - 1, j, 1.0);
 	}
 	S.fluid.setzouBC();
+<<<<<<< HEAD
 	//S.setSolidFraction();
 	//S.fluid.solver(10000, "LBM");
 	S.solve("LBM", 10000);
 	//print(S.particle.bodies[0]->functionR);
+=======
+	S.fluid.solver(10000, "LBM");
+>>>>>>> 3aa013c6578e08f47f83e2c2d9c64f8ec3f73e4e
 	
 	return 0;
 }
