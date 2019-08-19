@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include <omp.h>
 
 double uMax = 0.1;
 double re = 5;
@@ -21,6 +22,7 @@ void calcInitSpeed(int x, int y, Vec2d& _vel) {
 
 int main() {
 	Timer Time;
+	/*
 	double tau = calcVisc();
 	Scene S(dim, 1, 1, tau);
 	S.fluid.setBoundary(true, true, false, false);
@@ -35,14 +37,16 @@ int main() {
 		S.fluid.setdenBC(dim[0] - 1, j, 1.0);
 	}
 	S.fluid.setzouBC();
-<<<<<<< HEAD
 	//S.setSolidFraction();
 	//S.fluid.solver(10000, "LBM");
 	S.solve("LBM", 10000);
 	//print(S.particle.bodies[0]->functionR);
-=======
-	S.fluid.solver(10000, "LBM");
->>>>>>> 3aa013c6578e08f47f83e2c2d9c64f8ec3f73e4e
-	
+	*/
+	std::vector<int> teste = { 0,1,2,3,4,5,6,7,8,9 };
+	int sum = 0;
+	for (auto& i : teste) {
+		sum += i;
+	}
+	print(sum);
 	return 0;
 }
