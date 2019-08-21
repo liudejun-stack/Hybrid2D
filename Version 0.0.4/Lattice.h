@@ -32,6 +32,9 @@ public:
 	//Methods:
 	double set_eqFun(double _rho, Vec2d _vel, int k);
 
+	friend class LBM;
+	friend class IMB;
+
 	//Cell variables:
 	Vec2d  aux;
 	Vec2d  dim;
@@ -45,6 +48,7 @@ public:
 	double rho           = 0.0;
 	bool   Boundary      = false;
 
+private:
 	//D2Q9 Variables:
 	const int Q = 9;
 	const std::vector<int>    opNode           = { 0, 3, 4, 1, 2, 7, 8, 5, 6 };

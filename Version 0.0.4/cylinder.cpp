@@ -1,8 +1,8 @@
-#include "Scene.h"
-#include <omp.h>
+#include "IMB.h"
+
 
 double uMax = 0.1;
-double re = 5;
+double re = 100;
 Vec2d dim = { 500, 100 };
 int radius = (int)dim[1] / 20 + 1;
 int obsX = (int)dim[1] / 2;
@@ -22,31 +22,25 @@ void calcInitSpeed(int x, int y, Vec2d& _vel) {
 
 int main() {
 	Timer Time;
-	/*
+	
 	double tau = calcVisc();
-	Scene S(dim, 1, 1, tau);
-	S.fluid.setBoundary(true, true, false, false);
-	S.addBody(1, 20, { 50,50 }, { 0,0 });
-	//S.fluid.setObstacle(obsX, obsY, radius);
-	S.fluid.setinitCond(1.0, { 0.08, 0.0 });
+	IMB I(dim, 1, 1, tau);
+	I.fluid.setBoundary(true, true, false, false);
+	I.fluid.setObstacle(obsX, obsY, radius);
+	I.fluid.setinitCond(1.0, { 0.08, 0.0 });
 	
 	for (int j = 0; j < dim[1]; j++) {
 		Vec2d vel;
 		calcInitSpeed(0, j, vel);
-		S.fluid.setvelBC(0, j, vel);
-		S.fluid.setdenBC(dim[0] - 1, j, 1.0);
+		I.fluid.setvelBC(0, j, vel);
+		I.fluid.setdenBC(dim[0] - 1, j, 1.0);
 	}
-	S.fluid.setzouBC();
-	//S.setSolidFraction();
-	//S.fluid.solver(10000, "LBM");
-	S.solve("LBM", 10000);
-	//print(S.particle.bodies[0]->functionR);
-	*/
-	std::vector<int> teste = { 0,1,2,3,4,5,6,7,8,9 };
-	int sum = 0;
-	for (auto& i : teste) {
-		sum += i;
-	}
-	print(sum);
+	 I.fluid.setzouBC();
+	//I.setSolidFraction();
+	//I.fluid.solver(10000, "LBM");
+	I.solve("LBM", 10000);
+	//print(I.particle.bodies[0]->functionR);
+	
+	
 	return 0;
 }
