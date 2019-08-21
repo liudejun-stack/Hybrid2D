@@ -26,7 +26,9 @@ int main() {
 	double tau = calcVisc();
 	IMB I(dim, 1, 1, tau);
 	I.fluid.setBoundary(true, true, false, false);
-	I.fluid.setObstacle(obsX, obsY, radius);
+	//I.fluid.setObstacle(obsX, obsY, radius);
+	I.addBody(1, 10, { 5,5 }, { 0,0 });
+	I.setTimeStep(0.3, 1e6);
 	I.fluid.setinitCond(1.0, { 0.08, 0.0 });
 	
 	for (int j = 0; j < dim[1]; j++) {
@@ -41,6 +43,8 @@ int main() {
 	I.solve("LBM", 10000);
 	//print(I.particle.bodies[0]->functionR);
 	
+
+
 	
 	return 0;
 }

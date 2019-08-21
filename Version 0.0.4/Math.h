@@ -14,7 +14,6 @@ using Vec3d = Vector3<double>;
 
 template<typename Type> void print(Type value) { std::cout << value << "\n"; }
 
-
 //Classes
 class Timer {
 public:
