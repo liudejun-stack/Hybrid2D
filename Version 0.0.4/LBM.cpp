@@ -32,6 +32,15 @@ void LBM::setBoundary(bool _top, bool _bot, bool _left, bool _right) {
 	}
 }
 
+void LBM::setSquare(Vec2d _initPos, double _squareSide) {
+	Vec2d finalPos = _initPos + _squareSide * Vec2d::Ones();
+	for (int j = _initPos[1]; j < finalPos[1]; j++)
+		for (int i = _initPos[0]; i < finalPos[0]; i++) {
+			int id = getCell(i, j);
+			cells[id]->Boundary = isSolid;
+		}
+}
+
 void LBM::setObstacle(int _obsX, int _obsY, int _radius) {
 	for (int j = 0; j < dim[1]; j++)
 	for (int i = 0; i < dim[0]; i++) {
@@ -40,14 +49,6 @@ void LBM::setObstacle(int _obsX, int _obsY, int _radius) {
 			int id = getCell(i, j);
 			cells[id]->Boundary = isSolid;
 		}
-	}
-}
-
-void LBM::setSquare(Vec2d _coordInit, Vec2d _coordFinal) {
-	for (int j = _coordInit[1]; j < _coordFinal[1]; j++)
-	for (int i = _coordInit[0]; i < _coordFinal[0]; i++) {
-		int id = getCell(i, j);
-		cells[id]->Boundary = isSolid;
 	}
 }
 

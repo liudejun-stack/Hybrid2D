@@ -8,12 +8,12 @@
 //Templates:
 template<typename Scalar> using Vector2 = Eigen::Matrix<Scalar, 2, 1, Eigen::DontAlign>;
 using Vec2d = Vector2<double>;
+using Vec2i = Vector2<int>;
 
 template<typename Scalar> using Vector3 = Eigen::Matrix<Scalar, 3, 1, Eigen::DontAlign>;
 using Vec3d = Vector3<double>;
 
 template<typename Type> void print(Type value) { std::cout << value << "\n"; }
-
 
 //Classes
 class Timer {

@@ -72,6 +72,7 @@ void DEM::demCycle() {
 		//Body and border force:
 		B->force += B->mass * gravity;
 		B->force += applyBorderForce(B);
+		B->force += B->forceLBM;
 
 		//Calculate accelaration from forces:
 		Vec2d  linAccel = { 0.0, 0.0 };

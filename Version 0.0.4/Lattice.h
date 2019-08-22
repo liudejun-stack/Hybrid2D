@@ -32,6 +32,9 @@ public:
 	//Methods:
 	double set_eqFun(double _rho, Vec2d _vel, int k);
 
+	friend class LBM;
+	friend class IMB;
+
 	//Cell variables:
 	Vec2d  aux;
 	Vec2d  dim;
@@ -44,6 +47,7 @@ public:
 	double solidFunction = 0.0;
 	double rho           = 0.0;
 	bool   Boundary      = false;
+
 
 	//D2Q9 Variables:
 	const int Q = 9;

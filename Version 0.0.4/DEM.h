@@ -39,7 +39,6 @@ public:
 	double frictionAngle = 30;
 	double borderStifness = 1e6;
 	double dt = 0.0;
-	double dtCrit = 0.0;
 	double time = 0.0;
 	int    vtkCounter = 0;
 	int    nIter = 0;
