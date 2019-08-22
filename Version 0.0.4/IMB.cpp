@@ -6,7 +6,6 @@ void IMB::addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel) {
 	particle.bodies.push_back(std::make_shared<Body>(_mass, _radius, _pos, _vel, id));
 }
 
-<<<<<<< HEAD
 void IMB::setTimeStep(double _FoS, double _kinematicViscosity) {
 	double maxMass = 0.0;
 	double maxStiffness = 0.0;
@@ -19,15 +18,6 @@ void IMB::setTimeStep(double _FoS, double _kinematicViscosity) {
 
 	fluid.dx = std::sqrt((3.0 * particle.dt * _kinematicViscosity) / (fluid.tau - 0.5));
 	print(fluid.dx);
-=======
-void IMB::setTimeStep(double _FoS, double _maxStiffness) {
-	double maxMass = 0.0;
-	for (auto& B : particle.bodies) {
-		if (B->mass > maxMass)	maxMass = B->mass;
-	}
-	particle.dtCrit = std::sqrt(maxMass / _maxStiffness);
-	particle.dt = _FoS * particle.dtCrit;
->>>>>>> bc7dadff60807093e0b9aceeab8a075227273fcb
 	
 	for (auto& C : fluid.cells) {
 		C->latticeSpeed = fluid.dx / particle.dt;
