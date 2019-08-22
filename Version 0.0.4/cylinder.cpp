@@ -26,8 +26,14 @@ int main() {
 	double tau = calcVisc();
 	IMB I(dim, 1, 1, tau);
 	I.fluid.setBoundary(true, true, false, false);
+<<<<<<< HEAD
 	I.fluid.setObstacle(obsX, obsY, radius);
 	I.fluid.setSquare({ 230,50 }, 20);
+=======
+	//I.fluid.setObstacle(obsX, obsY, radius);
+	I.addBody(1, 10, { 5,5 }, { 0,0 });
+	I.setTimeStep(0.3, 1e6);
+>>>>>>> bc7dadff60807093e0b9aceeab8a075227273fcb
 	I.fluid.setinitCond(1.0, { 0.08, 0.0 });
 	
 	for (int j = 0; j < dim[1]; j++) {
@@ -38,9 +44,16 @@ int main() {
 	}
 	 I.fluid.setzouBC();
 	//I.setSolidFraction();
+<<<<<<< HEAD
 	I.fluid.solver(10000, "LBM");
 	//I.solve("LBM", 10000);
 	//print(I.particle.bodies[0]->functionR);
+=======
+	//I.fluid.solver(10000, "LBM");
+	I.solve("LBM", 10000);
+	//print(I.particle.bodies[0]->functionR);
+	
+>>>>>>> bc7dadff60807093e0b9aceeab8a075227273fcb
 
 
 	

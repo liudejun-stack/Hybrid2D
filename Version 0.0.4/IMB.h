@@ -13,7 +13,11 @@ public:
 	void addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
 
 	//Setters
+<<<<<<< HEAD
 	void setTimeStep(double _FoS, double _kinematicViscosity);
+=======
+	void setTimeStep(double _FoS, double _maxStiffness);
+>>>>>>> bc7dadff60807093e0b9aceeab8a075227273fcb
 	void setSolidFraction();
 
 	//Engine

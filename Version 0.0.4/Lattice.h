@@ -48,7 +48,11 @@ public:
 	double rho           = 0.0;
 	bool   Boundary      = false;
 
+<<<<<<< HEAD
 
+=======
+private:
+>>>>>>> bc7dadff60807093e0b9aceeab8a075227273fcb
 	//D2Q9 Variables:
 	const int Q = 9;
 	const std::vector<int>    opNode           = { 0, 3, 4, 1, 2, 7, 8, 5, 6 };
