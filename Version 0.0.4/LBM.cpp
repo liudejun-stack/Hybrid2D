@@ -128,8 +128,14 @@ void LBM::updateMacro() {
 	}
 }
 
+<<<<<<< HEAD
 void LBM::applyForce() {
 	for (auto& C : cells) {
+=======
+void LBM::applyForce(std::string _fileName) {
+	for (auto& C : cells) {
+		Vec2d gravity = { 0.0, -9.81 };
+>>>>>>> abe756dfa78fdb1bfa2edf0439ee9811cba5038e
 		C->sourceForce = C->rho * gravity;
 	}
 }
@@ -140,7 +146,15 @@ void LBM::collision() {
 		if (C->Boundary == isSolid)	continue;
 		Vec2d velAux = C->vel + C->sourceForce * dtLBM / C->rho;
 		for (int k = 0; k < C->Q; k++) {
+<<<<<<< HEAD
 			double EDF = C->set_eqFun(C->rho, velAux, k);
+=======
+			Vec2d velAux = C->vel + C->sourceForce * tau / C->rho;
+			double EDF = C->set_eqFun(C->rho, velAux, k);
+			//C->solidFunction = (C->solidFraction * (tau - 0.5)) / ((1 - C->solidFraction) + tau - 0.5);
+			ASSERT(C->solidFunction >= 0.0 && C->solidFunction <= 1.0);
+			//C->f[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
+>>>>>>> abe756dfa78fdb1bfa2edf0439ee9811cba5038e
 			C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
 		}
 	}

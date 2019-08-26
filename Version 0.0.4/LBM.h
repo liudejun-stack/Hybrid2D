@@ -50,7 +50,11 @@ public:
 	void calculateFluidTimeStep();
 	void setinitCond(double _rhoInit, Vec2d _vel);
 	void updateMacro();
+<<<<<<< HEAD
 	void applyForce();
+=======
+	void applyForce(std::string _fileName);
+>>>>>>> abe756dfa78fdb1bfa2edf0439ee9811cba5038e
 	void collision();
 	void stream();
 	void solver(int _nIter, std::string _fileName);

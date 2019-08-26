@@ -25,12 +25,20 @@ int main() {
 	
 	double tau = calcVisc();
 	IMB I(dim, 1, 1, tau);
+<<<<<<< HEAD
 	I.fluid.setBotSolid();
 	I.fluid.setTopSolid();
 	I.fluid.setCircle({obsX,obsY}, radius);
 
 	I.fluid.setinitCond(1.0, { 0.08, 0.0 });
 	I.fluid.applyForce();
+=======
+	I.fluid.setBoundary(true, true, false, false);
+	I.fluid.setObstacle(obsX, obsY, radius);
+	//I.fluid.setSquare({ 230,50 }, 20);
+	I.fluid.setinitCond(1.0, { 0.08, 0.0 });
+	I.fluid.applyForce("teste");
+>>>>>>> abe756dfa78fdb1bfa2edf0439ee9811cba5038e
 	
 
 	for (int j = 0; j < dim[1]; j++) {
