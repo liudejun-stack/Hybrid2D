@@ -27,22 +27,19 @@ int main() {
 	IMB I(dim, 1, 1, tau);
 	I.fluid.setBoundary(true, true, false, false);
 	I.fluid.setObstacle(obsX, obsY, radius);
-	I.fluid.setSquare({ 230,50 }, 20);
+	//I.fluid.setSquare({ 230,50 }, 20);
 	I.fluid.setinitCond(1.0, { 0.08, 0.0 });
+	I.fluid.applyForce("teste");
 	
+
 	for (int j = 0; j < dim[1]; j++) {
 		Vec2d vel;
 		calcInitSpeed(0, j, vel);
 		I.fluid.setvelBC(0, j, vel);
 		I.fluid.setdenBC(dim[0] - 1, j, 1.0);
 	}
-	 I.fluid.setzouBC();
-	//I.setSolidFraction();
+	I.fluid.setzouBC();
 	I.fluid.solver(10000, "LBM");
-	//I.solve("LBM", 10000);
-	//print(I.particle.bodies[0]->functionR);
 
-
-	
 	return 0;
 }

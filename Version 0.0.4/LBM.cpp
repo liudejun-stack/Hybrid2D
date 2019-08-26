@@ -1,4 +1,5 @@
 #include "LBM.h"
+#include <omp.h>
 
 int LBM::getCell(int i, int j) {return i + dim[0] * j;}
 
@@ -113,7 +114,7 @@ void LBM::setzouBC() {
 void LBM::updateMacro() {
 	for (auto& C : cells) {
 		if (C->Boundary == isFluid) {
-			C->rho    =  C->f[0] + C->f[1] + C->f[2] + C->f[3] + C->f[4] + C->f[5] + C->f[6] + C->f[7] + C->f[8];
+			C->rho    = C->f[0] + C->f[1] + C->f[2] + C->f[3] + C->f[4] + C->f[5] + C->f[6] + C->f[7] + C->f[8];
 			C->vel[0] = latticeSpeed * ((C->f[1] + C->f[5] + C->f[8] - C->f[3] - C->f[6] - C->f[7]) / C->rho);
 			C->vel[1] = latticeSpeed * ((C->f[2] + C->f[5] + C->f[6] - C->f[4] - C->f[7] - C->f[8]) / C->rho);
 		}
@@ -125,16 +126,24 @@ void LBM::updateMacro() {
 	}
 }
 
+void LBM::applyForce(std::string _fileName) {
+	for (auto& C : cells) {
+		Vec2d gravity = { 0.0, -9.81 };
+		C->sourceForce = C->rho * gravity;
+	}
+}
+
 void LBM::collision() {
 	ASSERT(tau > 0.5);
 	for (auto& C : cells) {
 		if (C->Boundary == isSolid)	continue;
 		for (int k = 0; k < C->Q; k++) {
-			double EDF = C->set_eqFun(C->rho, C->vel, k);
-			C->solidFunction = (C->solidFraction * (tau - 0.5)) / ((1 - C->solidFraction) + tau - 0.5);
+			Vec2d velAux = C->vel + C->sourceForce * tau / C->rho;
+			double EDF = C->set_eqFun(C->rho, velAux, k);
+			//C->solidFunction = (C->solidFraction * (tau - 0.5)) / ((1 - C->solidFraction) + tau - 0.5);
 			ASSERT(C->solidFunction >= 0.0 && C->solidFunction <= 1.0);
-			C->f[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
-			//C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
+			//C->f[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
+			C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
 		}
 	}
 }
@@ -152,11 +161,11 @@ void LBM::stream() {
 	for (int k = 0; k < cells[0]->Q; k++) {
 		cells[cells[i]->nCell[k]]->fTemp[k] = cells[i]->f[k];
 	}
+	
 	//Swap distribution function:
-	for (auto& C : cells) {
-		for (int k = 0; k < C->Q; k++) {
-			C->f[k] = C->fTemp[k];
-		}
+	for (auto& C : cells) 
+	for (int k = 0; k < C->Q; k++) {
+		C->f[k] = C->fTemp[k];
 	}
 }
 

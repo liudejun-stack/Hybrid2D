@@ -40,6 +40,7 @@ public:
 
 	//Engine:
 	void updateMacro();
+	void applyForce(std::string _fileName);
 	void collision();
 	void bounceback();
 	void stream();
