@@ -9,8 +9,8 @@ class Lattice {
 public:
 	//Constructor:
 	Lattice(int _ID, double _latticeSpeed, Vec2d _dim, Vec2d _cellPos) {
+		ID = _ID;
 		latticeSpeed  = _latticeSpeed;
-		ID            = _ID;
 		dim           = _dim;
 		cellPos       = _cellPos;
 		solidFraction = 0.0;
@@ -43,12 +43,13 @@ public:
 	double solidFraction;
 	double latticeSpeed;
 
+	Vec2d  sourceForce   = Vec2d::Zero();
 	Vec2d  vel           = Vec2d::Zero();
 	double solidFunction = 0.0;
 	double rho           = 0.0;
 	bool   Boundary      = false;
 
-
+private:
 	//D2Q9 Variables:
 	const int Q = 9;
 	const std::vector<int>    opNode           = { 0, 3, 4, 1, 2, 7, 8, 5, 6 };

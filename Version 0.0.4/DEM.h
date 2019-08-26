@@ -13,13 +13,14 @@ public:
 	DEM(Vec2d _domainSize) : domainSize(_domainSize) {};
 
 	//Engine:
+	void calculateParticleTimeStep(double _FoS);
 	Vec2d applyBorderForce(std::shared_ptr<Body> _body);
-	void  demEnergy();
-	void  demCycle();
+	void calculateEnergy();
+	void demCycle();
 
 	//Output:
-	void  outputECSV(std::string _fileName);
-	void  outputSVTK(std::string _fileName);
+	void energyCSV(std::string _fileName);
+	void particleVTK(std::string _fileName);
 
 	//Smart pointers to classes:
 	std::vector<std::shared_ptr<Body>> bodies;
@@ -42,6 +43,8 @@ public:
 	double time = 0.0;
 	int    vtkCounter = 0;
 	int    nIter = 0;
+
+	double dtDEM;
 };
 
 #endif //DEM_H

@@ -1,5 +1,14 @@
 #include "DEM.h"
 
+void DEM::calculateParticleTimeStep(double _FoS = 0.1) {
+	double minMass = 0.0;
+	for (int i = 0; i < bodies.size(); i++) {
+		if (bodies[i]->mass < bodies[i + 1]->mass)	minMass = bodies[i]->mass;
+		ASSERT(minMass > 0);
+		dtDEM = 2 * _FoS * std::sqrt(minMass / kn);
+	}
+}
+
 Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body) {
 	//Vectors:
 	Vec2d unitUp = { 0, 1 };
@@ -14,7 +23,7 @@ Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body) {
 	return force;
 }
 
-void DEM::demEnergy() {
+void DEM::calculateEnergy() {
 	double _kinEnergy = 0.0;
 	double _potEnergy = 0.0;
 	for (auto& B : bodies) {
@@ -112,7 +121,7 @@ void DEM::demCycle() {
 	time += dt;
 }
 
-void DEM::outputECSV(std::string _fileName) {
+void DEM::energyCSV(std::string _fileName) {
 	int j;
 	double t = 0.0;
 	std::ofstream out;
@@ -124,7 +133,7 @@ void DEM::outputECSV(std::string _fileName) {
 	}
 }
 
-void DEM::outputSVTK(std::string _fileName) {
+void DEM::particleVTK(std::string _fileName) {
 	std::ofstream out;
 	out.open(_fileName + std::to_string(vtkCounter) + ".vtk");
 	out << "# vtk DataFile Version 3.0\n";

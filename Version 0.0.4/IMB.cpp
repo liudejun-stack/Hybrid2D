@@ -81,7 +81,7 @@ void IMB::solve(std::string _fileName, int _nIter) {
 		fluid.bounceback();
 		particle.demCycle();
 		if (i % 100 == 0) {
-			fluid.outputFVTK(_fileName);
+			fluid.fluidVTK(_fileName);
 			particle.outputSVTK("DEM");
 		}
 	}

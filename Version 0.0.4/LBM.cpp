@@ -1,34 +1,33 @@
 #include "LBM.h"
+#include <omp.h>
 
 int LBM::getCell(int i, int j) {return i + dim[0] * j;}
 
-void LBM::setBoundary(bool _top, bool _bot, bool _left, bool _right) {
-	if (_top) {
-		for (int i = 0; i < dim[0]; i++) {
-			int id = getCell(i, dim[1] - 1);
-			cells[id]->Boundary = isSolid;
-		}
+void LBM::setTopSolid() {
+	for (int i = 0; i < dim[0]; i++) {
+		int id = getCell(i, dim[1] - 1);
+		cells[id]->Boundary = isSolid;
 	}
+}
 
-	if (_bot) {
-		for (int i = 0; i < dim[0]; i++) {
-			int id = getCell(i, 0);
-			cells[id]->Boundary = isSolid;
-		}
+void LBM::setBotSolid() {
+	for (int i = 0; i < dim[0]; i++) {
+		int id = getCell(i, 0);
+		cells[id]->Boundary = isSolid;
 	}
+}
 
-	if (_left) {
-		for (int j = 0; j < dim[1]; j++) {
-			int id = getCell(0, j);
-			cells[id]->Boundary = isSolid;
-		}
+void LBM::setRightSolid() {
+	for (int j = 0; j < dim[1]; j++) {
+		int id = getCell(dim[0] - 1, j);
+		cells[id]->Boundary = isSolid;
 	}
+}
 
-	if (_right) {
-		for (int j = 0; j < dim[1]; j++) {
-			int id = getCell(dim[0] - 1, j);
-			cells[id]->Boundary = isSolid;
-		}
+void LBM::setLeftSolid() {
+	for (int j = 0; j < dim[1]; j++) {
+		int id = getCell(0, j);
+		cells[id]->Boundary = isSolid;
 	}
 }
 
@@ -41,22 +40,13 @@ void LBM::setSquare(Vec2d _initPos, double _squareSide) {
 		}
 }
 
-void LBM::setObstacle(int _obsX, int _obsY, int _radius) {
+void LBM::setCircle(Vec2d _center, double _radius) {
 	for (int j = 0; j < dim[1]; j++)
 	for (int i = 0; i < dim[0]; i++) {
-		int cir = (i - _obsX) * (i - _obsX) + (j - _obsY) * (j - _obsY);
+		int cir = (i - _center[0]) * (i - _center[0]) + (j - _center[1]) * (j - _center[1]);
 		if (cir < _radius * _radius) {
 			int id = getCell(i, j);
 			cells[id]->Boundary = isSolid;
-		}
-	}
-}
-
-void LBM::setinitCond(double _rhoInit, Vec2d _vel) {
-	for (auto& C : cells) {
-		if (C->Boundary == isSolid)	continue;
-		for (int k = 0; k < C->Q; k++) {
-			C->f[k] = C->set_eqFun(_rhoInit, _vel, k);
 		}
 	}
 }
@@ -110,10 +100,23 @@ void LBM::setzouBC() {
 	}
 }
 
+void LBM::calculateFluidTimeStep() {
+	dtLBM = (tau - 0.5) * (dx * dx / kinViscosity) * (1.0 / 3.0);
+}
+
+void LBM::setinitCond(double _rhoInit, Vec2d _vel) {
+	for (auto& C : cells) {
+		if (C->Boundary == isSolid)	continue;
+		for (int k = 0; k < C->Q; k++) {
+			C->f[k] = C->set_eqFun(_rhoInit, _vel, k);
+		}
+	}
+}
+
 void LBM::updateMacro() {
 	for (auto& C : cells) {
 		if (C->Boundary == isFluid) {
-			C->rho    =  C->f[0] + C->f[1] + C->f[2] + C->f[3] + C->f[4] + C->f[5] + C->f[6] + C->f[7] + C->f[8];
+			C->rho    = C->f[0] + C->f[1] + C->f[2] + C->f[3] + C->f[4] + C->f[5] + C->f[6] + C->f[7] + C->f[8];
 			C->vel[0] = latticeSpeed * ((C->f[1] + C->f[5] + C->f[8] - C->f[3] - C->f[6] - C->f[7]) / C->rho);
 			C->vel[1] = latticeSpeed * ((C->f[2] + C->f[5] + C->f[6] - C->f[4] - C->f[7] - C->f[8]) / C->rho);
 		}
@@ -125,16 +128,20 @@ void LBM::updateMacro() {
 	}
 }
 
+void LBM::applyForce() {
+	for (auto& C : cells) {
+		C->sourceForce = C->rho * gravity;
+	}
+}
+
 void LBM::collision() {
 	ASSERT(tau > 0.5);
 	for (auto& C : cells) {
 		if (C->Boundary == isSolid)	continue;
+		Vec2d velAux = C->vel + C->sourceForce * dtLBM / C->rho;
 		for (int k = 0; k < C->Q; k++) {
-			double EDF = C->set_eqFun(C->rho, C->vel, k);
-			C->solidFunction = (C->solidFraction * (tau - 0.5)) / ((1 - C->solidFraction) + tau - 0.5);
-			ASSERT(C->solidFunction >= 0.0 && C->solidFunction <= 1.0);
-			C->f[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
-			//C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
+			double EDF = C->set_eqFun(C->rho, velAux, k);
+			C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
 		}
 	}
 }
@@ -152,15 +159,15 @@ void LBM::stream() {
 	for (int k = 0; k < cells[0]->Q; k++) {
 		cells[cells[i]->nCell[k]]->fTemp[k] = cells[i]->f[k];
 	}
+	
 	//Swap distribution function:
-	for (auto& C : cells) {
-		for (int k = 0; k < C->Q; k++) {
-			C->f[k] = C->fTemp[k];
-		}
+	for (auto& C : cells) 
+	for (int k = 0; k < C->Q; k++) {
+		C->f[k] = C->fTemp[k];
 	}
 }
 
-void LBM::outputFVTK(std::string _fileName) {
+void LBM::fluidVTK(std::string _fileName) {
 	std::ofstream out;
 	out.open(_fileName + std::to_string(vtkCounter) + ".vtk");
 	out << "# vtk DataFile Version 3.0\n";
@@ -196,6 +203,20 @@ void LBM::solver(int _nIter, std::string _fileName) {
 		collision();
 		bounceback();
 		stream();
-		if (i % 100 == 0)	outputFVTK(_fileName);
+		if (i % 100 == 0)	fluidVTK(_fileName);
+	}
+}
+
+void LBM::c_collision() {
+	for (auto& C : cells) {
+		if (C->Boundary == isSolid)	continue;
+		Vec2d velAux = C->vel + C->sourceForce * dtLBM / C->rho;
+		for (int k = 0; k < C->Q; k++) {
+			C->solidFunction = (C->solidFraction * (tau - 0.5)) / ((1 - C->solidFraction) + tau - 0.5);
+			ASSERT(C->solidFunction >= 0.0 && C->solidFunction <= 1.0);
+			double EDF = 
+			C->fTemp[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
+		}
+		for (int k = 0; k < C->Q; k++)	C->f[k] = std::abs(C->fTemp[k]);
 	}
 }
