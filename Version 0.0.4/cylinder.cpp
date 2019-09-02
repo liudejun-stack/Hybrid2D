@@ -1,8 +1,8 @@
-
-#include "IMB.h"
+/*
+#include "LBM.h"
 
 double uMax = 0.1;
-double re = 100;
+double re = 5;
 Vec2d dim = { 500, 100 };
 double radius = dim[1] / 20 + 1;
 double obsX = dim[1] / 2;
@@ -44,5 +44,7 @@ int main() {
 	L.setzouBC();
 	L.solver(10000, "LBM");
 
+
 	return 0;
 }
+*/

@@ -11,7 +11,7 @@ public:
 
 	//Engine:
 	void addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
-	void calculateParticleTimeStep(double _FoS, double _minMass, double _maxStifness);
+	void calculateParticleTimeStep(double _FoS);
 	Vec2d applyBorderForce(std::shared_ptr<Body> _body);
 	void calculateEnergy();
 	void demCycle();

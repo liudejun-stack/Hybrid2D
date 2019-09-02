@@ -126,8 +126,8 @@ void LBM::updateMacro() {
 	for (auto& C : cells) {
 		if (C->node == isFluid) {
 			C->rho    = C->f[0] + C->f[1] + C->f[2] + C->f[3] + C->f[4] + C->f[5] + C->f[6] + C->f[7] + C->f[8];
-			C->vel[0] = latticeSpeed * ((C->f[1] + C->f[5] + C->f[8] - C->f[3] - C->f[6] - C->f[7]) / C->rho);
-			C->vel[1] = latticeSpeed * ((C->f[2] + C->f[5] + C->f[6] - C->f[4] - C->f[7] - C->f[8]) / C->rho);
+			C->vel[0] = latticeSpeed * ((C->f[1] + C->f[5] + C->f[8] - C->f[3] - C->f[6] - C->f[7]) / C->rho) + (C->sourceForce[0] * dtLBM / (2 * C->rho));
+			C->vel[1] = latticeSpeed * ((C->f[2] + C->f[5] + C->f[6] - C->f[4] - C->f[7] - C->f[8]) / C->rho) + (C->sourceForce[1] * dtLBM / (2 * C->rho));
 		}
 		else {
 			C->rho = 0.0;
@@ -148,10 +148,10 @@ void LBM::collision() {
 	double tauInv = 1.0 / tau;
 	for (auto& C : cells) {
 		if (C->node == isSolid)	continue;
-		Vec2d velAux = C->vel + C->sourceForce * dtLBM / C->rho;
 		for (int k = 0; k < C->Q; k++) {
-			double EDF = C->set_eqFun(C->rho, velAux, k);
-			C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
+			double EDF = C->set_eqFun(C->rho, C->vel, k);
+			double source = C->set_sourceTerm(tau, dtLBM, k);
+			C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF + source;
 		}
 	}
 }

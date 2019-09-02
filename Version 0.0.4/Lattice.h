@@ -31,6 +31,7 @@ public:
 
 	//Methods:
 	double set_eqFun(double _rho, Vec2d _vel, int k);
+	double set_sourceTerm(double& _tau, double _dt, int k);
 
 	friend class LBM;
 	friend class IMB;

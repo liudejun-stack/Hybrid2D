@@ -5,9 +5,13 @@ void DEM::addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel) {
 	bodies.push_back(std::make_shared<Body>(_mass, _radius, _pos, _vel, id));
 }
 
-void DEM::calculateParticleTimeStep(double _FoS, double _minMass, double _maxStifness) {
-	
-	dtDEM = 2 * _FoS * std::sqrt(_minMass / _maxStifness);
+void DEM::calculateParticleTimeStep(double _FoS) {
+	double minMass = 1.0;
+	for (auto& B : bodies) {
+		if (B->mass < minMass)	minMass = B->mass;
+	}
+	ASSERT(minMass > 0);
+	dtDEM = _FoS * std::sqrt(minMass / kn);
 }
 
 Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body) {

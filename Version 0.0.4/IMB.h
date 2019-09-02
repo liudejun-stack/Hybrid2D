@@ -9,18 +9,14 @@ public:
 	//Constructor:
 	IMB() : fluid(), particle() {};
 
-	//Preparação de cenário;
-	void addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
-
-	//Setters
-	void setSolidFraction();
-
 	//Engine
-	void calculateHydroForce();
-	void solve(std::string _fileName, int _nIter);
+	void calculateTimeStep();
+	void calculateSolidFraction();
+	void calculateForceAndTorque();
 
 	LBM fluid;
 	DEM particle;
+	double dt;
 
 };
 

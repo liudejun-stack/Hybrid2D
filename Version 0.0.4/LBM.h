@@ -26,9 +26,6 @@ public:
 	void setzouBC();
 	void bounceback();
 
-	//Output:
-	void fluidVTK(std::string _fileName);
-
 	//LBM Engine:
 	void initializeCells();
 	void calculateFluidTimeStep();
@@ -41,6 +38,9 @@ public:
 
 	//Coupling Engine:
 	void c_collision();
+
+	//Output:
+	void fluidVTK(std::string _fileName);
 
 	std::vector<std::shared_ptr<Lattice>> cells;
 
