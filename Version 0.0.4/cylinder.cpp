@@ -1,4 +1,4 @@
-/*
+
 #include "IMB.h"
 
 double uMax = 0.1;
@@ -46,4 +46,3 @@ int main() {
 
 	return 0;
 }
-*/

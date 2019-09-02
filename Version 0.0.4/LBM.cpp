@@ -6,28 +6,28 @@ int LBM::getCell(int i, int j) {return i + dim[0] * j;}
 void LBM::setTopSolid() {
 	for (int i = 0; i < dim[0]; i++) {
 		int id = getCell(i, dim[1] - 1);
-		cells[id]->Boundary = isSolid;
+		cells[id]->node = isSolid;
 	}
 }
 
 void LBM::setBotSolid() {
 	for (int i = 0; i < dim[0]; i++) {
 		int id = getCell(i, 0);
-		cells[id]->Boundary = isSolid;
+		cells[id]->node = isSolid;
 	}
 }
 
 void LBM::setRightSolid() {
 	for (int j = 0; j < dim[1]; j++) {
 		int id = getCell(dim[0] - 1, j);
-		cells[id]->Boundary = isSolid;
+		cells[id]->node = isSolid;
 	}
 }
 
 void LBM::setLeftSolid() {
 	for (int j = 0; j < dim[1]; j++) {
 		int id = getCell(0, j);
-		cells[id]->Boundary = isSolid;
+		cells[id]->node = isSolid;
 	}
 }
 
@@ -36,7 +36,7 @@ void LBM::setSquare(Vec2d _initPos, double _squareSide) {
 	for (int j = _initPos[1]; j < finalPos[1]; j++)
 		for (int i = _initPos[0]; i < finalPos[0]; i++) {
 			int id = getCell(i, j);
-			cells[id]->Boundary = isSolid;
+			cells[id]->node = isSolid;
 		}
 }
 
@@ -46,7 +46,7 @@ void LBM::setCircle(Vec2d _center, double _radius) {
 		int cir = (i - _center[0]) * (i - _center[0]) + (j - _center[1]) * (j - _center[1]);
 		if (cir < _radius * _radius) {
 			int id = getCell(i, j);
-			cells[id]->Boundary = isSolid;
+			cells[id]->node = isSolid;
 		}
 	}
 }
@@ -65,7 +65,7 @@ void LBM::setzouBC() {
 	double div = 1.0 / 6.0;
 	double aux = 2.0 / 3.0;
 	for (auto& C : cells) {
-		if (C->Boundary == isSolid)	continue;
+		if (C->node == isSolid)	continue;
 		//Prescribed velocity (Left & Right sides)
 		for (int j = 0; j < dim[1]; j++) {
 			if (C->ID == getCell(0, j)) {
@@ -115,7 +115,7 @@ void LBM::initializeCells() {
 
 void LBM::setinitCond(double _rhoInit, Vec2d _vel) {
 	for (auto& C : cells) {
-		if (C->Boundary == isSolid)	continue;
+		if (C->node == isSolid)	continue;
 		for (int k = 0; k < C->Q; k++) {
 			C->f[k] = C->set_eqFun(_rhoInit, _vel, k);
 		}
@@ -124,7 +124,7 @@ void LBM::setinitCond(double _rhoInit, Vec2d _vel) {
 
 void LBM::updateMacro() {
 	for (auto& C : cells) {
-		if (C->Boundary == isFluid) {
+		if (C->node == isFluid) {
 			C->rho    = C->f[0] + C->f[1] + C->f[2] + C->f[3] + C->f[4] + C->f[5] + C->f[6] + C->f[7] + C->f[8];
 			C->vel[0] = latticeSpeed * ((C->f[1] + C->f[5] + C->f[8] - C->f[3] - C->f[6] - C->f[7]) / C->rho);
 			C->vel[1] = latticeSpeed * ((C->f[2] + C->f[5] + C->f[6] - C->f[4] - C->f[7] - C->f[8]) / C->rho);
@@ -147,7 +147,7 @@ void LBM::collision() {
 	ASSERT(tau > 0.5);
 	double tauInv = 1.0 / tau;
 	for (auto& C : cells) {
-		if (C->Boundary == isSolid)	continue;
+		if (C->node == isSolid)	continue;
 		Vec2d velAux = C->vel + C->sourceForce * dtLBM / C->rho;
 		for (int k = 0; k < C->Q; k++) {
 			double EDF = C->set_eqFun(C->rho, velAux, k);
@@ -158,7 +158,7 @@ void LBM::collision() {
 
 void LBM::bounceback() {
 	for (auto& C : cells) {
-		if (C->Boundary == isFluid)	continue;
+		if (C->node == isFluid)	continue;
 		for (int k = 0; k < C->Q; k++)	C->fTemp[k] = C->f[k];
 		for (int k = 0; k < C->Q; k++)	C->f[k] = C->fTemp[C->opNode[k]];
 	}
@@ -192,7 +192,7 @@ void LBM::fluidVTK(std::string _fileName) {
 	out << "SCALARS Geometry float 1\n";
 	out << "LOOKUP_TABLE default\n";
 	for (auto& C : cells) {
-		out << C->Boundary << "\n";
+		out << C->node << "\n";
 	}
 	out << "SCALARS Density float 1\n";
 	out << "LOOKUP_TABLE default\n";
@@ -222,7 +222,7 @@ void LBM::c_collision() {
 	ASSERT(tau > 0.5);
 	double tauInv = 1.0 / tau;
 	for (auto& C : cells) {
-		if (C->Boundary == isSolid)	continue;
+		if (C->node == isSolid)	continue;
 		Vec2d velAux = C->vel + C->sourceForce * dtLBM / C->rho;
 		for (int k = 0; k < C->Q; k++) {
 			C->solidFunction = (C->solidFraction * (tau - 0.5)) / ((1 - C->solidFraction) + tau - 0.5);

@@ -43,11 +43,11 @@ public:
 	double solidFraction;
 	double latticeSpeed;
 
-	Vec2d  sourceForce   = Vec2d::Zero();
-	Vec2d  vel           = Vec2d::Zero();
+	Vec2d sourceForce   = Vec2d::Zero();
+	Vec2d vel           = Vec2d::Zero();
 	double solidFunction = 0.0;
 	double rho           = 0.0;
-	bool   Boundary      = false;
+	int node = 0;
 
 private:
 	//D2Q9 Variables:

@@ -1,4 +1,4 @@
-
+/*
 #include "DEM.h"
 
 
@@ -28,3 +28,4 @@ int main() {
 
 	return 0;
 }
+*/

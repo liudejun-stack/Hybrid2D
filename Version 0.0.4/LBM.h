@@ -51,8 +51,9 @@ public:
 	double tau          = 1.0;
 	double latticeSpeed = 1.0;
 	double kinViscosity = 1.0;
-	bool isFluid        = false;
-	bool isSolid        = true;
+	int isFluid = 0;
+	int isSolid = 1;
+	int fluidSolidInteraction = 2;
 	int vtkCounter      = 0;
 
 };

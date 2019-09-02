@@ -20,7 +20,7 @@ void IMB::setSolidFraction() {
 				double distanceSurface = distanceCenter - B->radius;
 				C->solidFraction = -distanceSurface + B->functionR;
 			}
-			if (C->Boundary == true)	C->solidFraction = 1.0;
+			if (C->node == 1)	C->solidFraction = 1.0;
 			if (C->solidFraction < 0.0)	C->solidFraction = 0.0;
 			if (C->solidFraction > 1.0)	C->solidFraction = 1.0;
 			ASSERT(C->solidFraction >= 0.0 && C->solidFraction <= 1.0);
