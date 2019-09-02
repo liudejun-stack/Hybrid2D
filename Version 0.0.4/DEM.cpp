@@ -1,12 +1,13 @@
 #include "DEM.h"
 
-void DEM::calculateParticleTimeStep(double _FoS = 0.1) {
-	double minMass = 0.0;
-	for (int i = 0; i < bodies.size(); i++) {
-		if (bodies[i]->mass < bodies[i + 1]->mass)	minMass = bodies[i]->mass;
-		ASSERT(minMass > 0);
-		dtDEM = 2 * _FoS * std::sqrt(minMass / kn);
-	}
+void DEM::addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel) {
+	int id = bodies.size();
+	bodies.push_back(std::make_shared<Body>(_mass, _radius, _pos, _vel, id));
+}
+
+void DEM::calculateParticleTimeStep(double _FoS, double _minMass, double _maxStifness) {
+	
+	dtDEM = 2 * _FoS * std::sqrt(_minMass / _maxStifness);
 }
 
 Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body) {
@@ -52,7 +53,7 @@ void DEM::demCycle() {
 	//Loop through interactions:
 	for (auto& I : interactions) {
 		I->set_UnitVectorandContact();
-		I->set_ForceAndShearIncrements(dt, kn, ks);
+		I->set_ForceAndShearIncrements(dtDEM, kn, ks);
 		I->applyFrictionLaw(frictionAngle);
 	}
 
@@ -101,15 +102,15 @@ void DEM::demCycle() {
 
 		//Update velocity and position (LeapFrog method):
 		if (nIter == 0) {
-			B->vel += linAccel * dt * 0.5;
-			B->rotVel += rotAccel * dt * 0.5;
+			B->vel += linAccel * dtDEM * 0.5;
+			B->rotVel += rotAccel * dtDEM * 0.5;
 		}
 		else {
-			B->vel += linAccel * dt;
-			B->rotVel += rotAccel * dt;
+			B->vel += linAccel * dtDEM;
+			B->rotVel += rotAccel * dtDEM;
 		}
-		B->pos += B->vel * dt;
-		B->rot += B->rotVel * dt;
+		B->pos += B->vel * dtDEM;
+		B->rot += B->rotVel * dtDEM;
 	}
 	//Interaction loss removal
 	interactions.erase(std::remove_if(std::begin(interactions), std::end(interactions), [](std::shared_ptr<Interaction> I) {return !I->checkContact(); }), std::end(interactions));
@@ -118,7 +119,7 @@ void DEM::demCycle() {
 	}
 
 	++nIter;
-	time += dt;
+	time += dtDEM;
 }
 
 void DEM::energyCSV(std::string _fileName) {
@@ -128,7 +129,7 @@ void DEM::energyCSV(std::string _fileName) {
 	out.open(_fileName + ".csv");
 	out << "Time" << " " << "kinEnergy" << " " << "potEnergy" << std::endl;
 	for (int i = 0; i < kinEnergy.size(); ++i) {
-		i == 0 ? t = 0.0 : t += dt;
+		i == 0 ? t = 0.0 : t += dtDEM;
 		out << t << " " << kinEnergy[i] << " " << potEnergy[i] << std::endl;
 	}
 }

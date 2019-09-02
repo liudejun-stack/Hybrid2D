@@ -9,11 +9,9 @@
 class DEM {
 public:
 
-	//Constructor:
-	DEM(Vec2d _domainSize) : domainSize(_domainSize) {};
-
 	//Engine:
-	void calculateParticleTimeStep(double _FoS);
+	void addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
+	void calculateParticleTimeStep(double _FoS, double _minMass, double _maxStifness);
 	Vec2d applyBorderForce(std::shared_ptr<Body> _body);
 	void calculateEnergy();
 	void demCycle();
@@ -31,7 +29,7 @@ public:
 	std::vector<double> potEnergy;
 
 	//Model variables:
-	Vec2d  domainSize;
+	Vec2d  domainSize = Vec2d::Zero();
 	Vec2d  domainReference = Vec2d::Zero();
 	Vec2d  gravity = { 0.0, -9.81 };
 	double kn = 1e6;

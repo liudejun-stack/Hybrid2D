@@ -7,7 +7,7 @@
 class IMB {
 public:
 	//Constructor:
-	IMB(Vec2d _dim) : fluid(), particle(_dim) {};
+	IMB() : fluid(), particle() {};
 
 	//Preparação de cenário;
 	void addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
