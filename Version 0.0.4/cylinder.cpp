@@ -23,24 +23,26 @@ void calcInitSpeed(int x, int y, Vec2d& _vel) {
 int main() {
 	Timer Time;
 	
-	double tau = calcVisc();
-	IMB I(dim, 1, 1, tau);
-	I.fluid.setBotSolid();
-	I.fluid.setTopSolid();
-	I.fluid.setCircle({obsX,obsY}, radius);
+	LBM L;
+	L.tau = calcVisc();
+	L.dim = dim;
+	L.initializeCells();
+	L.setBotSolid();
+	L.setTopSolid();
+	L.setCircle({obsX,obsY}, radius);
 
-	I.fluid.setinitCond(1.0, { 0.08, 0.0 });
-	I.fluid.applyForce();
+	L.setinitCond(1.0, { 0.08, 0.0 });
+	L.applyForce();
 	
 
 	for (int j = 0; j < dim[1]; j++) {
 		Vec2d vel;
 		calcInitSpeed(0, j, vel);
-		I.fluid.setvelBC(0, j, vel);
-		I.fluid.setdenBC(dim[0] - 1, j, 1.0);
+		L.setvelBC(0, j, vel);
+		L.setdenBC(dim[0] - 1, j, 1.0);
 	}
-	I.fluid.setzouBC();
-	I.fluid.solver(10000, "LBM");
+	L.setzouBC();
+	L.solver(10000, "LBM");
 
 	return 0;
 }

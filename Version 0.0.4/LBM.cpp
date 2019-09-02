@@ -104,6 +104,15 @@ void LBM::calculateFluidTimeStep() {
 	dtLBM = (tau - 0.5) * (dx * dx / kinViscosity) * (1.0 / 3.0);
 }
 
+void LBM::initializeCells() {
+	for (int j = 0; j < dim[1]; j++)
+		for (int i = 0; i < dim[0]; i++) {
+			Vec2d cellPos = { i,j };
+			int id = cells.size();
+			cells.emplace_back(std::make_shared<Lattice>(id, latticeSpeed, dim, cellPos));
+		}
+}
+
 void LBM::setinitCond(double _rhoInit, Vec2d _vel) {
 	for (auto& C : cells) {
 		if (C->Boundary == isSolid)	continue;
@@ -136,6 +145,7 @@ void LBM::applyForce() {
 
 void LBM::collision() {
 	ASSERT(tau > 0.5);
+	double tauInv = 1.0 / tau;
 	for (auto& C : cells) {
 		if (C->Boundary == isSolid)	continue;
 		Vec2d velAux = C->vel + C->sourceForce * dtLBM / C->rho;
@@ -155,6 +165,7 @@ void LBM::bounceback() {
 }
 
 void LBM::stream() {
+	double Ncells = dim[0] * dim[1];
 	for (int i = 0; i < Ncells; i++) 
 	for (int k = 0; k < cells[0]->Q; k++) {
 		cells[cells[i]->nCell[k]]->fTemp[k] = cells[i]->f[k];
@@ -208,13 +219,15 @@ void LBM::solver(int _nIter, std::string _fileName) {
 }
 
 void LBM::c_collision() {
+	ASSERT(tau > 0.5);
+	double tauInv = 1.0 / tau;
 	for (auto& C : cells) {
 		if (C->Boundary == isSolid)	continue;
 		Vec2d velAux = C->vel + C->sourceForce * dtLBM / C->rho;
 		for (int k = 0; k < C->Q; k++) {
 			C->solidFunction = (C->solidFraction * (tau - 0.5)) / ((1 - C->solidFraction) + tau - 0.5);
 			ASSERT(C->solidFunction >= 0.0 && C->solidFunction <= 1.0);
-			double EDF = 
+			double EDF = C->set_eqFun(C->rho, velAux, k);
 			C->fTemp[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
 		}
 		for (int k = 0; k < C->Q; k++)	C->f[k] = std::abs(C->fTemp[k]);

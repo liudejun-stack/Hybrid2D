@@ -6,25 +6,6 @@ void IMB::addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel) {
 	particle.bodies.push_back(std::make_shared<Body>(_mass, _radius, _pos, _vel, id));
 }
 
-void IMB::setTimeStep(double _FoS, double _kinematicViscosity) {
-	double maxMass = 0.0;
-	double maxStiffness = 0.0;
-	for (auto& B : particle.bodies) {
-		if (B->mass > maxMass)	maxMass = B->mass;
-		if (particle.kn > maxStiffness)	maxStiffness = particle.kn;
-	}
-	particle.dt = _FoS * std::sqrt(maxMass / maxStiffness);
-	fluid.dt = (1.0 / 3.0) * (fluid.tau - 0.5) * (fluid.dx * fluid.dx / _kinematicViscosity);
-
-	fluid.dx = std::sqrt((3.0 * particle.dt * _kinematicViscosity) / (fluid.tau - 0.5));
-	print(fluid.dx);
-	
-	for (auto& C : fluid.cells) {
-		C->latticeSpeed = fluid.dx / particle.dt;
-	}
-	
-}
-
 void IMB::setSolidFraction() {
 	for (auto& B : particle.bodies) {
 		for (auto& C : fluid.cells) {
@@ -82,7 +63,7 @@ void IMB::solve(std::string _fileName, int _nIter) {
 		particle.demCycle();
 		if (i % 100 == 0) {
 			fluid.fluidVTK(_fileName);
-			particle.outputSVTK("DEM");
+			particle.particleVTK("DEM");
 		}
 	}
 }

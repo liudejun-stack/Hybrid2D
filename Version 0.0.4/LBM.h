@@ -8,23 +8,6 @@
 
 class LBM {
 public:
-	//Constructor:
-	LBM(Vec2d _dim, double _dx, double _dt, double _tau) {
-		dim          = _dim;
-		Ncells       = _dim[0] * _dim[1];
-		dx           = _dx;
-		dtLBM        = _dt;
-		tau          = _tau;
-		tauInv       = 1.0 / _tau;
-		latticeSpeed = _dx / _dt;
-
-		for (int j = 0; j < _dim[1]; j++)
-		for (int i = 0; i < _dim[0]; i++) {
-			Vec2d cellPos = { i,j };
-			int id = cells.size();
-			cells.emplace_back(std::make_shared<Lattice>(id,latticeSpeed, dim, cellPos));
-		}
-	}
 
 	//Getters:
 	int getCell(int i, int j);
@@ -47,6 +30,7 @@ public:
 	void fluidVTK(std::string _fileName);
 
 	//LBM Engine:
+	void initializeCells();
 	void calculateFluidTimeStep();
 	void setinitCond(double _rhoInit, Vec2d _vel);
 	void updateMacro();
@@ -60,19 +44,16 @@ public:
 
 	std::vector<std::shared_ptr<Lattice>> cells;
 
-	Vec2d dim;
-	double dx;
-	double dtLBM;
-	double tau;
-	double Ncells;
-	double latticeSpeed;
-	double tauInv;
-	double kinViscosity;
-
-	Vec2d gravity    = { 0.0, -9.81 };
-	bool  isFluid    = false;
-	bool  isSolid    = true;
-	int   vtkCounter = 0;
+	Vec2d gravity       = { 0.0, -9.81 };
+	Vec2d dim           = Vec2d::Zero();
+	double dx           = 1.0;
+	double dtLBM        = 1.0;
+	double tau          = 1.0;
+	double latticeSpeed = 1.0;
+	double kinViscosity = 1.0;
+	bool isFluid        = false;
+	bool isSolid        = true;
+	int vtkCounter      = 0;
 
 };
 #endif // !LBM_H
