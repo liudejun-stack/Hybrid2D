@@ -15,10 +15,6 @@ public:
 	//Domain:
 	void setCircle(Vec2d _center, double _radius);
 	void setSquare(Vec2d _initPos, double _squareSide);
-	void setTopSolid();
-	void setBotSolid();
-	void setRightSolid();
-	void setLeftSolid();
 
 	//Boundary conditions:
 	void setvelBC(int i, int j, Vec2d _vel);

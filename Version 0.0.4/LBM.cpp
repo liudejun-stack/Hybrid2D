@@ -3,34 +3,6 @@
 
 int LBM::getCell(int i, int j) {return i + dim[0] * j;}
 
-void LBM::setTopSolid() {
-	for (int i = 0; i < dim[0]; i++) {
-		int id = getCell(i, dim[1] - 1);
-		cells[id]->node = isSolid;
-	}
-}
-
-void LBM::setBotSolid() {
-	for (int i = 0; i < dim[0]; i++) {
-		int id = getCell(i, 0);
-		cells[id]->node = isSolid;
-	}
-}
-
-void LBM::setRightSolid() {
-	for (int j = 0; j < dim[1]; j++) {
-		int id = getCell(dim[0] - 1, j);
-		cells[id]->node = isSolid;
-	}
-}
-
-void LBM::setLeftSolid() {
-	for (int j = 0; j < dim[1]; j++) {
-		int id = getCell(0, j);
-		cells[id]->node = isSolid;
-	}
-}
-
 void LBM::setSquare(Vec2d _initPos, double _squareSide) {
 	Vec2d finalPos = _initPos + _squareSide * Vec2d::Ones();
 	for (int j = _initPos[1]; j < finalPos[1]; j++)

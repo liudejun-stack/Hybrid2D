@@ -22,25 +22,37 @@ void IMB::calculateTimeStep() {
 
 void IMB::calculateSolidFraction() {
 	for (auto& B : particle.bodies) {
-		for (auto& C : fluid.cells) {
-			double distanceCenter = std::sqrt((B->pos - C->cellPos).norm());
-			if (distanceCenter >= (B->radius + fluid.dx)) {
-				C->solidFraction = 0.0;
-				C->node = fluid.isFluid;
+		ASSERT(particle.bodies.size() > 0);
+		for (int j = 0; j < fluid.dim[1]; j++) {
+			for (int i = 0; i < fluid.dim[0]; i++) {
+				double cir = (i - B->pos[0]) * (i - B->pos[0]) + (j - B->pos[1]) * (i - B->pos[1]);
+				if (cir <= (B->radius * B->radius)){
+					int id = fluid.getCell(i, j);
+					fluid.cells[id]->node = fluid.isSolid;
+				}
 			}
-			else if (distanceCenter <= (B->radius - fluid.dx)) {
-				C->solidFraction = 1.0;
-				C->node = fluid.isSolid;
-			}
-			else {
-				C->node = fluid.fluidSolidInteraction;
-				double distanceSurface = distanceCenter - B->radius;
-				C->solidFraction = -distanceSurface + B->functionR;
-			}
-			if (C->solidFraction < 0.0)	C->solidFraction = 0.0;
-			if (C->solidFraction > 1.0)	C->solidFraction = 1.0;
-			ASSERT(C->solidFraction >= 0.0 && C->solidFraction <= 1.0);
-			//print(C->solidFraction);
 		}
 	}
 }
+/*
+for (auto& C : fluid.cells) {
+	double distanceCenter = std::sqrt((C->cellPos - B->pos).norm());
+	if (distanceCenter <= B->radius) {
+		/*
+		if (distanceCenter >= B->radius + fluid.dx) {
+			C->solidFraction = 1.0;
+			C->node = fluid.isSolid;
+		}
+		else if (distanceCenter <= B->radius - fluid.dx) {
+			C->solidFraction = 0.0;
+			C->node = fluid.isFluid;
+		}
+		else {
+			double distanceSurface = distanceCenter - B->radius;
+			C->solidFraction = -distanceSurface + B->functionR;
+			C->node = fluid.fluidSolidInteraction;
+		}
+		
+	}
+}
+*/
