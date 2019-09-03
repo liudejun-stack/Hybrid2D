@@ -25,8 +25,8 @@ void IMB::calculateSolidFraction() {
 		ASSERT(particle.bodies.size() > 0);
 		for (int j = 0; j < fluid.dim[1]; j++) {
 			for (int i = 0; i < fluid.dim[0]; i++) {
-				double cir = (i - B->pos[0]) * (i - B->pos[0]) + (j - B->pos[1]) * (i - B->pos[1]);
-				if (cir <= (B->radius * B->radius)){
+				double cir = (i - B->pos[0]) * (i - B->pos[0]) + (j - B->pos[1]) * (j - B->pos[1]);
+				if (cir < (B->radius * B->radius)){
 					int id = fluid.getCell(i, j);
 					fluid.cells[id]->node = fluid.isSolid;
 				}
