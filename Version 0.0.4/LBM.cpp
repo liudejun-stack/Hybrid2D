@@ -3,37 +3,17 @@
 
 int LBM::getCell(int i, int j) {return i + dim[0] * j;}
 
-void LBM::setSquare(Vec2d _initPos, double _squareSide) {
-	Vec2d finalPos = _initPos + _squareSide * Vec2d::Ones();
-	for (int j = _initPos[1]; j < finalPos[1]; j++)
-		for (int i = _initPos[0]; i < finalPos[0]; i++) {
-			int id = getCell(i, j);
-			cells[id]->node = isSolid;
-		}
-}
-
-void LBM::setCircle(Vec2d _center, double _radius) {
-	for (int j = 0; j < dim[1]; j++)
-	for (int i = 0; i < dim[0]; i++) {
-		int cir = (i - _center[0]) * (i - _center[0]) + (j - _center[1]) * (j - _center[1]);
-		if (cir < _radius * _radius) {
-			int id = getCell(i, j);
-			cells[id]->node = isSolid;
-		}
-	}
-}
-
-void LBM::setvelBC(int i, int j, Vec2d _vel) {
+void LBM::set_velBC(int i, int j, Vec2d _vel) {
 	int id = getCell(i, j);
 	cells[id]->vel = _vel;
 }
 
-void LBM::setdenBC(int i, int j, double _rho) {
+void LBM::set_denBC(int i, int j, double _rho) {
 	int id = getCell(i, j);
 	cells[id]->rho = _rho;
 }
 
-void LBM::setzouBC() {
+void LBM::set_zouBC() {
 	double div = 1.0 / 6.0;
 	double aux = 2.0 / 3.0;
 	for (auto& C : cells) {
@@ -85,7 +65,7 @@ void LBM::initializeCells() {
 		}
 }
 
-void LBM::setinitCond(double _rhoInit, Vec2d _vel) {
+void LBM::set_initCond(double _rhoInit, Vec2d _vel) {
 	for (auto& C : cells) {
 		if (C->node == isSolid)	continue;
 		for (int k = 0; k < C->Q; k++) {
@@ -128,7 +108,7 @@ void LBM::collision() {
 	}
 }
 
-void LBM::bounceback() {
+void LBM::set_bounceback() {
 	for (auto& C : cells) {
 		if (C->node == isFluid)	continue;
 		for (int k = 0; k < C->Q; k++)	C->fTemp[k] = C->f[k];
@@ -184,7 +164,7 @@ void LBM::solver(int _nIter, std::string _fileName) {
 		print(i);
 		updateMacro();
 		collision();
-		bounceback();
+		set_bounceback();
 		stream();
 		if (i % 100 == 0)	fluidVTK(_fileName);
 	}

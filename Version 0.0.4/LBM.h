@@ -12,20 +12,16 @@ public:
 	//Getters:
 	int getCell(int i, int j);
 
-	//Domain:
-	void setCircle(Vec2d _center, double _radius);
-	void setSquare(Vec2d _initPos, double _squareSide);
-
 	//Boundary conditions:
-	void setvelBC(int i, int j, Vec2d _vel);
-	void setdenBC(int i, int j, double _rho);
-	void setzouBC();
-	void bounceback();
+	void set_velBC(int i, int j, Vec2d _vel);
+	void set_denBC(int i, int j, double _rho);
+	void set_zouBC();
+	void set_bounceback();
 
 	//LBM Engine:
 	void initializeCells();
 	void calculateFluidTimeStep();
-	void setinitCond(double _rhoInit, Vec2d _vel);
+	void set_initCond(double _rhoInit, Vec2d _vel);
 	void updateMacro();
 	void applyForce();
 	void collision();
