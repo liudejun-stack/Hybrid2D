@@ -9,6 +9,7 @@ public:
 
 	//Scenario prepartion:
 	void addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
+	void set_boundary(Vec2d _domain);
 	void set_circlesSolid();
 	void set_topSolid();
 	void set_botSolid();

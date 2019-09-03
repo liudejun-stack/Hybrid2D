@@ -1,5 +1,11 @@
 #include "Scene.h"
 
+void Scene::set_boundary(Vec2d _domain) {
+	domainSize = _domain;
+	coupling.fluid.dim = _domain;
+	coupling.particle.domainSize = _domain;
+}
+
 void Scene::addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel) {
 	int id = coupling.particle.bodies.size();
 	coupling.particle.bodies.push_back(std::make_shared<Body>(_mass, _radius, _pos, _vel, id));
