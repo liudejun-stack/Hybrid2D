@@ -1,10 +1,5 @@
 #include "Scene.h"
 
-void Scene::set_boundary(Vec2d _domain) {
-	domainSize = _domain;
-	coupling.fluid.dim = _domain;
-	coupling.particle.domainSize = _domain;
-}
 
 void Scene::addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel) {
 	int id = coupling.particle.bodies.size();
@@ -51,4 +46,35 @@ void Scene::set_rightSolid() {
 		int id = coupling.fluid.getCell(domainSize[0] - 1, j);
 		coupling.fluid.cells[id]->node = coupling.fluid.isSolid;
 	}
+}
+
+void Scene::prepareScenario() {
+	//Boundary definition:
+	coupling.fluid.dim = domainSize;
+	coupling.particle.domainSize = domainSize;
+	
+	//Fluid parameters definition:
+	coupling.fluid.tau = relaxationTime;
+	coupling.fluid.kinViscosity = kinViscosity;
+
+	//Particle parameters definition:
+	coupling.particle.factorOfSafety = factorOfSafety;
+	coupling.particle.localDamping = localDamping;
+	coupling.particle.frictionAngle = frictionAngle;
+	coupling.particle.kn = normalStiffness;
+	coupling.particle.ks = shearStiffness;
+
+	//Cell initialization for LBM simualtion:
+	coupling.fluid.initializeCells();
+
+	//Setting solids for LBM simulation:
+	if (top_isSolid)	set_topSolid();
+	if (bot_isSolid)	set_botSolid();
+	if (right_isSolid)	set_rightSolid();
+	if (left_isSolid)	set_rightSolid();
+	if (bodies_isSolid)	set_circlesSolid();
+
+	//Time step calculation:
+	//coupling.calculateTimeStep();
+
 }

@@ -2,9 +2,9 @@
 #include <cmath>
 
 void IMB::calculateTimeStep() {
-	std::cout << fluid.dtLBM << " " << particle.dtDEM << " " << fluid.dx << "\n";
 	fluid.calculateFluidTimeStep();
-	particle.calculateParticleTimeStep(0.1);
+	particle.calculateParticleTimeStep();
+	std::cout << fluid.dtLBM << " " << particle.dtDEM << " " << fluid.dx << "\n";
 	if (particle.dtDEM >= fluid.dtLBM) {
 		particle.dtDEM = fluid.dtLBM;
 		dt = fluid.dtLBM;
