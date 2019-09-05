@@ -177,8 +177,6 @@ void LBM::c_collision() {
 		if (C->node == isSolid)	continue;
 		Vec2d velAux = C->vel + C->sourceForce * dtLBM / C->rho;
 		for (int k = 0; k < C->Q; k++) {
-			C->solidFunction = (C->solidFraction * (tau - 0.5)) / ((1 - C->solidFraction) + tau - 0.5);
-			ASSERT(C->solidFunction >= 0.0 && C->solidFunction <= 1.0);
 			double EDF = C->set_eqFun(C->rho, velAux, k);
 			C->fTemp[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
 		}

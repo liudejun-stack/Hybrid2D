@@ -131,10 +131,10 @@ void DEM::energyCSV(std::string _fileName) {
 	double t = 0.0;
 	std::ofstream out;
 	out.open(_fileName + ".csv");
-	out << "Time" << " " << "kinEnergy" << " " << "potEnergy" << std::endl;
+	out << "Time" << "," << "kinEnergy" << "," << "potEnergy" << std::endl;
 	for (int i = 0; i < kinEnergy.size(); ++i) {
 		i == 0 ? t = 0.0 : t += dtDEM;
-		out << t << " " << kinEnergy[i] << " " << potEnergy[i] << std::endl;
+		out << t << "," << kinEnergy[i] << "," << potEnergy[i] << std::endl;
 	}
 }
 

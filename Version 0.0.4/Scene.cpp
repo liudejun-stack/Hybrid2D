@@ -76,5 +76,4 @@ void Scene::prepareScenario() {
 
 	//Time step calculation:
 	//coupling.calculateTimeStep();
-
 }

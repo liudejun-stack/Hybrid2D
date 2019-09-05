@@ -11,12 +11,11 @@ public:
 
 	//Engine
 	void calculateTimeStep();
-	void calculateSolidFraction();
 	void calculateForceAndTorque();
 
 	LBM fluid;
 	DEM particle;
-	double dt;
+	double dt = 0.0;
 
 };
 
