@@ -16,6 +16,9 @@ public:
 	void set_rightSolid();
 	void prepareScenario();
 
+	//Solver:
+	void moveToNextTimeStep_LBM(int _nIter, std::string _fileName);
+
 	//Geometry parameters:
 	Vec2d domainSize       = Vec2d::Zero();
 	bool top_isSolid       = false;

@@ -24,6 +24,7 @@ void Scene::set_topSolid() {
 	for (int i = 0; i < domainSize[0]; i++) {
 		int id = coupling.fluid.getCell(i, domainSize[1] - 1);
 		coupling.fluid.cells[id]->node = coupling.fluid.isSolid;
+		coupling.fluid.cells[id]->solidFraction = 1.0;
 	}
 }
 
@@ -31,6 +32,7 @@ void Scene::set_botSolid() {
 	for (int i = 0; i < domainSize[0]; i++) {
 		int id = coupling.fluid.getCell(i, 0);
 		coupling.fluid.cells[id]->node = coupling.fluid.isSolid;
+		coupling.fluid.cells[id]->solidFraction = 1.0;
 	}
 }
 
@@ -38,6 +40,7 @@ void Scene::set_leftSolid() {
 	for (int j = 0; j < domainSize[1]; j++) {
 		int id = coupling.fluid.getCell(0, j);
 		coupling.fluid.cells[id]->node = coupling.fluid.isSolid;
+		coupling.fluid.cells[id]->solidFraction = 1.0;
 	}
 }
 
@@ -45,6 +48,7 @@ void Scene::set_rightSolid() {
 	for (int j = 0; j < domainSize[1]; j++) {
 		int id = coupling.fluid.getCell(domainSize[0] - 1, j);
 		coupling.fluid.cells[id]->node = coupling.fluid.isSolid;
+		coupling.fluid.cells[id]->solidFraction = 1.0;
 	}
 }
 
@@ -76,4 +80,16 @@ void Scene::prepareScenario() {
 
 	//Time step calculation:
 	//coupling.calculateTimeStep();
+}
+
+void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
+	for (int i = 0; i != _nIter; i++) {
+		print(i);
+		coupling.fluid.updateMacro();
+		coupling.calculateSolidFraction();
+		coupling.fluid.collision();
+		coupling.fluid.set_bounceback();
+		coupling.fluid.stream();
+		if (i % 100 == 0)	coupling.fluid.fluidVTK(_fileName);
+	}
 }

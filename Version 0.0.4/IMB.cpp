@@ -25,25 +25,19 @@ void IMB::calculateTimeStep() {
 }
 
 void IMB::calculateSolidFraction() {
-
-}
-
-void IMB::calculateSolidFraction() {
 	for (auto& B : particle.bodies) {
 		ASSERT(particle.bodies.size() > 0);
 		for (int j = 0; j < fluid.dim[1]; j++) {
 			for (int i = 0; i < fluid.dim[0]; i++) {
-
-				//Calculate solid fraction:
 				int id = fluid.getCell(i, j);
 				double cir = (i - B->pos[0]) * (i - B->pos[0]) + (j - B->pos[1]) * (j - B->pos[1]);
-				if (cir < (B->radius * B->radius)){
+				if (cir < (B->radius * B->radius)) {
 					double distanceCenter = std::sqrt(cir);
-					if (distanceCenter >= (B->radius + fluid.dx)) {
+					if (distanceCenter >= (B->radius + 1.0)) {
 						fluid.cells[id]->solidFraction = 0.0;
 						fluid.cells[id]->node = fluid.isFluid;
 					}
-					else if (distanceCenter <= (B->radius - fluid.dx)) {
+					else if (distanceCenter <= (B->radius - 1.0)) {
 						fluid.cells[id]->solidFraction = 1.0;
 						fluid.cells[id]->node = fluid.isSolid;
 					}
@@ -56,23 +50,23 @@ void IMB::calculateSolidFraction() {
 					if (fluid.cells[id]->solidFraction > 1.0)	fluid.cells[id]->solidFraction = 1.0;
 					ASSERT(fluid.cells[id]->solidFraction >= 0.0 && fluid.cells[id]->solidFraction <= 1.0);
 
+					//Calculate solid function:
+					fluid.cells[id]->solidFunction = (fluid.cells[id]->solidFraction * (fluid.tau - 0.5)) / ((1 - fluid.cells[id]->solidFraction) + (fluid.tau - 0.5));
+					ASSERT(fluid.cells[id]->solidFunction >= 0.0 && fluid.cells[id]->solidFunction <= 1.0);
+
+					//Calculate collision operator (Omega):
+					for (int k = 0; k < fluid.cells[id]->Q; k++) {
+						double EDF_OP = fluid.cells[id]->set_eqFun(fluid.cells[id]->rho, fluid.cells[id]->vel, fluid.cells[id]->opNode[k]);
+						double EDF_Par = fluid.cells[id]->set_eqFun(fluid.cells[id]->rho, B->vel, k);
+
+						fluid.cells[id]->omega[k] = fluid.cells[id]->f[fluid.cells[id]->opNode[k]] - EDF_OP - (fluid.cells[id]->f[k] - EDF_Par);
+					}
 				}
 			}
 		}
 	}
 }
 
-/*
-//Calculate solid function:
-fluid.cells[id]->solidFunction = (fluid.cells[id]->solidFraction * (fluid.tau - 0.5)) / ((1 - fluid.cells[id]->solidFraction) + (fluid.tau - 0.5));
-ASSERT(fluid.cells[id]->solidFunction >= 0.0 && fluid.cells[id]->solidFunction <= 1.0);
-
-//Calculate collision operator (Omega):
-for (int k = 0; k < fluid.cells[id]->Q; k++) {
-	double EDF_OP = fluid.cells[id]->set_eqFun(fluid.cells[id]->rho, fluid.cells[id]->vel, fluid.cells[id]->opNode[k]);
-	double EDF_Par = fluid.cells[id]->set_eqFun(fluid.cells[id]->rho, B->vel, k);
-
+void IMB::calculateForceAndTorque() {
+	
 }
-
-//Calculate hydrodynamic force and torque:
-*/

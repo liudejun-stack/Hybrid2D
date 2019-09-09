@@ -2,7 +2,7 @@
 #include "Scene.h"
 
 double uMax = 0.1;
-double re = 100;
+double re = 50;
 Vec2d dim = { 500, 100 };
 double radius = dim[1] / 20 + 1;
 Vec2d cylinderCoord = { dim[1] / 2, dim[1] / 2 };
@@ -41,7 +41,7 @@ int main() {
 		S.coupling.fluid.set_denBC(dim[0] - 1, j, 1.0);
 	}
 	S.coupling.fluid.set_zouBC();
-	S.coupling.fluid.solver(10000, "LBM");
+	S.moveToNextTimeStep_LBM(10000, "LBM");
 
 	return 0;
 }

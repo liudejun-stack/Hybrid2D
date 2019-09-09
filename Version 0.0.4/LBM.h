@@ -28,9 +28,6 @@ public:
 	void stream();
 	void solver(int _nIter, std::string _fileName);
 
-	//Coupling Engine:
-	void c_collision();
-
 	//Output:
 	void fluidVTK(std::string _fileName);
 
