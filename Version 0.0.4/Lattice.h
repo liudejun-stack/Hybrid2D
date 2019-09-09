@@ -48,6 +48,7 @@ public:
 	Vec2d vel           = Vec2d::Zero();
 	double solidFunction = 0.0;
 	double rho           = 0.0;
+	int particleFluid_ID = 0;
 	int node = 0;
 
 private:

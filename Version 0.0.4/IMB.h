@@ -11,6 +11,7 @@ public:
 
 	//Engine
 	void calculateTimeStep();
+	void calculateSolidFraction();
 	void calculateForceAndTorque();
 
 	LBM fluid;
