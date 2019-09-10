@@ -55,12 +55,16 @@ void IMB::calculateSolidFraction() {
 					ASSERT(fluid.cells[id]->solidFunction >= 0.0 && fluid.cells[id]->solidFunction <= 1.0);
 
 					//Calculate collision operator (Omega):
+					Vec2d particleVel = B->vel;
 					for (int k = 0; k < fluid.cells[id]->Q; k++) {
 						double EDF_OP = fluid.cells[id]->set_eqFun(fluid.cells[id]->rho, fluid.cells[id]->vel, fluid.cells[id]->opNode[k]);
-						double EDF_Par = fluid.cells[id]->set_eqFun(fluid.cells[id]->rho, B->vel, k);
+						double EDF_Par = fluid.cells[id]->set_eqFun(fluid.cells[id]->rho, particleVel, k);
 
 						fluid.cells[id]->omega[k] = fluid.cells[id]->f[fluid.cells[id]->opNode[k]] - EDF_OP - (fluid.cells[id]->f[k] - EDF_Par);
 					}
+
+					//Record particle ID:
+					fluid.cells[id]->particleFluid_ID = B->id;
 				}
 			}
 		}
@@ -68,5 +72,9 @@ void IMB::calculateSolidFraction() {
 }
 
 void IMB::calculateForceAndTorque() {
-	
+	for (auto& C : fluid.cells) {
+		for (int k = 0; k < C->Q; k++) {
+
+		}
+	}
 }
