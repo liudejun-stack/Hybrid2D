@@ -11,7 +11,7 @@ void DEM::calculateParticleTimeStep() {
 		if (B->mass < minMass)	minMass = B->mass;
 	}
 	ASSERT(minMass > 0);
-	dtDEM = factorOfSafety * std::sqrt(minMass / kn);
+	dtDEM = 2 * factorOfSafety * std::sqrt(minMass / kn);
 }
 
 Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body) {

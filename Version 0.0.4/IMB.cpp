@@ -74,7 +74,7 @@ void IMB::calculateSolidFraction() {
 void IMB::calculateForceAndTorque() {
 	for (auto& C : fluid.cells) {
 		for (int k = 0; k < C->Q; k++) {
-
+			continue;
 		}
 	}
 }
