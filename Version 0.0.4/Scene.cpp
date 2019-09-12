@@ -79,7 +79,7 @@ void Scene::prepareScenario() {
 	if (bodies_isSolid)	set_circlesSolid();
 
 	//Time step calculation:
-	//coupling.calculateTimeStep();
+	coupling.calculateTimeStep();
 }
 
 void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
@@ -87,9 +87,11 @@ void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
 		print(i);
 		coupling.fluid.updateMacro();
 		coupling.calculateSolidFraction();
+		coupling.calculateForceAndTorque();
 		coupling.fluid.collision();
 		coupling.fluid.set_bounceback();
 		coupling.fluid.stream();
+		coupling.particle.demCycle();
 		if (i % 100 == 0)	coupling.fluid.fluidVTK(_fileName);
 	}
 }

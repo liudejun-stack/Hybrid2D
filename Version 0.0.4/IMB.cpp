@@ -72,9 +72,11 @@ void IMB::calculateSolidFraction() {
 }
 
 void IMB::calculateForceAndTorque() {
+	Vec2d soma;
 	for (auto& C : fluid.cells) {
 		for (int k = 0; k < C->Q; k++) {
-			continue;
+			soma = Vec2d::Zero();
+			particle.bodies[C->particleFluid_ID]->forceLBM += C->latticeSpeed * fluid.dx * C->solidFunction * C->omega[k] * C->discreteVelocity[k];
 		}
 	}
 }

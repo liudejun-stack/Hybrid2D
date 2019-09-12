@@ -26,6 +26,7 @@ int main() {
 	Scene S;
 	S.addCircle(1, radius, cylinderCoord, {0.0, 0.0});
 	S.relaxationTime = calcVisc();
+	S.kinViscosity = uMax * (2 * radius) / re;
 	S.domainSize = dim;
 	S.top_isSolid = true;
 	S.bot_isSolid = true;
