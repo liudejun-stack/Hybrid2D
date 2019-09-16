@@ -91,7 +91,9 @@ void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
 		coupling.fluid.collision();
 		coupling.fluid.set_bounceback();
 		coupling.fluid.stream();
-		//coupling.particle.demCycle();
+		coupling.particle.demCycle();
 		if (i % 100 == 0)	coupling.fluid.fluidVTK(_fileName);
+		coupling.updateGeom();
+		set_circlesSolid();
 	}
 }

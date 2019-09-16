@@ -13,6 +13,7 @@ public:
 	void calculateTimeStep();
 	void calculateSolidFraction();
 	void calculateForceAndTorque();
+	void updateGeom();
 
 	LBM fluid;
 	DEM particle;
