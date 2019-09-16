@@ -26,7 +26,6 @@ void IMB::calculateTimeStep() {
 
 void IMB::calculateSolidFraction() {
 	for (auto& B : particle.bodies) {
-		ASSERT(particle.bodies.size() > 0);
 		for (int j = 0; j < fluid.dim[1]; j++) {
 			for (int i = 0; i < fluid.dim[0]; i++) {
 				int id = fluid.getCell(i, j);
