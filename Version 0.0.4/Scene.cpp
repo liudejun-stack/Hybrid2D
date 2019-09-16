@@ -52,6 +52,17 @@ void Scene::set_rightSolid() {
 	}
 }
 
+void Scene::updateGeom() {
+	for (auto& C : coupling.fluid.cells) {
+		if (C->node == coupling.fluid.fluidSolidInteraction) {
+			C->node = coupling.fluid.isFluid;
+		}
+	}
+	set_topSolid();
+	set_botSolid();
+	set_circlesSolid();
+}
+
 void Scene::prepareScenario() {
 	//Boundary definition:
 	coupling.fluid.dim = domainSize;
@@ -80,20 +91,30 @@ void Scene::prepareScenario() {
 
 	//Time step calculation:
 	coupling.calculateTimeStep();
+	//coupling.particle.calculateParticleTimeStep();
+}
+
+void Scene::simulationInfo(int i) {
+	std::cout << "-------------------- LBM/DEM Simulation --------------------"  << "\n";
+	std::cout << "Current Iteration Number: " << i                               << "\n";
+	std::cout << "Solution Time Step: "       << coupling.dt                     << "\n";
+	std::cout << "Number of Bodies: "         << coupling.particle.bodies.size() << "\n";
+	std::cout << "Number of Cells: "          << coupling.fluid.cells.size()     << "\n";
 }
 
 void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
 	for (int i = 0; i != _nIter; i++) {
-		print(i);
 		coupling.fluid.updateMacro();
 		coupling.calculateSolidFraction();
 		coupling.calculateForceAndTorque();
 		coupling.fluid.collision();
 		coupling.fluid.set_bounceback();
 		coupling.fluid.stream();
-		coupling.particle.demCycle();
-		if (i % 100 == 0)	coupling.fluid.fluidVTK(_fileName);
-		coupling.updateGeom();
-		set_circlesSolid();
+		//coupling.particle.demCycle();
+		if (i % 100 == 0) {
+			simulationInfo(i);
+			coupling.fluid.fluidVTK(_fileName);
+		}
+		//updateGeom();
 	}
 }

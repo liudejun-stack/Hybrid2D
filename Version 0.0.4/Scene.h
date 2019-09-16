@@ -14,7 +14,9 @@ public:
 	void set_botSolid();
 	void set_leftSolid();
 	void set_rightSolid();
+	void updateGeom();
 	void prepareScenario();
+	void simulationInfo(int i);
 
 	//Solver:
 	void moveToNextTimeStep_LBM(int _nIter, std::string _fileName);
