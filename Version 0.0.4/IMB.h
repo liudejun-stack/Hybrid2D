@@ -7,16 +7,19 @@
 class IMB {
 public:
 	//Constructor:
-	IMB() : fluid(), particle() {};
+	IMB() : eLBM(), eDEM() {};
 
 	//Engine
 	void calculateTimeStep();
 	void calculateSolidFraction();
 	void calculateForceAndTorque();
 
-	LBM fluid;
-	DEM particle;
+	std::vector<double>solidFunction;
 	double dt = 0.0;
+
+
+	LBM eLBM;	//LBM engine
+	DEM eDEM;	//DEM engine
 
 };
 

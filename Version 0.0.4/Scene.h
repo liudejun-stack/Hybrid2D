@@ -5,7 +5,7 @@
 
 class Scene {
 public:
-	Scene() : coupling() {};
+	Scene() : eIMB() {};
 
 	//Scenario prepartion:
 	void addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
@@ -40,7 +40,7 @@ public:
 	double normalStiffness = 1e6;
 	double shearStiffness  = 0.5e6;
 
-	IMB coupling;
+	IMB eIMB;  //Coupling Engine
 };
 
 #endif // !SCENE_H

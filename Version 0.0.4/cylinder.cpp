@@ -27,21 +27,23 @@ int main() {
 	S.addCircle(1, radius, cylinderCoord, {0.0, 0.0});
 	S.relaxationTime = calcVisc();
 	S.kinViscosity = uMax * (2 * radius) / re;
+	S.eIMB.eDEM.localDamping = 0.7;
+	S.factorOfSafety = 0.1;
 	S.domainSize = dim;
 	S.top_isSolid = true;
 	S.bot_isSolid = true;
 	S.bodies_isSolid = true;
 	S.prepareScenario();
 
-	S.coupling.fluid.set_initCond(1.0, { 0.08, 0.0 });
+	S.eIMB.eLBM.set_initCond(1.0, { 0.08, 0.0 });
 
 	for (int j = 0; j < dim[1]; j++) {
 		Vec2d vel;
 		calcInitSpeed(0, j, vel);
-		S.coupling.fluid.set_velBC(0, j, vel);
-		S.coupling.fluid.set_denBC(dim[0] - 1, j, 1.0);
+		S.eIMB.eLBM.set_velBC(0, j, vel);
+		S.eIMB.eLBM.set_denBC(dim[0] - 1, j, 1.0);
 	}
-	S.coupling.fluid.set_zouBC();
+	S.eIMB.eLBM.set_zouBC();
 	S.moveToNextTimeStep_LBM(10000, "LBM");
 
 	return 0;
