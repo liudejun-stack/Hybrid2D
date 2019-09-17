@@ -97,7 +97,7 @@ void LBM::applyForce() {
 
 void LBM::collision() {
 	ASSERT(tau > 0.5);
-	double tauInv = 1.0 / tau;
+	double tauInv = dtLBM / tau;
 	for (auto& C : cells) {
 		if (C->node == isSolid)	continue;
 		for (int k = 0; k < C->Q; k++) {

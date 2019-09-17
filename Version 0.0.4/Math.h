@@ -31,8 +31,8 @@ public:
 		auto start        = std::chrono::time_point_cast<std::chrono::minutes>(startTimePoint).time_since_epoch().count();
 		auto end          = std::chrono::time_point_cast<std::chrono::minutes>(endTimePoint).time_since_epoch().count();
 		auto duration     = end - start;
-
-		std::cout << duration << " minutes\n";
+		std::cout << "------------------------------------------\n";
+		std::cout << "Simulation Time: "<< duration << " minutes\n";
 	}
 private:
 	std::chrono::time_point<std::chrono::high_resolution_clock> startTimePoint;

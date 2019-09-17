@@ -50,7 +50,7 @@ void IMB::calculateSolidFraction() {
 					ASSERT(fluid.cells[id]->solidFraction >= 0.0 && fluid.cells[id]->solidFraction <= 1.0);
 
 					//Calculate solid function:
-					fluid.cells[id]->solidFunction = (fluid.cells[id]->solidFraction * (fluid.tau - 0.5)) / ((1 - fluid.cells[id]->solidFraction) + (fluid.tau - 0.5));
+					fluid.cells[id]->solidFunction = (fluid.cells[id]->solidFraction * (fluid.tau/fluid.dtLBM - 0.5)) / ((1 - fluid.cells[id]->solidFraction) + (fluid.tau/fluid.dtLBM - 0.5));
 					ASSERT(fluid.cells[id]->solidFunction >= 0.0 && fluid.cells[id]->solidFunction <= 1.0);
 
 					//Calculate collision operator (Omega):
