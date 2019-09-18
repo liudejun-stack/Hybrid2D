@@ -51,7 +51,7 @@ void IMB::calculateSolidFraction() {
 					ASSERT(eLBM.cells[id]->solidFraction >= 0.0 && eLBM.cells[id]->solidFraction <= 1.0);
 
 					//Calculate solid function:
-					eLBM.cells[id]->solidFunction = (eLBM.cells[id]->solidFraction * (eLBM.tau/eLBM.dtLBM - 0.5)) / ((1 - eLBM.cells[id]->solidFraction) + (eLBM.tau/eLBM.dtLBM - 0.5));
+					eLBM.cells[id]->solidFunction = (eLBM.cells[id]->solidFraction * (eLBM.tau - 0.5)) / ((1 - eLBM.cells[id]->solidFraction) + (eLBM.tau - 0.5));
 					ASSERT(eLBM.cells[id]->solidFunction >= 0.0 && eLBM.cells[id]->solidFunction <= 1.0);
 					B->Bn += eLBM.cells[id]->solidFunction;     //NÃO É ATRIBUTO DO BODY, MODIFICAR!
 
