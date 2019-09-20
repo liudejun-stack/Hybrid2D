@@ -34,7 +34,7 @@ public:
 	std::vector<std::shared_ptr<Lattice>> cells;
 
 	Vec2d gravity       = { 0.0, -9.81 };
-	Vec2d dim           = Vec2d::Zero();
+	Vec2d domainSize           = Vec2d::Zero();
 	double dx           = 1.0;
 	double dtLBM        = 1.0;
 	double tau          = 1.0;

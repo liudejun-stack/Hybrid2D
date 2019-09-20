@@ -20,6 +20,7 @@ public:
 
 	//Solver:
 	void moveToNextTimeStep_LBM(int _nIter, std::string _fileName);
+	void moveToNextTimeStep_DEM(int _nIter, std::string _fileName);
 
 	//Geometry parameters:
 	Vec2d domainSize       = Vec2d::Zero();

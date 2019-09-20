@@ -45,7 +45,6 @@ public:
 	double rotVel       = 0.0;
 	double moment       = 0.0;
 	double blockedMDOFs = 1;
-	double Bn = 0.0;
 };
 
 #endif //BODY_H

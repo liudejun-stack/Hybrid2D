@@ -25,19 +25,21 @@ int main() {
 	Timer Time;
 	Scene S;
 	S.addCircle(1, radius, cylinderCoord, {0.0, 0.0});
+	//S.addCircle(1, 0.5, { 5,5 }, { 0,0 });
 	S.relaxationTime = calcVisc();
 	S.kinViscosity = uMax * (2 * radius) / re;
-	S.eIMB.eDEM.localDamping = 0.7;
-	S.factorOfSafety = 0.1;
+	S.eIMB.eDEM.localDamping = 0;
+	S.factorOfSafety = 0.5;
 	S.domainSize = dim;
 	S.top_isSolid = true;
 	S.bot_isSolid = true;
 	S.bodies_isSolid = true;
 	S.prepareScenario();
+	S.eIMB.eDEM.calculateParticleTimeStep();
 
 	S.eIMB.eLBM.set_initCond(1.0, { 0.08, 0.0 });
 
-	for (int j = 0; j < dim[1]; j++) {
+	for (int j = 0; j < dim[1]; ++j) {
 		Vec2d vel;
 		calcInitSpeed(0, j, vel);
 		S.eIMB.eLBM.set_velBC(0, j, vel);
@@ -45,6 +47,7 @@ int main() {
 	}
 	S.eIMB.eLBM.set_zouBC();
 	S.moveToNextTimeStep_LBM(10000, "LBM");
+	//S.moveToNextTimeStep_DEM(10000, "DEM");
 
 	return 0;
 }

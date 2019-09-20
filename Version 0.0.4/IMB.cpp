@@ -26,9 +26,8 @@ void IMB::calculateTimeStep() {
 
 void IMB::calculateSolidFraction() {
 	for (auto& B : eDEM.bodies) {
-		B->forceLBM = Vec2d::Zero();
-		for (int j = 0; j < eLBM.dim[1]; j++) {
-			for (int i = 0; i < eLBM.dim[0]; i++) {
+		for (int j = 0; j < eLBM.domainSize[1]; ++j) {
+			for (int i = 0; i < eLBM.domainSize[0]; ++i) {
 				int id = eLBM.getCell(i, j);
 				double cir = (i - B->pos[0]) * (i - B->pos[0]) + (j - B->pos[1]) * (j - B->pos[1]);
 				if (cir < (B->radius * B->radius)) {
@@ -53,7 +52,6 @@ void IMB::calculateSolidFraction() {
 					//Calculate solid function:
 					eLBM.cells[id]->solidFunction = (eLBM.cells[id]->solidFraction * (eLBM.tau - 0.5)) / ((1 - eLBM.cells[id]->solidFraction) + (eLBM.tau - 0.5));
 					ASSERT(eLBM.cells[id]->solidFunction >= 0.0 && eLBM.cells[id]->solidFunction <= 1.0);
-					B->Bn += eLBM.cells[id]->solidFunction;     //NÃO É ATRIBUTO DO BODY, MODIFICAR!
 
 					//Calculate collision operator (Omega):
 					Vec2d particleVel = B->vel;
@@ -76,7 +74,7 @@ void IMB::calculateForceAndTorque() {
 
 	for (auto& C : eLBM.cells) {
 		for (int k = 0; k < C->Q; k++) {
-			eDEM.bodies[C->particleFluid_ID]->forceLBM += -C->latticeSpeed * eLBM.dx * eDEM.bodies[C->particleFluid_ID]->Bn * C->omega[k] * C->discreteVelocity[k];
+			eDEM.bodies[C->particleFluid_ID]->forceLBM += -C->latticeSpeed * eLBM.dx * C->omega[k] * C->discreteVelocity[k];
 		}
 	}
 }

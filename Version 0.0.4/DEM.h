@@ -10,11 +10,14 @@ class DEM {
 public:
 
 	//Engine:
-	void addBody(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
 	void calculateParticleTimeStep();
+	void forceResetter();
+	void contactVerification();
+	void forceCalculation();
+	void updateVelPos();
+	void updateContact();
 	Vec2d applyBorderForce(std::shared_ptr<Body> _body);
 	void calculateEnergy();
-	void demCycle();
 
 	//Output:
 	void energyCSV(std::string _fileName);
@@ -29,21 +32,20 @@ public:
 	std::vector<double> potEnergy;
 
 	//Model variables:
-	Vec2d  domainSize = Vec2d::Zero();
-	Vec2d  domainReference = Vec2d::Zero();
-	Vec2d  gravity = { 0.0, -9.81 };
-	double kn = 1e6;
-	double ks = 0.5e6;
-	double localDamping = 0.8;
-	double frictionAngle = 30;
-	double borderStifness = 1e6;
-	double dt = 0.0;
-	double time = 0.0;
-	double factorOfSafety;
-	int    vtkCounter = 0;
-	int    nIter = 0;
+	Vec2d domainReference  = Vec2d::Zero();
+	Vec2d domainSize       = Vec2d::Zero();
+	Vec2d gravity          = { 0.0, -9.81 };
+	double normalStiffness = 1e6;
+	double shearStiffness  = 0.5e6;
+	double localDamping    = 0.8;
+	double frictionAngle   = 30;
+	double borderStifness  = 1e6;
+	double dtDEM           = 0.0;
+	double time            = 0.0;
+	double factorOfSafety  = 0.1;
+	int vtkCounter         = 0;
+	int nIter              = 0;
 
-	double dtDEM;
 };
 
 #endif //DEM_H

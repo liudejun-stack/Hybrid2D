@@ -1,7 +1,7 @@
 #include "LBM.h"
 #include <omp.h>
 
-int LBM::getCell(int i, int j) {return i + dim[0] * j;}
+int LBM::getCell(int i, int j) {return i + domainSize[0] * j;}
 
 void LBM::set_velBC(int i, int j, Vec2d _vel) {
 	int id = getCell(i, j);
@@ -19,7 +19,7 @@ void LBM::set_zouBC() {
 	for (auto& C : cells) {
 		if (C->node == isSolid)	continue;
 		//Prescribed velocity (Left & Right sides)
-		for (int j = 0; j < dim[1]; j++) {
+		for (int j = 0; j < domainSize[1]; ++j) {
 			if (C->ID == getCell(0, j)) {
 				//Left side:
 				double rho = (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[3] + C->f[6] + C->f[7])) / (1.0 - C->vel[0]);
@@ -29,7 +29,7 @@ void LBM::set_zouBC() {
 				C->f[8] = C->f[6] + div * rho * C->vel[0] - 0.5 * rho * C->vel[1] + 0.5 * (C->f[2] - C->f[4]);
 			}
 			/*
-			if (C->ID == getCell(dim[0] - 1, j)) {
+			if (C->ID == getCell(domainSize[0] - 1, j)) {
 				//Right side:
 				double rho = (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[1] + C->f[5] + C->f[8])) / (1.0 + C->vel[0]);
 
@@ -40,8 +40,8 @@ void LBM::set_zouBC() {
 			*/
 		}
 		//Prescribed density
-		for (int j = 0; j < dim[1]; j++) {
-			if (C->ID == getCell(dim[0] - 1, j)) {
+		for (int j = 0; j < domainSize[1]; ++j) {
+			if (C->ID == getCell(domainSize[0] - 1, j)) {
 				double vx = -1.0 + (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[1] + C->f[5] + C->f[8])) / C->rho;
 
 				C->f[3] = C->f[1] - aux * C->rho * vx;
@@ -57,11 +57,11 @@ void LBM::calculateFluidTimeStep() {
 }
 
 void LBM::initializeCells() {
-	for (int j = 0; j < dim[1]; j++)
-		for (int i = 0; i < dim[0]; i++) {
+	for (int j = 0; j < domainSize[1]; ++j)
+		for (int i = 0; i < domainSize[0]; ++i) {
 			Vec2d cellPos = { i,j };
 			int id = cells.size();
-			cells.emplace_back(std::make_shared<Lattice>(id, latticeSpeed, dim, cellPos));
+			cells.emplace_back(std::make_shared<Lattice>(id, latticeSpeed, domainSize, cellPos));
 		}
 }
 
@@ -118,8 +118,8 @@ void LBM::set_bounceback() {
 }
 
 void LBM::stream() {
-	double Ncells = dim[0] * dim[1];
-	for (int i = 0; i < Ncells; i++) 
+	double Ncells = domainSize[0] * domainSize[1];
+	for (int i = 0; i < Ncells; ++i) 
 	for (int k = 0; k < cells[0]->Q; k++) {
 		cells[cells[i]->nCell[k]]->fTemp[k] = cells[i]->f[k];
 	}
@@ -138,10 +138,10 @@ void LBM::fluidVTK(std::string _fileName) {
 	out << "Fluid state\n";
 	out << "ASCII\n";
 	out << "DATASET STRUCTURED_POINTS\n";
-	out << "DIMENSIONS " << dim[0] << " " << dim[1] << " " << 1 << "\n";
+	out << "DIMENSIONS " << domainSize[0] << " " << domainSize[1] << " " << 1 << "\n";
 	out << "ORIGIN "     << 0      << " " << 0      << " " << 0 << "\n";
 	out << "SPACING "    << 1      << " " << 1      << " " << 1 << "\n";
-	out << "POINT_DATA " << dim[0] * dim[1] << "\n";
+	out << "POINT_DATA " << domainSize[0] * domainSize[1] << "\n";
 	out << "SCALARS Geometry float 1\n";
 	out << "LOOKUP_TABLE default\n";
 	for (auto& C : cells) {
@@ -161,7 +161,7 @@ void LBM::fluidVTK(std::string _fileName) {
 }
 
 void LBM::solver(int _nIter, std::string _fileName) {
-	for (int i = 0; i != _nIter; i++) {
+	for (int i = 0; i != _nIter; ++i) {
 		print(i);
 		updateMacro();
 		collision();
