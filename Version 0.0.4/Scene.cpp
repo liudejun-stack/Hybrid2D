@@ -67,17 +67,17 @@ void Scene::prepareScenario() {
 	//Boundary definition:
 	eIMB.eLBM.domainSize = domainSize;
 	eIMB.eDEM.domainSize = domainSize;
-	
+
 	//Fluid parameters definition:
-	eIMB.eLBM.tau          = relaxationTime;
+	eIMB.eLBM.tau = relaxationTime;
 	eIMB.eLBM.kinViscosity = kinViscosity;
 
 	//Particle parameters definition:
-	eIMB.eDEM.factorOfSafety  = factorOfSafety;
-	eIMB.eDEM.localDamping    = localDamping;
-	eIMB.eDEM.frictionAngle   = frictionAngle;
+	eIMB.eDEM.factorOfSafety = factorOfSafety;
+	eIMB.eDEM.localDamping = localDamping;
+	eIMB.eDEM.frictionAngle = frictionAngle;
 	eIMB.eDEM.normalStiffness = normalStiffness;
-	eIMB.eDEM.shearStiffness  = shearStiffness;
+	eIMB.eDEM.shearStiffness = shearStiffness;
 
 	//Cell initialization for LBM simualtion:
 	eIMB.eLBM.initializeCells();
@@ -94,19 +94,33 @@ void Scene::prepareScenario() {
 	//eIMB.eDEM.calculateParticleTimeStep();
 }
 
-void Scene::simulationInfo(int i) {
-	std::cout << "-------------------- LBM/DEM Simulation --------------------"  << "\n";
-	std::cout << "Current Iteration Number: " << i                               << "\n";
-	std::cout << "Solution Time Step: "       << eIMB.dt                     << "\n";
-	std::cout << "Number of Bodies: "         << eIMB.eDEM.bodies.size() << "\n";
-	std::cout << "Number of Cells: "          << eIMB.eLBM.cells.size()     << "\n";
+void Scene::simulationInfo(int& i) {
+	if (i == 0) {
+		std::cout << "----------------------- LBM/DEM Simulation -----------------------"  << "\n";
+		std::cout << "Current Iteration Number: " << i                                     << "\n";
+		std::cout << "Domain Size:              " << domainSize[0] << "x" << domainSize[1] << "\n";
+		std::cout << "Number of Bodies:         " << eIMB.eDEM.bodies.size()               << "\n";
+		std::cout << "Number of cells:          " << eIMB.eLBM.cells.size()                << "\n";
+		std::cout << "Solution TimeStep:        " << eIMB.dt                               << "\n";
+		std::cout << "Lattice Spacing:          " << eIMB.eLBM.dx                          << "\n";
+		std::cout << "Relaxation Time:          " << relaxationTime                        << "\n";
+		std::cout << "Kinematic Viscosity:      " << kinViscosity                          << "\n";
+		std::cout << "Friction Angle:           " << frictionAngle                         << "\n";
+		std::cout << "Normal Stiffness:         " << normalStiffness                       << "\n";
+		std::cout << "Shear Stiffness:          " << shearStiffness                        << "\n";
+		std::cout << "Local Damping:            " << localDamping                          << "\n";
+	}
+	else {
+		std::cout << "----------------------- LBM/DEM Simulation -----------------------" << "\n";
+		std::cout << "Current Iteration Number: " << i << "\n";
+	}
 }
 
 void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
 	for (int i = 0; i != _nIter; ++i) {
 		eIMB.eDEM.forceResetter();
 		eIMB.eLBM.updateMacro();
-		eIMB.calculateForceAndTorque();
+		eIMB.calculateSolidFraction();
 		eIMB.eLBM.collision();
 		eIMB.eLBM.set_bounceback();
 		eIMB.eLBM.stream();
