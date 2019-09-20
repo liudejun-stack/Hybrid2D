@@ -90,7 +90,7 @@ void Scene::prepareScenario() {
 	if (bodies_isSolid)	set_circlesSolid();
 
 	//Time step calculation:
-	//eIMB.calculateTimeStep();
+	eIMB.calculateTimeStep();
 	//eIMB.eDEM.calculateParticleTimeStep();
 }
 
@@ -104,17 +104,21 @@ void Scene::simulationInfo(int i) {
 
 void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
 	for (int i = 0; i != _nIter; ++i) {
+		eIMB.eDEM.forceResetter();
 		eIMB.eLBM.updateMacro();
-		eIMB.calculateSolidFraction();
-		//eIMB.calculateForceAndTorque();
+		eIMB.calculateForceAndTorque();
 		eIMB.eLBM.collision();
 		eIMB.eLBM.set_bounceback();
 		eIMB.eLBM.stream();
+		eIMB.eDEM.contactVerification();
+		eIMB.eDEM.forceCalculation();
+		eIMB.eDEM.updateVelPos();
+		eIMB.eDEM.updateContact();
 		if (i % 100 == 0) {
 			simulationInfo(i);
 			eIMB.eLBM.fluidVTK(_fileName);
 		}
-		//updateGeom();
+		updateGeom();
 	}
 }
 

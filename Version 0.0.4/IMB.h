@@ -11,7 +11,6 @@ public:
 
 	//Engine
 	void calculateTimeStep();
-	void calculateSolidFraction();
 	void calculateForceAndTorque();
 
 	std::vector<double>solidFunction;

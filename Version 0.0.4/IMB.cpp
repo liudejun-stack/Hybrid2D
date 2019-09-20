@@ -24,52 +24,53 @@ void IMB::calculateTimeStep() {
 	std::cout << eLBM.dtLBM << " " << eDEM.dtDEM << " " << eLBM.dx << "\n";
 }
 
-void IMB::calculateSolidFraction() {
+void IMB::calculateForceAndTorque() {
 	for (auto& B : eDEM.bodies) {
-		for (int j = 0; j < eLBM.domainSize[1]; ++j) {
-			for (int i = 0; i < eLBM.domainSize[0]; ++i) {
-				int id = eLBM.getCell(i, j);
-				double cir = (i - B->pos[0]) * (i - B->pos[0]) + (j - B->pos[1]) * (j - B->pos[1]);
-				if (cir < (B->radius * B->radius)) {
-					double distanceCenter = std::sqrt(cir);
-					if (distanceCenter >= (B->radius + 1.0)) {
-						eLBM.cells[id]->solidFraction = 0.0;
-						eLBM.cells[id]->node = eLBM.isFluid;
-					}
-					else if (distanceCenter <= (B->radius - 1.0)) {
-						eLBM.cells[id]->solidFraction = 1.0;
-						eLBM.cells[id]->node = eLBM.isSolid;
-					}
-					else {
-						double distanceSurface = distanceCenter - B->radius;
-						eLBM.cells[id]->solidFraction = -distanceSurface + B->functionR;
-						eLBM.cells[id]->node = eLBM.isFluid;
-					}
-					if (eLBM.cells[id]->solidFraction < 0.0)	eLBM.cells[id]->solidFraction = 0.0;
-					if (eLBM.cells[id]->solidFraction > 1.0)	eLBM.cells[id]->solidFraction = 1.0;
-					ASSERT(eLBM.cells[id]->solidFraction >= 0.0 && eLBM.cells[id]->solidFraction <= 1.0);
+		for (auto& C : eLBM.cells) {
 
-					//Calculate solid function:
-					eLBM.cells[id]->solidFunction = (eLBM.cells[id]->solidFraction * (eLBM.tau - 0.5)) / ((1 - eLBM.cells[id]->solidFraction) + (eLBM.tau - 0.5));
-					ASSERT(eLBM.cells[id]->solidFunction >= 0.0 && eLBM.cells[id]->solidFunction <= 1.0);
-
-					//Calculate collision operator (Omega):
-					Vec2d particleVel = B->vel;
-					for (int k = 0; k < eLBM.cells[id]->Q; k++) {
-						double EDF_OP = eLBM.cells[id]->set_eqFun(eLBM.cells[id]->rho, eLBM.cells[id]->vel, eLBM.cells[id]->opNode[k]);
-						double EDF_Par = eLBM.cells[id]->set_eqFun(eLBM.cells[id]->rho, particleVel, k);
-
-						eLBM.cells[id]->omega[k] = eLBM.cells[id]->f[eLBM.cells[id]->opNode[k]] - EDF_OP - (eLBM.cells[id]->f[k] - EDF_Par);
-					}
-
-					//Record particle ID:
-					eLBM.cells[id]->particleFluid_ID = B->id;
-				}
+			//Calculate Solid Fraction (SF):
+			double inDisk = (C->cellPos - B->pos).dot((C->cellPos - B->pos));
+			if (inDisk > B->radius * B->radius)	continue;
+			double distCellPar = (C->cellPos - B->pos).norm();
+			if (distCellPar >= (B->radius + 1.0)) {
+				C->solidFraction = 0.0;
+				C->node = eLBM.isFluid;
 			}
+			else if (distCellPar <= (B->radius - 1.0)) {
+				C->solidFraction = 1.0;
+				C->node = eLBM.isSolid;
+			}
+			else {
+				double distCellParSurf = distCellPar - B->radius;
+				C->solidFraction = -distCellParSurf + B->functionR;
+				C->node = eLBM.fluidSolidInteraction;
+			}
+
+			//Change incorrect values of SF:
+			if (C->solidFraction < 0.0)	C->solidFraction = 0.0;
+			if (C->solidFraction > 1.0)	C->solidFraction = 1.0;
+			ASSERT(C->solidFraction >= 0.0 && C->solidFraction <= 1.0);
+
+			//Calculate Solid Function:
+			C->solidFunction = (C->solidFraction * (eLBM.tau - 0.5)) / ((1 - C->solidFraction) + (eLBM.tau - 0.5));
+			ASSERT(C->solidFunction >= 0.0 && C->solidFunction <= 1.0);
+
+			//Calculate collision operator (Omega):
+			Vec2d particleVel = B->vel;
+			Vec2d Force_LBM   = Vec2d::Zero();
+			for (int k = 0; k < C->Q; k++) {
+				double EDF_OP = C->set_eqFun(C->rho, C->vel, C->opNode[k]);
+				double EDF_Par = C->set_eqFun(C->rho, particleVel, k);
+
+				C->omega[k] = C->f[C->opNode[k]] - EDF_OP - (C->f[k] - EDF_Par);
+				Force_LBM += -C->latticeSpeed * eLBM.dx * C->solidFunction * C->omega[k] * C->discreteVelocity[k];
+			}
+			B->forceLBM = Force_LBM;
 		}
 	}
 }
 
+/*
 void IMB::calculateForceAndTorque() {
 
 	for (auto& C : eLBM.cells) {
@@ -78,3 +79,4 @@ void IMB::calculateForceAndTorque() {
 		}
 	}
 }
+*/

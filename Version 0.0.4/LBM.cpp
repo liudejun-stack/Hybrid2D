@@ -53,7 +53,7 @@ void LBM::set_zouBC() {
 }
 
 void LBM::calculateFluidTimeStep() {
-	dtLBM = (tau - 0.5) * (dx * dx / kinViscosity) * (1.0 / 3.0);
+	dtLBM = (tau - 0.5) * ((dx * dx) / kinViscosity) * (1.0 / 3.0);
 }
 
 void LBM::initializeCells() {

@@ -25,8 +25,9 @@ int main() {
 	Timer Time;
 	Scene S;
 	S.addCircle(1, radius, cylinderCoord, {0.0, 0.0});
+	S.addCircle(1, 2*radius, { 250, 50 }, { 10, 0 });
 	//S.addCircle(1, 0.5, { 5,5 }, { 0,0 });
-	S.relaxationTime = calcVisc();
+	S.relaxationTime = 0.55;
 	S.kinViscosity = uMax * (2 * radius) / re;
 	S.eIMB.eDEM.localDamping = 0;
 	S.factorOfSafety = 0.5;
@@ -48,6 +49,8 @@ int main() {
 	S.eIMB.eLBM.set_zouBC();
 	S.moveToNextTimeStep_LBM(10000, "LBM");
 	//S.moveToNextTimeStep_DEM(10000, "DEM");
+
+
 
 	return 0;
 }
