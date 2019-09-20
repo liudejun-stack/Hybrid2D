@@ -3,7 +3,7 @@
 
 double uMax = 0.1;
 double re = 100;
-Vec2d dim = { 500, 100 };
+Vec2d dim = { 500, 200 };
 double radius = dim[1] / 20 + 1;
 Vec2d cylinderCoord = { dim[1] / 2, dim[1] / 2 };
 
@@ -25,7 +25,6 @@ int main() {
 	Timer Time;
 	Scene S;
 	S.addCircle(1, radius, cylinderCoord, {0.0, 0.0});
-	S.addCircle(1, 2*radius, { 250, 50 }, { 10, 0 });
 	//S.addCircle(1, 0.5, { 5,5 }, { 0,0 });
 	S.relaxationTime = 0.55;
 	S.kinViscosity = uMax * (2 * radius) / re;

@@ -114,10 +114,8 @@ void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
 		eIMB.eDEM.forceCalculation();
 		eIMB.eDEM.updateVelPos();
 		eIMB.eDEM.updateContact();
-		if (i % 100 == 0) {
-			simulationInfo(i);
-			eIMB.eLBM.fluidVTK(_fileName);
-		}
+		if (i % 100 == 0)	eIMB.eLBM.fluidVTK(_fileName);
+		if (i % 1000 == 0)	simulationInfo(i);
 		updateGeom();
 	}
 }

@@ -57,15 +57,15 @@ void IMB::calculateForceAndTorque() {
 
 			//Calculate collision operator (Omega):
 			Vec2d particleVel = B->vel;
-			Vec2d Force_LBM   = Vec2d::Zero();
 			for (int k = 0; k < C->Q; k++) {
 				double EDF_OP = C->set_eqFun(C->rho, C->vel, C->opNode[k]);
 				double EDF_Par = C->set_eqFun(C->rho, particleVel, k);
 
-				C->omega[k] = C->f[C->opNode[k]] - EDF_OP - (C->f[k] - EDF_Par);
-				Force_LBM += -C->latticeSpeed * eLBM.dx * C->solidFunction * C->omega[k] * C->discreteVelocity[k];
+				//C->omega[k] = C->f[C->opNode[k]] - EDF_OP - (C->f[k] - EDF_Par);
+				C->omega[k] = C->f[C->opNode[k]] - C->f[k] + EDF_Par - EDF_OP;
+				B->forceLBM += -C->latticeSpeed * eLBM.dx * C->solidFunction * C->omega[k] * C->discreteVelocity[k];
 			}
-			B->forceLBM = Force_LBM;
+			ASSERT(B->forceLBM != Vec2d::Zero());
 		}
 	}
 }
