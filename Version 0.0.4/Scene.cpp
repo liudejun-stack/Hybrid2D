@@ -109,27 +109,36 @@ void Scene::simulationInfo(int& i) {
 		std::cout << "Normal Stiffness:         " << normalStiffness                       << "\n";
 		std::cout << "Shear Stiffness:          " << shearStiffness                        << "\n";
 		std::cout << "Local Damping:            " << localDamping                          << "\n";
+		std::cout << "Particle Kinematic Energy: " << eIMB.eDEM.kinEnergy.back()          << "\n";
+		std::cout << "Particle Potential Energy: " << eIMB.eDEM.potEnergy.back()          << "\n";
+		std::cout << "Total Energy: " << eIMB.eDEM.kinEnergy.back() + eIMB.eDEM.potEnergy.back() << "\n";
 	}
 	else {
 		std::cout << "----------------------- LBM/DEM Simulation -----------------------" << "\n";
-		std::cout << "Current Iteration Number: " << i << "\n";
+		std::cout << "Current Iteration Number:   " << i                                  << "\n";
+		std::cout << "Particle Kinematic Energy : " << eIMB.eDEM.kinEnergy.back() << "\n";
+		std::cout << "Particle Potential Energy : " << eIMB.eDEM.potEnergy.back() << "\n";
+		std::cout << "Total Energy: " << eIMB.eDEM.kinEnergy.back() + eIMB.eDEM.potEnergy.back() << "\n";
 	}
 }
 
 void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
 	for (int i = 0; i != _nIter; ++i) {
 		eIMB.eDEM.forceResetter();
-		eIMB.eLBM.updateMacro();
-		eIMB.calculateSolidFraction();
-		eIMB.eLBM.collision();
-		eIMB.eLBM.set_bounceback();
-		eIMB.eLBM.stream();
+		//eIMB.eLBM.updateMacro();
+		//eIMB.calculateSolidFraction();
+		//eIMB.eLBM.collision();
+		//eIMB.eLBM.set_bounceback();
+		//eIMB.eLBM.stream();
 		eIMB.eDEM.contactVerification();
 		eIMB.eDEM.forceCalculation();
 		eIMB.eDEM.updateVelPos();
 		eIMB.eDEM.updateContact();
 		if (i % 100 == 0)	eIMB.eLBM.fluidVTK(_fileName);
-		if (i % 1000 == 0)	simulationInfo(i);
+		if (i % 1000 == 0) {
+			eIMB.eDEM.calculateEnergy();
+			simulationInfo(i);
+		}
 		updateGeom();
 	}
 }
