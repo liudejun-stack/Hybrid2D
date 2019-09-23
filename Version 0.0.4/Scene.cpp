@@ -128,7 +128,7 @@ void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
 	for (int i = 0; i != _nIter; ++i) {
 		eIMB.eDEM.forceResetter();
 		eIMB.eLBM.updateMacro();
-		eIMB.calculateSolidFraction();
+		//eIMB.calculateSolidFraction();
 		eIMB.eLBM.collision();
 		eIMB.eLBM.set_bounceback();
 		eIMB.eLBM.stream();

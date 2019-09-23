@@ -36,7 +36,7 @@ void IMB::calculateSolidFraction() {
 			else {
 				double distCellParSurf = distCellPar - B->radius;
 				C->solidFraction = -distCellParSurf + B->functionR;
-				C->node = eLBM.fluidSolidInteraction;
+				C->node = eLBM.isFluid;
 			}
 
 			//Change incorrect values of SF:

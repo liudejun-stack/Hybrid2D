@@ -104,8 +104,8 @@ void LBM::collision() {
 		for (int k = 0; k < C->Q; k++) {
 			double EDF = C->set_eqFun(C->rho, C->vel, k);
 			double source = C->set_sourceTerm(tau, dtLBM, k);
-			//C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF + source;
-			C->f[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
+			C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF + source;
+			//C->f[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
 		}
 	}
 }
