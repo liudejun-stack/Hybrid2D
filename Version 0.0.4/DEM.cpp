@@ -6,7 +6,7 @@ void DEM::calculateParticleTimeStep() {
 		if (B->mass < minMass)	minMass = B->mass;
 	}
 	ASSERT(minMass > 0);
-	dtDEM = 2 * factorOfSafety * std::sqrt(minMass / normalStiffness);
+	dtDEM = factorOfSafety * std::sqrt(minMass / normalStiffness);
 }
 
 Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body) {
@@ -75,7 +75,7 @@ void DEM::forceCalculation() {
 			}
 		}
 
-		//Body and border force:
+		//Body, fluid and border force:
 		B->force += B->mass * gravity;
 		B->force += applyBorderForce(B);
 		B->force += B->forceLBM;

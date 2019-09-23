@@ -16,7 +16,7 @@ public:
 		pos           = _pos;
 		vel           = _vel;
 		id            = _id;
-		inertiaMoment = _mass * _mass * _radius * 0.5;
+		inertiaMoment = _mass * _radius * _radius * 0.5;
 		functionR     = 0.5 * std::sqrt(_radius * _radius - 0.25) + _radius * _radius * atan(0.5 / (std::sqrt(_radius * _radius - 0.25))) - _radius + 0.5;
 	}
 
@@ -45,6 +45,8 @@ public:
 	double rotVel       = 0.0;
 	double moment       = 0.0;
 	double blockedMDOFs = 1;
+
+	~Body() {};
 };
 
 #endif //BODY_H

@@ -95,7 +95,7 @@ void Scene::prepareScenario() {
 }
 
 void Scene::simulationInfo(int& i) {
-	double totalEnergy = eIMB.eDEM.kinEnergy.back() + eIMB.eDEM.potEnergy.back();
+	//double totalEnergy = eIMB.eDEM.kinEnergy.back() + eIMB.eDEM.potEnergy.back();
 	if (i == 0) {
 		std::cout << "----------------------- LBM/DEM Simulation -----------------------"  << "\n";
 		std::cout << "Current Iteration Number: " << i                                     << "\n";
@@ -110,16 +110,16 @@ void Scene::simulationInfo(int& i) {
 		std::cout << "Normal Stiffness:         " << normalStiffness                       << "\n";
 		std::cout << "Shear Stiffness:          " << shearStiffness                        << "\n";
 		std::cout << "Local Damping:            " << localDamping                          << "\n";
-		std::cout << "Particle Kinematic Energy: " << eIMB.eDEM.kinEnergy.back()          << "\n";
-		std::cout << "Particle Potential Energy: " << eIMB.eDEM.potEnergy.back()          << "\n";
-		std::cout << "Total Energy: " << totalEnergy<< "\n";
+		//std::cout << "Particle Kinematic Energy: " << eIMB.eDEM.kinEnergy.back()          << "\n";
+		//std::cout << "Particle Potential Energy: " << eIMB.eDEM.potEnergy.back()          << "\n";
+		//std::cout << "Total Energy: " << totalEnergy<< "\n";
 	}
 	else {
 		std::cout << "----------------------- LBM/DEM Simulation -----------------------" << "\n";
 		std::cout << "Current Iteration Number:   " << i                                  << "\n";
-		std::cout << "Particle Kinematic Energy : " << eIMB.eDEM.kinEnergy.back() << "\n";
-		std::cout << "Particle Potential Energy : " << eIMB.eDEM.potEnergy.back() << "\n";
-		std::cout << "Total Energy: " << totalEnergy << "\n";
+		//std::cout << "Particle Kinematic Energy : " << eIMB.eDEM.kinEnergy.back() << "\n";
+		//std::cout << "Particle Potential Energy : " << eIMB.eDEM.potEnergy.back() << "\n";
+		//std::cout << "Total Energy: " << totalEnergy << "\n";
 	}
 }
 
@@ -151,6 +151,9 @@ void Scene::moveToNextTimeStep_DEM(int _nIter, std::string _fileName) {
 		eIMB.eDEM.forceCalculation();
 		eIMB.eDEM.updateVelPos();
 		eIMB.eDEM.updateContact();
-		if (i % 100 == 0)	eIMB.eDEM.particleVTK(_fileName);
+		if (i % 100 == 0) {
+			eIMB.eDEM.particleVTK(_fileName);
+			simulationInfo(i);
+		}
 	}
 }
