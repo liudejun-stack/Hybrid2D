@@ -36,14 +36,16 @@ void DEM::contactVerification() {
 	int bodySize = (int)bodies.size();
 	ASSERT(bodySize > 0);
 	//Brute force method:
-	for (int i = 0; i < bodySize - 1; ++i)
+	for (int i = 0; i < bodySize - 1; ++i) {
 		for (int j = i + 1; j < bodySize; ++j) {
-			if ((bodies[i]->pos - bodies[j]->pos).norm() < (bodies[i]->radius + bodies[j]->radius)) {
+			if (bodies[i]->checkInteraction(bodies[j]->id))	continue;
+			if ((bodies[i]->pos - bodies[j]->pos).norm() < bodies[i]->radius + bodies[j]->radius) {
 				interactions.push_back(std::make_shared<Interaction>(bodies[i], bodies[j]));
 				bodies[i]->inter.push_back(interactions[interactions.size() - 1]);
 				bodies[j]->inter.push_back(interactions[interactions.size() - 1]);
 			}
 		}
+	}
 }
 
 void DEM::forceCalculation() {
@@ -54,7 +56,6 @@ void DEM::forceCalculation() {
 		I->applyFrictionLaw(frictionAngle);
 	}
 
-	//Force calculation:
 	//Force calculation:
 	for (auto& B : bodies) {
 
@@ -84,10 +85,6 @@ void DEM::forceCalculation() {
 
 void DEM::updateVelPos() {
 	for (auto& B : bodies) {
-		//Body and border force:
-		B->force += B->mass * gravity;
-		B->force += applyBorderForce(B);
-		B->force += B->forceLBM;
 
 		//Calculate accelaration from forces:
 		Vec2d  linAccel = { 0.0, 0.0 };
@@ -117,8 +114,6 @@ void DEM::updateVelPos() {
 		B->pos += B->vel * dtDEM;
 		B->rot += B->rotVel * dtDEM;
 	}
-	++nIter;
-	time += dtDEM;
 }
 
 void DEM::updateContact() {
@@ -126,6 +121,8 @@ void DEM::updateContact() {
 	for (auto& B : bodies) {
 		B->inter.erase(std::remove_if(std::begin(B->inter), std::end(B->inter), [](std::weak_ptr<Interaction> I) {return I.expired(); }), std::end(B->inter));
 	}
+	++nIter;
+	time += dtDEM;
 }
 
 void DEM::calculateEnergy() {
