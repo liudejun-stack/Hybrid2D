@@ -26,16 +26,16 @@ int main() {
 	Scene S;
 	S.addCircle(1, radius, cylinderCoord, {0.0, 0.0});
 	//S.addCircle(1, 0.5, { 5,5 }, { 0,0 });
-	S.relaxationTime = 0.55;
-	S.kinViscosity = uMax * (2 * radius) / re;
+	S.relaxationTime = 0.6;
+	S.kinViscosity = 1e-6;
+	S.latticeSpacing = 1.0;
 	S.eIMB.eDEM.localDamping = 0;
-	S.factorOfSafety = 0.5;
+	S.factorOfSafety = 0.1;
 	S.domainSize = dim;
 	S.top_isSolid = true;
 	S.bot_isSolid = true;
 	S.bodies_isSolid = true;
 	S.prepareScenario();
-	S.eIMB.eDEM.calculateParticleTimeStep();
 
 	S.eIMB.eLBM.set_initCond(1.0, { 0.08, 0.0 });
 
@@ -46,7 +46,7 @@ int main() {
 		S.eIMB.eLBM.set_denBC(dim[0] - 1, j, 1.0);
 	}
 	S.eIMB.eLBM.set_zouBC();
-	S.moveToNextTimeStep_LBM(10000, "LBM");
+	S.moveToNextTimeStep_LBM(30000, "LBM");
 	//S.moveToNextTimeStep_DEM(10000, "DEM");
 
 

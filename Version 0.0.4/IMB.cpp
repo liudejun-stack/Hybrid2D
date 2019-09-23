@@ -4,23 +4,17 @@
 void IMB::calculateTimeStep() {
 	eLBM.calculateFluidTimeStep();
 	eDEM.calculateParticleTimeStep();
-	if (eDEM.dtDEM >= eLBM.dtLBM) {
-		eDEM.dtDEM = eLBM.dtLBM;
-		dt = eLBM.dtLBM;
-	}
-	else {
-		eLBM.dtLBM = eDEM.dtDEM;
-		dt = eDEM.dtDEM;
 
-		//calculate lattice spacing for new dt:
-		eLBM.dx = std::sqrt(3 * eLBM.kinViscosity * eLBM.dtLBM / (eLBM.tau - 0.5));
-
-		//Change lattice speed for all cells:
-		for (auto& C : eLBM.cells) {
-			C->latticeSpeed = eLBM.dx / eLBM.dtLBM;
-		}
+	while (eLBM.dtLBM >= eDEM.dtDEM) {
+		std::cout << eDEM.dtDEM << "\n";
+		std::cout << eLBM.dtLBM << "\n";
+		std::cout << "Choose another lattice spacing: \n";
+		std::cin >> eLBM.dx;
+		eLBM.calculateFluidTimeStep();
+		eDEM.calculateParticleTimeStep();
 	}
-	ASSERT(dt > 0.0);
+	eDEM.dtDEM = eLBM.dtLBM;
+	dt = eLBM.dtLBM;
 }
 
 void IMB::calculateSolidFraction() {
@@ -42,7 +36,7 @@ void IMB::calculateSolidFraction() {
 			else {
 				double distCellParSurf = distCellPar - B->radius;
 				C->solidFraction = -distCellParSurf + B->functionR;
-				C->node = eLBM.fluidSolidInteraction;
+				C->node = eLBM.isSolid;
 			}
 
 			//Change incorrect values of SF:
@@ -59,12 +53,10 @@ void IMB::calculateSolidFraction() {
 			for (int k = 0; k < C->Q; k++) {
 				double EDF_OP = C->set_eqFun(C->rho, C->vel, C->opNode[k]);
 				double EDF_Par = C->set_eqFun(C->rho, particleVel, k);
-
 				C->omega[k] = C->f[C->opNode[k]] - C->f[k] + EDF_Par - EDF_OP;
 				B->forceLBM += -C->latticeSpeed * eLBM.dx * C->solidFunction * C->omega[k] * C->discreteVelocity[k];
-				//std::cout << B->forceLBM << std::endl;
 			}
-			ASSERT(B->forceLBM != Vec2d::Zero());
+			//ASSERT(B->forceLBM != Vec2d::Zero());
 		}
 	}
 }

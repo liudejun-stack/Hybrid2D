@@ -31,6 +31,7 @@ public:
 	bool bodies_isSolid    = false;
 	
 	//Fluid parameters:
+	double latticeSpacing  = 1.0;
 	double kinViscosity    = 1e-6;
 	double relaxationTime  = 1.0;
 

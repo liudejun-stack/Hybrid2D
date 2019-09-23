@@ -57,6 +57,7 @@ void LBM::calculateFluidTimeStep() {
 }
 
 void LBM::initializeCells() {
+	latticeSpeed = dx / dtLBM;
 	for (int j = 0; j < domainSize[1]; ++j)
 		for (int i = 0; i < domainSize[0]; ++i) {
 			Vec2d cellPos = { i,j };

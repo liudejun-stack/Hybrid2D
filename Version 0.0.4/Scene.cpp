@@ -54,7 +54,7 @@ void Scene::set_rightSolid() {
 
 void Scene::updateGeom() {
 	for (auto& C : eIMB.eLBM.cells) {
-		if (C->node == eIMB.eLBM.fluidSolidInteraction) {
+		if (C->node == eIMB.eLBM.isSolid) {
 			C->node = eIMB.eLBM.isFluid;
 		}
 	}
@@ -69,15 +69,19 @@ void Scene::prepareScenario() {
 	eIMB.eDEM.domainSize = domainSize;
 
 	//Fluid parameters definition:
-	eIMB.eLBM.tau = relaxationTime;
+	eIMB.eLBM.dx           = latticeSpacing;
+	eIMB.eLBM.tau          = relaxationTime;
 	eIMB.eLBM.kinViscosity = kinViscosity;
 
 	//Particle parameters definition:
-	eIMB.eDEM.factorOfSafety = factorOfSafety;
-	eIMB.eDEM.localDamping = localDamping;
-	eIMB.eDEM.frictionAngle = frictionAngle;
+	eIMB.eDEM.factorOfSafety  = factorOfSafety;
+	eIMB.eDEM.localDamping    = localDamping;
+	eIMB.eDEM.frictionAngle   = frictionAngle;
 	eIMB.eDEM.normalStiffness = normalStiffness;
-	eIMB.eDEM.shearStiffness = shearStiffness;
+	eIMB.eDEM.shearStiffness  = shearStiffness;
+
+	//Time step calculation:
+	eIMB.calculateTimeStep();
 
 	//Cell initialization for LBM simualtion:
 	eIMB.eLBM.initializeCells();
@@ -88,13 +92,10 @@ void Scene::prepareScenario() {
 	if (right_isSolid)	set_rightSolid();
 	if (left_isSolid)	set_rightSolid();
 	if (bodies_isSolid)	set_circlesSolid();
-
-	//Time step calculation:
-	eIMB.calculateTimeStep();
-	//eIMB.eDEM.calculateParticleTimeStep();
 }
 
 void Scene::simulationInfo(int& i) {
+	double totalEnergy = eIMB.eDEM.kinEnergy.back() + eIMB.eDEM.potEnergy.back();
 	if (i == 0) {
 		std::cout << "----------------------- LBM/DEM Simulation -----------------------"  << "\n";
 		std::cout << "Current Iteration Number: " << i                                     << "\n";
@@ -111,25 +112,25 @@ void Scene::simulationInfo(int& i) {
 		std::cout << "Local Damping:            " << localDamping                          << "\n";
 		std::cout << "Particle Kinematic Energy: " << eIMB.eDEM.kinEnergy.back()          << "\n";
 		std::cout << "Particle Potential Energy: " << eIMB.eDEM.potEnergy.back()          << "\n";
-		std::cout << "Total Energy: " << eIMB.eDEM.kinEnergy.back() + eIMB.eDEM.potEnergy.back() << "\n";
+		std::cout << "Total Energy: " << totalEnergy<< "\n";
 	}
 	else {
 		std::cout << "----------------------- LBM/DEM Simulation -----------------------" << "\n";
 		std::cout << "Current Iteration Number:   " << i                                  << "\n";
 		std::cout << "Particle Kinematic Energy : " << eIMB.eDEM.kinEnergy.back() << "\n";
 		std::cout << "Particle Potential Energy : " << eIMB.eDEM.potEnergy.back() << "\n";
-		std::cout << "Total Energy: " << eIMB.eDEM.kinEnergy.back() + eIMB.eDEM.potEnergy.back() << "\n";
+		std::cout << "Total Energy: " << totalEnergy << "\n";
 	}
 }
 
 void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
 	for (int i = 0; i != _nIter; ++i) {
 		eIMB.eDEM.forceResetter();
-		//eIMB.eLBM.updateMacro();
-		//eIMB.calculateSolidFraction();
-		//eIMB.eLBM.collision();
-		//eIMB.eLBM.set_bounceback();
-		//eIMB.eLBM.stream();
+		eIMB.eLBM.updateMacro();
+		eIMB.calculateSolidFraction();
+		eIMB.eLBM.collision();
+		eIMB.eLBM.set_bounceback();
+		eIMB.eLBM.stream();
 		eIMB.eDEM.contactVerification();
 		eIMB.eDEM.forceCalculation();
 		eIMB.eDEM.updateVelPos();
