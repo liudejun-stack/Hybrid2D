@@ -16,6 +16,7 @@ public:
 
 	std::vector<double>solidFunction;
 	double dt = 0.0;
+	int subCycleNumber = 0;
 
 
 	LBM eLBM;	//LBM engine

@@ -2,9 +2,9 @@
 #include <cmath>
 
 void IMB::calculateTimeStep() {
-	eLBM.calculateFluidTimeStep();
+	//eLBM.calculateFluidTimeStep();
 	eDEM.calculateParticleTimeStep();
-
+	/*
 	while (eLBM.dtLBM >= eDEM.dtDEM) {
 		std::cout << eDEM.dtDEM << "\n";
 		std::cout << eLBM.dtLBM << "\n";
@@ -15,10 +15,16 @@ void IMB::calculateTimeStep() {
 	}
 	eDEM.dtDEM = eLBM.dtLBM;
 	dt = eLBM.dtLBM;
+	*/
+	subCycleNumber = (eLBM.dtLBM / eDEM.dtDEM) + 1;
+	ASSERT(subCycleNumber > 0);
 }
 
 void IMB::calculateSolidFraction() {
 	for (auto& B : eDEM.bodies) {
+		//Reset LBM Forces:
+		B->forceLBM = Vec2d::Zero();
+		B->torqueLBM = Vec2d::Zero();
 		for (auto& C : eLBM.cells) {
 
 			//Calculate Solid Fraction (SF):
@@ -36,7 +42,7 @@ void IMB::calculateSolidFraction() {
 			else {
 				double distCellParSurf = distCellPar - B->radius;
 				C->solidFraction = -distCellParSurf + B->functionR;
-				C->node = eLBM.isFluid;
+				C->node = eLBM.fluidSolidInteraction;
 			}
 
 			//Change incorrect values of SF:
@@ -56,7 +62,7 @@ void IMB::calculateSolidFraction() {
 				C->omega[k] = C->f[C->opNode[k]] - C->f[k] + EDF_Par - EDF_OP;
 				B->forceLBM += -C->latticeSpeed * eLBM.dx * C->solidFunction * C->omega[k] * C->discreteVelocity[k];
 			}
-			//ASSERT(B->forceLBM != Vec2d::Zero());
+			ASSERT(B->forceLBM != Vec2d::Zero());
 		}
 	}
 }

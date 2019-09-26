@@ -157,3 +157,25 @@ void Scene::moveToNextTimeStep_DEM(int _nIter, std::string _fileName) {
 		}
 	}
 }
+
+void Scene::moveToNextTimeStep(int _nIter, std::string _fileName) {
+	for (int i = 0; i != _nIter; ++i) {
+		eIMB.eDEM.forceResetter();
+		eIMB.eLBM.updateMacro();
+		eIMB.calculateSolidFraction();
+		eIMB.eLBM.set_bounceback();
+		eIMB.eLBM.stream();
+		for (int i = 0; i != eIMB.subCycleNumber; ++i) {
+			eIMB.eDEM.contactVerification();
+			eIMB.eDEM.forceCalculation();
+			eIMB.eDEM.updateVelPos();
+			eIMB.eDEM.updateContact();
+			eIMB.eDEM.forceResetter();
+		}
+		if (i % 100 == 0)	eIMB.eLBM.fluidVTK(_fileName);
+		if (i % 1000 == 0) {
+			eIMB.eDEM.calculateEnergy();
+			simulationInfo(i);
+		}
+	}
+}

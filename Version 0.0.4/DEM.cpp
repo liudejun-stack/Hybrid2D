@@ -26,8 +26,6 @@ Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body) {
 void DEM::forceResetter() {
 	for (auto& B : bodies) {
 		B->force     = Vec2d::Zero();
-		B->forceLBM  = Vec2d::Zero();
-		B->torqueLBM = Vec2d::Zero();
 		B->moment    = 0.0;
 	}
 }

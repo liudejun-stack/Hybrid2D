@@ -39,9 +39,9 @@ int main() {
 	//S.addCircle(0.5, 0.5, { 5,5 }, { 1,0 });
 
 	//Fluid Parameters:
-	S.relaxationTime = 0.6;
-	S.kinViscosity = 1e-6;
-	S.latticeSpacing = 5e-5;
+	S.relaxationTime = calcVisc();
+	//S.kinViscosity = uMax * (2 * radius) / re;
+	S.latticeSpacing = 1.0;
 
 	//Particle Parameters:
 	S.localDamping = 0;
