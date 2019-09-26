@@ -3,7 +3,7 @@
 
 double uMax = 0.1;
 double re = 100;
-Vec2d dim = { 500, 100 };
+Vec2d dim = { 10, 10 };
 double radius = dim[1] / 20 + 1;
 Vec2d cylinderCoord = { dim[1] / 2, dim[1] / 2 };
 
@@ -61,9 +61,11 @@ int main() {
 		S.eIMB.eLBM.set_denBC(dim[0] - 1, j, 1.0);
 	}
 	S.eIMB.eLBM.set_zouBC();
-	S.moveToNextTimeStep_LBM(30000, "LBM");
+	//S.moveToNextTimeStep_LBM(30000, "LBM");
 	
-	//S.moveToNextTimeStep_DEM(50000, "DEM");
+	S.moveToNextTimeStep_DEM(50000, "DEM");
+
+	//S.moveToNextTimeStep(30000, "Sim");
 
 	return 0;
 }

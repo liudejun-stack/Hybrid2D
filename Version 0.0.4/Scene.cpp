@@ -128,7 +128,7 @@ void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
 	for (int i = 0; i != _nIter; ++i) {
 		eIMB.eDEM.forceResetter();
 		eIMB.eLBM.updateMacro();
-		//eIMB.calculateSolidFraction();
+		eIMB.calculateSolidFraction();
 		eIMB.eLBM.collision();
 		eIMB.eLBM.set_bounceback();
 		eIMB.eLBM.stream();
@@ -152,6 +152,7 @@ void Scene::moveToNextTimeStep_DEM(int _nIter, std::string _fileName) {
 		eIMB.eDEM.updateVelPos();
 		eIMB.eDEM.updateContact();
 		if (i % 100 == 0) {
+			eIMB.eDEM.calculateEnergy();
 			eIMB.eDEM.particleVTK(_fileName);
 			simulationInfo(i);
 		}
@@ -162,7 +163,8 @@ void Scene::moveToNextTimeStep(int _nIter, std::string _fileName) {
 	for (int i = 0; i != _nIter; ++i) {
 		eIMB.eDEM.forceResetter();
 		eIMB.eLBM.updateMacro();
-		eIMB.calculateSolidFraction();
+		//eIMB.calculateSolidFraction();
+		eIMB.eLBM.collision();
 		eIMB.eLBM.set_bounceback();
 		eIMB.eLBM.stream();
 		for (int i = 0; i != eIMB.subCycleNumber; ++i) {
@@ -172,10 +174,11 @@ void Scene::moveToNextTimeStep(int _nIter, std::string _fileName) {
 			eIMB.eDEM.updateContact();
 			eIMB.eDEM.forceResetter();
 		}
-		if (i % 100 == 0)	eIMB.eLBM.fluidVTK(_fileName);
-		if (i % 1000 == 0) {
+		if (i % 100 == 0) {
 			eIMB.eDEM.calculateEnergy();
-			simulationInfo(i);
+			//eIMB.eLBM.fluidVTK(_fileName);
+			eIMB.eDEM.particleVTK(_fileName);
 		}
+		//updateGeom();
 	}
 }
