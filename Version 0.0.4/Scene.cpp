@@ -182,20 +182,19 @@ void Scene::solidVTK(std::string _fileName) {
 }
 
 void Scene::moveToNextTimeStep_LBM() {
-		eIMB.eDEM.forceResetter();
-		eIMB.eLBM.updateMacro();
-		eIMB.calculateSolidFraction();
-		eIMB.eLBM.collision();
-		eIMB.eLBM.set_bounceback();
-		eIMB.eLBM.stream();
+	eIMB.eLBM.updateMacro();
+	eIMB.calculateSolidFraction();
+	eIMB.eLBM.collision();
+	eIMB.eLBM.set_bounceback();
+	eIMB.eLBM.stream();
 }
 
 void Scene::moveToNextTimeStep_DEM() {
-		eIMB.eDEM.forceResetter();
-		eIMB.eDEM.contactVerification();
-		eIMB.eDEM.forceCalculation();
-		eIMB.eDEM.updateVelPos();
-		eIMB.eDEM.updateContact();
+	eIMB.eDEM.forceResetter();
+	eIMB.eDEM.contactVerification();
+	eIMB.eDEM.forceCalculation();
+	eIMB.eDEM.updateVelPos();
+	eIMB.eDEM.updateContact();
 }
 
 void Scene::moveToNextTimeStep(int _nIter, std::string _fileName) {

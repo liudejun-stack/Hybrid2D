@@ -62,7 +62,7 @@ void IMB::calculateSolidFraction() {
 				C->omega[k] = C->f[C->opNode[k]] - C->f[k] + EDF_Par - EDF_OP;
 				B->forceLBM += -C->latticeSpeed * eLBM.dx * C->solidFunction * C->omega[k] * C->discreteVelocity[k];
 			}
-			ASSERT(B->forceLBM != Vec2d::Zero());
+			//ASSERT(B->forceLBM != Vec2d::Zero());
 		}
 	}
 }
