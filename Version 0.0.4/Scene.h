@@ -19,9 +19,13 @@ public:
 	void simulationInfo(int& i);
 
 	//Solver:
-	void moveToNextTimeStep_LBM(int _nIter, std::string _fileName);
-	void moveToNextTimeStep_DEM(int _nIter, std::string _fileName);
+	void moveToNextTimeStep_LBM();
+	void moveToNextTimeStep_DEM();
 	void moveToNextTimeStep(int _nIter, std::string _fileName);
+
+	//Outputs
+	void fluidVTK(std::string _fileName);
+	void solidVTK(std::string _fileName);
 
 	//Geometry parameters:
 	Vec2d domainSize       = Vec2d::Zero();
@@ -42,6 +46,9 @@ public:
 	double factorOfSafety  = 0.3;
 	double normalStiffness = 1e6;
 	double shearStiffness  = 0.5e6;
+
+	//Output parameters:
+	int vtkCounter;
 
 	IMB eIMB;  //Coupling Engine
 };

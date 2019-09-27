@@ -1,5 +1,4 @@
 #include "LBM.h"
-#include <omp.h>
 
 int LBM::getCell(int i, int j) {return i + domainSize[0] * j;}
 
@@ -130,33 +129,4 @@ void LBM::stream() {
 	for (int k = 0; k < C->Q; k++) {
 		C->f[k] = C->fTemp[k];
 	}
-}
-
-void LBM::fluidVTK(std::string _fileName) {
-	std::ofstream out;
-	out.open(_fileName + std::to_string(vtkCounter) + ".vtk");
-	out << "# vtk DataFile Version 3.0\n";
-	out << "Fluid state\n";
-	out << "ASCII\n";
-	out << "DATASET STRUCTURED_POINTS\n";
-	out << "DIMENSIONS " << domainSize[0] << " " << domainSize[1] << " " << 1 << "\n";
-	out << "ORIGIN "     << 0      << " " << 0      << " " << 0 << "\n";
-	out << "SPACING "    << 1      << " " << 1      << " " << 1 << "\n";
-	out << "POINT_DATA " << domainSize[0] * domainSize[1] << "\n";
-	out << "SCALARS Geometry float 1\n";
-	out << "LOOKUP_TABLE default\n";
-	for (auto& C : cells) {
-		out << C->node << "\n";
-	}
-	out << "SCALARS Density float 1\n";
-	out << "LOOKUP_TABLE default\n";
-	for (auto& C : cells) {
-		out << C->rho << "\n";
-	}
-	out << "VECTORS Velocity float\n";
-	for (auto& C : cells) {
-		out << C->vel[0] << " " << C->vel[1] << " " << 0 << "\n";
-	}
-	out.close();
-	vtkCounter++;
 }

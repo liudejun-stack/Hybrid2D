@@ -21,7 +21,6 @@ public:
 
 	//Output:
 	void energyCSV(std::string _fileName);
-	void particleVTK(std::string _fileName);
 
 	//Smart pointers to classes:
 	std::vector<std::shared_ptr<Body>> bodies;
@@ -45,7 +44,6 @@ public:
 	double factorOfSafety  = 0.1;
 	int vtkCounter         = 0;
 	int nIter              = 0;
-
 };
 
 #endif //DEM_H

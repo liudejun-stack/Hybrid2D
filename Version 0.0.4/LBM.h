@@ -27,9 +27,6 @@ public:
 	void collision();
 	void stream();
 
-	//Output:
-	void fluidVTK(std::string _fileName);
-
 	std::vector<std::shared_ptr<Lattice>> cells;
 
 	Vec2d gravity       = { 0.0, -9.81 };
@@ -43,7 +40,6 @@ public:
 	int isSolid = 1;
 	int fluidSolidInteraction = 2;
 	int vtkCounter      = 0;
-
 };
 #endif // !LBM_H
 

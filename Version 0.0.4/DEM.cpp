@@ -148,25 +148,3 @@ void DEM::energyCSV(std::string _fileName) {
 	}
 }
 
-void DEM::particleVTK(std::string _fileName) {
-	std::ofstream out;
-	out.open(_fileName + std::to_string(vtkCounter) + ".vtk");
-	out << "# vtk DataFile Version 3.0\n";
-	out << "DEM\n";
-	out << "ASCII\n";
-	out << " \n";
-	out << "DATASET POLYDATA\n";
-	out << "POINTS " << std::to_string((int)bodies.size()) << " float\n";
-	for (auto& B : bodies) {
-		out << B->pos[0] << " " << B->pos[1] << " " << 0 << std::endl;
-	}
-	out << "POINT_DATA " << std::to_string((int)bodies.size()) << std::endl;
-	out << "SCALARS radii double\n";
-	out << "LOOKUP_TABLE default\n";
-	for (auto& B : bodies) {
-		out << B->radius << std::endl;
-	}
-	out.close();
-	vtkCounter++;
-}
-

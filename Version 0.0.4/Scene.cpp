@@ -64,6 +64,7 @@ void Scene::updateGeom() {
 }
 
 void Scene::prepareScenario() {
+
 	//Boundary definition:
 	eIMB.eLBM.domainSize = domainSize;
 	eIMB.eDEM.domainSize = domainSize;
@@ -93,6 +94,11 @@ void Scene::prepareScenario() {
 	if (right_isSolid)	set_rightSolid();
 	if (left_isSolid)	set_rightSolid();
 	if (bodies_isSolid)	set_circlesSolid();
+
+	//Directories for VTK output
+	int ignore;
+	ignore = system("mkdir -p fluidVTK");
+	ignore = system("mkdir -p solidVTK");
 }
 
 void Scene::simulationInfo(int& i) {
@@ -124,57 +130,74 @@ void Scene::simulationInfo(int& i) {
 	}
 }
 
-void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
-	for (int i = 0; i != _nIter; ++i) {
+void Scene::fluidVTK(std::string _fileName) {
+	std::ofstream out;
+	out.open("fluidVTK/" + _fileName + std::to_string(vtkCounter) + ".vtk");
+	out << "# vtk DataFile Version 3.0\n";
+	out << "Fluid state\n";
+	out << "ASCII\n";
+	out << "DATASET STRUCTURED_POINTS\n";
+	out << "DIMENSIONS " << domainSize[0] << " " << domainSize[1] << " " << 1 << "\n";
+	out << "ORIGIN " << 0 << " " << 0 << " " << 0 << "\n";
+	out << "SPACING " << 1 << " " << 1 << " " << 1 << "\n";
+	out << "POINT_DATA " << domainSize[0] * domainSize[1] << "\n";
+	out << "SCALARS Geometry float 1\n";
+	out << "LOOKUP_TABLE default\n";
+	for (auto& C : eIMB.eLBM.cells) {
+		out << C->node << "\n";
+	}
+	out << "SCALARS Density float 1\n";
+	out << "LOOKUP_TABLE default\n";
+	for (auto& C : eIMB.eLBM.cells) {
+		out << C->rho << "\n";
+	}
+	out << "VECTORS Velocity float\n";
+	for (auto& C : eIMB.eLBM.cells) {
+		out << C->vel[0] << " " << C->vel[1] << " " << 0 << "\n";
+	}
+	out.close();
+	vtkCounter++;
+}
+
+void Scene::solidVTK(std::string _fileName) {
+	std::ofstream out;
+	out.open("solidVTK/" + _fileName + std::to_string(vtkCounter) + ".vtk");
+	out << "# vtk DataFile Version 3.0\n";
+	out << "DEM\n";
+	out << "ASCII\n";
+	out << " \n";
+	out << "DATASET POLYDATA\n";
+	out << "POINTS " << std::to_string((int)eIMB.eDEM.bodies.size()) << " float\n";
+	for (auto& B : eIMB.eDEM.bodies) {
+		out << B->pos[0] << " " << B->pos[1] << " " << 0 << std::endl;
+	}
+	out << "POINT_DATA " << std::to_string((int)eIMB.eDEM.bodies.size()) << std::endl;
+	out << "SCALARS radii double\n";
+	out << "LOOKUP_TABLE default\n";
+	for (auto& B : eIMB.eDEM.bodies) {
+		out << B->radius << std::endl;
+	}
+	out.close();
+	vtkCounter++;
+}
+
+void Scene::moveToNextTimeStep_LBM() {
 		eIMB.eDEM.forceResetter();
 		eIMB.eLBM.updateMacro();
 		eIMB.calculateSolidFraction();
 		eIMB.eLBM.collision();
 		eIMB.eLBM.set_bounceback();
 		eIMB.eLBM.stream();
-		if (i % 100 == 0) {
-			eIMB.eLBM.fluidVTK(_fileName);
-			eIMB.eDEM.calculateEnergy();
-			simulationInfo(i);
-		}
-	}
 }
 
-void Scene::moveToNextTimeStep_DEM(int _nIter, std::string _fileName) {
-	for (int i = 0; i != _nIter; ++i) {
+void Scene::moveToNextTimeStep_DEM() {
 		eIMB.eDEM.forceResetter();
 		eIMB.eDEM.contactVerification();
 		eIMB.eDEM.forceCalculation();
 		eIMB.eDEM.updateVelPos();
 		eIMB.eDEM.updateContact();
-		if (i % 100 == 0) {
-			eIMB.eDEM.calculateEnergy();
-			eIMB.eDEM.particleVTK(_fileName);
-			simulationInfo(i);
-		}
-	}
 }
 
 void Scene::moveToNextTimeStep(int _nIter, std::string _fileName) {
-	for (int i = 0; i != _nIter; ++i) {
-		eIMB.eDEM.forceResetter();
-		eIMB.eLBM.updateMacro();
-		//eIMB.calculateSolidFraction();
-		eIMB.eLBM.collision();
-		eIMB.eLBM.set_bounceback();
-		eIMB.eLBM.stream();
-		for (int i = 0; i != eIMB.subCycleNumber; ++i) {
-			eIMB.eDEM.contactVerification();
-			eIMB.eDEM.forceCalculation();
-			eIMB.eDEM.updateVelPos();
-			eIMB.eDEM.updateContact();
-			eIMB.eDEM.forceResetter();
-		}
-		if (i % 100 == 0) {
-			eIMB.eDEM.calculateEnergy();
-			//eIMB.eLBM.fluidVTK(_fileName);
-			eIMB.eDEM.particleVTK(_fileName);
-		}
-		//updateGeom();
-	}
+
 }

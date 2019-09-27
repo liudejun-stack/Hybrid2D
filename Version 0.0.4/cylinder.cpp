@@ -2,8 +2,8 @@
 #include "Scene.h"
 
 double uMax = 0.1;
-double re = 20;
-Vec2d dim = { 500, 100 };
+double re = 50;
+Vec2d dim = { 10, 10 };
 double radius = dim[1] / 20 + 1;
 Vec2d cylinderCoord = { dim[1] / 2, dim[1] / 2 };
 
@@ -32,11 +32,11 @@ int main() {
 	S.bodies_isSolid = true;
 
 	//Bodies:
-	S.addCircle(1, radius, cylinderCoord, {0.0, 0.0});
-	//S.addCircle(0.5, 0.5, { 7,7 }, { 1.1,0 });
-	//S.addCircle(0.5, 0.5, { 2,2 }, { 1.5,1.5 });
-	//S.addCircle(0.5, 0.5, { 9,9 }, { 1,0 });
-	//S.addCircle(0.5, 0.5, { 5,5 }, { 1,0 });
+	//S.addCircle(1, radius, cylinderCoord, {0.0, 0.0});
+	S.addCircle(0.5, 0.5, { 7,7 }, { 1.1,0 });
+	S.addCircle(0.5, 0.5, { 2,2 }, { 1.5,1.5 });
+	S.addCircle(0.5, 0.5, { 9,9 }, { 1,0 });
+	S.addCircle(0.5, 0.5, { 5,5 }, { 1,0 });
 
 	//Fluid Parameters:
 	S.relaxationTime = calcVisc();
@@ -44,7 +44,7 @@ int main() {
 	S.latticeSpacing = 1.0;
 
 	//Particle Parameters:
-	S.localDamping = 0;
+	S.localDamping = 0.3;
 	S.factorOfSafety = 0.5;
 	S.frictionAngle = 30;
 	S.normalStiffness = 1e6;
@@ -61,11 +61,15 @@ int main() {
 		S.eIMB.eLBM.set_denBC(dim[0] - 1, j, 1.0);
 	}
 	S.eIMB.eLBM.set_zouBC();
-	S.moveToNextTimeStep_LBM(10000, "LBM");
-	
-	//S.moveToNextTimeStep_DEM(50000, "DEM");
 
-	//S.moveToNextTimeStep(30000, "Sim");
+	for (int i = 0; i != 30000; ++i) {
+		S.moveToNextTimeStep_DEM();
+		if (i % 100 == 0)	S.solidVTK("DEM");
+		if (i % 1000 == 0) {
+			S.eIMB.eDEM.calculateEnergy();
+			S.simulationInfo(i);
+		}
+	}
 
 	return 0;
 }
