@@ -26,7 +26,6 @@ public:
 	void applyForce();
 	void collision();
 	void stream();
-	void solver(int _nIter, std::string _fileName);
 
 	//Output:
 	void fluidVTK(std::string _fileName);

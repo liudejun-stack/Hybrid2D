@@ -100,27 +100,27 @@ void Scene::simulationInfo(int& i) {
 	if (i == 0) {
 		std::cout << "----------------------- LBM/DEM Simulation -----------------------"  << "\n";
 		std::cout << "Current Iteration Number: " << i                                     << "\n";
-		std::cout << "Domain Size:              " << domainSize[0] << "x" << domainSize[1] << "\n";
-		std::cout << "Number of Bodies:         " << eIMB.eDEM.bodies.size()               << "\n";
-		std::cout << "Number of cells:          " << eIMB.eLBM.cells.size()                << "\n";
-		std::cout << "Solution TimeStep:        " << eIMB.dt                               << "\n";
-		std::cout << "Lattice Spacing:          " << eIMB.eLBM.dx                          << "\n";
-		std::cout << "Relaxation Time:          " << relaxationTime                        << "\n";
-		std::cout << "Kinematic Viscosity:      " << kinViscosity                          << "\n";
-		std::cout << "Friction Angle:           " << frictionAngle                         << "\n";
-		std::cout << "Normal Stiffness:         " << normalStiffness                       << "\n";
-		std::cout << "Shear Stiffness:          " << shearStiffness                        << "\n";
-		std::cout << "Local Damping:            " << localDamping                          << "\n";
-		std::cout << "Particle Kinematic Energy: " << eIMB.eDEM.kinEnergy.back()          << "\n";
-		std::cout << "Particle Potential Energy: " << eIMB.eDEM.potEnergy.back()          << "\n";
-		std::cout << "Total Energy: " << totalEnergy<< "\n";
+		std::cout << "             Domain Size: " << domainSize[0] << "x" << domainSize[1] << "\n";
+		std::cout << "        Number of Bodies: " << eIMB.eDEM.bodies.size()               << "\n";
+		std::cout << "         Number of cells: " << eIMB.eLBM.cells.size()                << "\n";
+		std::cout << "       Solution TimeStep: " << eIMB.dt                               << "\n";
+		std::cout << "         Lattice Spacing: " << eIMB.eLBM.dx                          << "\n";
+		std::cout << "         Relaxation Time: " << relaxationTime                        << "\n";
+		std::cout << "     Kinematic Viscosity: " << kinViscosity                          << "\n";
+		std::cout << "          Friction Angle: " << frictionAngle                         << "\n";
+		std::cout << "        Normal Stiffness: " << normalStiffness                       << "\n";
+		std::cout << "         Shear Stiffness: " << shearStiffness                        << "\n";
+		std::cout << "           Local Damping: " << localDamping                          << "\n";
+		std::cout << "  (DEM) Kinematic Energy: " << eIMB.eDEM.kinEnergy.back()            << "\n";
+		std::cout << "  (DEM) Potential Energy: " << eIMB.eDEM.potEnergy.back()            << "\n";
+		std::cout << "  (DEM)     Total Energy: " << totalEnergy                           << "\n";
 	}
 	else {
 		std::cout << "----------------------- LBM/DEM Simulation -----------------------" << "\n";
-		std::cout << "Current Iteration Number:   " << i                                  << "\n";
-		std::cout << "Particle Kinematic Energy : " << eIMB.eDEM.kinEnergy.back() << "\n";
-		std::cout << "Particle Potential Energy : " << eIMB.eDEM.potEnergy.back() << "\n";
-		std::cout << "Total Energy: " << totalEnergy << "\n";
+		std::cout << "Current Iteration Number: " << i                                    << "\n";
+		std::cout << "  (DEM) Kinematic Energy: " << eIMB.eDEM.kinEnergy.back()           << "\n";
+		std::cout << "  (DEM) Potential Energy: " << eIMB.eDEM.potEnergy.back()           << "\n";
+		std::cout << "  (DEM)     Total Energy: " << totalEnergy                          << "\n";
 	}
 }
 
@@ -132,12 +132,8 @@ void Scene::moveToNextTimeStep_LBM(int _nIter, std::string _fileName) {
 		eIMB.eLBM.collision();
 		eIMB.eLBM.set_bounceback();
 		eIMB.eLBM.stream();
-		eIMB.eDEM.contactVerification();
-		eIMB.eDEM.forceCalculation();
-		eIMB.eDEM.updateVelPos();
-		eIMB.eDEM.updateContact();
-		if (i % 100 == 0)	eIMB.eLBM.fluidVTK(_fileName);
-		if (i % 1000 == 0) {
+		if (i % 100 == 0) {
+			eIMB.eLBM.fluidVTK(_fileName);
 			eIMB.eDEM.calculateEnergy();
 			simulationInfo(i);
 		}

@@ -160,14 +160,3 @@ void LBM::fluidVTK(std::string _fileName) {
 	out.close();
 	vtkCounter++;
 }
-
-void LBM::solver(int _nIter, std::string _fileName) {
-	for (int i = 0; i != _nIter; ++i) {
-		print(i);
-		updateMacro();
-		collision();
-		set_bounceback();
-		stream();
-		if (i % 100 == 0)	fluidVTK(_fileName);
-	}
-}
