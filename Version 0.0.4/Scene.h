@@ -9,7 +9,6 @@ public:
 
 	//Scenario prepartion:
 	void addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
-	void set_circlesSolid();
 	void set_topSolid();
 	void set_botSolid();
 	void set_leftSolid();
@@ -21,7 +20,7 @@ public:
 	//Solver:
 	void moveToNextTimeStep_LBM();
 	void moveToNextTimeStep_DEM();
-	void moveToNextTimeStep(int _nIter, std::string _fileName);
+	void moveToNextTimeStep();
 
 	//Outputs
 	void fluidVTK(std::string _fileName);
@@ -33,7 +32,6 @@ public:
 	bool bot_isSolid       = false;
 	bool left_isSolid      = false;
 	bool right_isSolid     = false;
-	bool bodies_isSolid    = false;
 	
 	//Fluid parameters:
 	double latticeSpacing  = 1.0;

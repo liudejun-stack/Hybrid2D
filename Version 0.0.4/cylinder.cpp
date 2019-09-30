@@ -29,7 +29,6 @@ int main() {
 	S.domainSize = dim;
 	S.top_isSolid = true;
 	S.bot_isSolid = true;
-	S.bodies_isSolid = true;
 
 	//Bodies:
 	S.addCircle(1, radius, cylinderCoord, {0.0, 0.0});
@@ -39,9 +38,9 @@ int main() {
 	//S.addCircle(0.5, 0.5, { 5,5 }, { 1,0 });
 
 	//Fluid Parameters:
-	S.relaxationTime = calcVisc();
-	//S.kinViscosity = uMax * (2 * radius) / re;
-	S.latticeSpacing = 1.0;
+	S.relaxationTime = 0.6;
+	S.kinViscosity = 1e-6;
+	S.latticeSpacing = 5e-5;
 
 	//Particle Parameters:
 	S.localDamping = 0.3;
@@ -63,8 +62,11 @@ int main() {
 	S.eIMB.eLBM.set_zouBC();
 
 	for (int i = 0; i != 30000; ++i) {
-		S.moveToNextTimeStep_LBM();
-		if (i % 100 == 0)	S.fluidVTK("LBM");
+		S.moveToNextTimeStep();
+		if (i % 100 == 0) {
+			S.fluidVTK("LBM");
+			S.solidVTK("DEM");
+		}
 		if (i % 1000 == 0) {
 			S.eIMB.eDEM.calculateEnergy();
 			S.simulationInfo(i);

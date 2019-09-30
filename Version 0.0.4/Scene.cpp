@@ -1,23 +1,8 @@
 #include "Scene.h"
 
-
 void Scene::addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel) {
 	int id = eIMB.eDEM.bodies.size();
 	eIMB.eDEM.bodies.push_back(std::make_shared<Body>(_mass, _radius, _pos, _vel, id));
-}
-
-void Scene::set_circlesSolid() {
-	for (auto& B : eIMB.eDEM.bodies) {
-		for (int j = 0; j < domainSize[1]; ++j) {
-			for (int i = 0; i < domainSize[0]; ++i) {
-				int id = eIMB.eLBM.getCell(i, j);
-				double cir = (i - B->pos[0]) * (i - B->pos[0]) + (j - B->pos[1]) * (j - B->pos[1]);
-				if (cir < B->radius * B->radius) {
-					eIMB.eLBM.cells[id]->node = eIMB.eLBM.isSolid;
-				}
-			}
-		}
-	}
 }
 
 void Scene::set_topSolid() {
@@ -60,7 +45,6 @@ void Scene::updateGeom() {
 	}
 	set_topSolid();
 	set_botSolid();
-	set_circlesSolid();
 }
 
 void Scene::prepareScenario() {
@@ -83,7 +67,6 @@ void Scene::prepareScenario() {
 
 	//Time step calculation:
 	eIMB.calculateTimeStep();
-	//eIMB.eDEM.calculateParticleTimeStep();
 
 	//Cell initialization for LBM simualtion:
 	eIMB.eLBM.initializeCells();
@@ -93,7 +76,6 @@ void Scene::prepareScenario() {
 	if (bot_isSolid)	set_botSolid();
 	if (right_isSolid)	set_rightSolid();
 	if (left_isSolid)	set_rightSolid();
-	if (bodies_isSolid)	set_circlesSolid();
 
 	//Directories for VTK output
 	int ignore;
@@ -182,8 +164,8 @@ void Scene::solidVTK(std::string _fileName) {
 }
 
 void Scene::moveToNextTimeStep_LBM() {
-	eIMB.eLBM.updateMacro();
 	eIMB.calculateSolidFraction();
+	eIMB.calculateForceAndTorque();
 	eIMB.eLBM.collision();
 	eIMB.eLBM.set_bounceback();
 	eIMB.eLBM.stream();
@@ -197,6 +179,16 @@ void Scene::moveToNextTimeStep_DEM() {
 	eIMB.eDEM.updateContact();
 }
 
-void Scene::moveToNextTimeStep(int _nIter, std::string _fileName) {
-
+void Scene::moveToNextTimeStep() {
+	eIMB.calculateSolidFraction();
+	eIMB.calculateForceAndTorque();
+	eIMB.eLBM.collision();
+	eIMB.eLBM.set_bounceback();
+	eIMB.eLBM.stream();
+	eIMB.eDEM.forceResetter();
+	eIMB.eDEM.contactVerification();
+	eIMB.eDEM.forceCalculation();
+	eIMB.eDEM.updateVelPos();
+	eIMB.eDEM.updateContact();
+	updateGeom();
 }
