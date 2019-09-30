@@ -43,7 +43,7 @@ int main() {
 	S.latticeSpacing = 5e-5;
 
 	//Particle Parameters:
-	S.localDamping = 0.3;
+	S.localDamping = 0;
 	S.factorOfSafety = 0.5;
 	S.frictionAngle = 30;
 	S.normalStiffness = 1e6;
@@ -61,10 +61,10 @@ int main() {
 	}
 	S.eIMB.eLBM.set_zouBC();
 
-	for (int i = 0; i != 30000; ++i) {
-		S.moveToNextTimeStep();
+	for (int i = 0; i != 50000; ++i) {
+		S.moveToNextTimeStep_DEM();
 		if (i % 100 == 0) {
-			S.fluidVTK("LBM");
+			//S.fluidVTK("LBM");
 			S.solidVTK("DEM");
 		}
 		if (i % 1000 == 0) {
