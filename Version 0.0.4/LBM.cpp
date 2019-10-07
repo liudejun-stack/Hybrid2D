@@ -98,13 +98,13 @@ void LBM::applyForce() {
 void LBM::collision() {
 	ASSERT(tau > 0.5);
 	double tauInv = 1.0 / tau;
+	updateMacro();
 	for (auto& C : cells) {
 		if (C->node == isSolid)	continue;
 		for (int k = 0; k < C->Q; k++) {
 			double EDF = C->set_eqFun(C->rho, C->vel, k);
 			double source = C->set_sourceTerm(tau, dtLBM, k);
-			//C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF + source;
-			C->f[k] = C->f[k] - (1 - C->solidFunction) * tauInv * (C->f[k] - EDF) + C->solidFunction * C->omega[k];
+			C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
 		}
 	}
 }
@@ -125,8 +125,9 @@ void LBM::stream() {
 	}
 	
 	//Swap distribution function:
-	for (auto& C : cells) 
-	for (int k = 0; k < C->Q; k++) {
-		C->f[k] = C->fTemp[k];
+	for (auto& C : cells) {
+		std::vector<double> Temp = C->f;
+		C->f = C->fTemp;
+		C->fTemp = Temp;
 	}
 }

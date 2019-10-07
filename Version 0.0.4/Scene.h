@@ -9,11 +9,11 @@ public:
 
 	//Scenario prepartion:
 	void addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
+	void set_bodiesSolid();
 	void set_topSolid();
 	void set_botSolid();
 	void set_leftSolid();
 	void set_rightSolid();
-	void updateGeom();
 	void prepareScenario();
 	void simulationInfo(int& i);
 
@@ -32,6 +32,7 @@ public:
 	bool bot_isSolid       = false;
 	bool left_isSolid      = false;
 	bool right_isSolid     = false;
+	bool bodies_areSolid   = false;
 	
 	//Fluid parameters:
 	double latticeSpacing  = 1.0;

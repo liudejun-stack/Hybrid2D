@@ -5,6 +5,16 @@ void Scene::addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel) {
 	eIMB.eDEM.bodies.push_back(std::make_shared<Body>(_mass, _radius, _pos, _vel, id));
 }
 
+void Scene::set_bodiesSolid() {
+	for (auto& B : eIMB.eDEM.bodies) {
+		for (auto& C : eIMB.eLBM.cells) {
+			double dist = (C->cellPos - B->pos).dot((C->cellPos - B->pos));
+			if (dist >= B->radius * B->radius)	continue;
+			C->node = eIMB.eLBM.isSolid;
+		}
+	}
+}
+
 void Scene::set_topSolid() {
 	for (int i = 0; i < domainSize[0]; ++i) {
 		int id = eIMB.eLBM.getCell(i, domainSize[1] - 1);
@@ -37,16 +47,6 @@ void Scene::set_rightSolid() {
 	}
 }
 
-void Scene::updateGeom() {
-	for (auto& C : eIMB.eLBM.cells) {
-		if (C->node == eIMB.eLBM.isSolid || C->node == eIMB.eLBM.fluidSolidInteraction) {
-			C->node = eIMB.eLBM.isFluid;
-		}
-	}
-	set_topSolid();
-	set_botSolid();
-}
-
 void Scene::prepareScenario() {
 
 	//Boundary definition:
@@ -65,9 +65,6 @@ void Scene::prepareScenario() {
 	eIMB.eDEM.normalStiffness = normalStiffness;
 	eIMB.eDEM.shearStiffness  = shearStiffness;
 
-	//Time step calculation:
-	eIMB.calculateTimeStep();
-
 	//Cell initialization for LBM simualtion:
 	eIMB.eLBM.initializeCells();
 
@@ -76,6 +73,7 @@ void Scene::prepareScenario() {
 	if (bot_isSolid)	set_botSolid();
 	if (right_isSolid)	set_rightSolid();
 	if (left_isSolid)	set_rightSolid();
+	if (bodies_areSolid)	set_bodiesSolid();
 
 	//Directories for VTK output
 	int ignore;
@@ -164,8 +162,6 @@ void Scene::solidVTK(std::string _fileName) {
 }
 
 void Scene::moveToNextTimeStep_LBM() {
-	eIMB.calculateSolidFraction();
-	eIMB.calculateForceAndTorque();
 	eIMB.eLBM.collision();
 	eIMB.eLBM.set_bounceback();
 	eIMB.eLBM.stream();
@@ -180,15 +176,5 @@ void Scene::moveToNextTimeStep_DEM() {
 }
 
 void Scene::moveToNextTimeStep() {
-	eIMB.calculateSolidFraction();
-	eIMB.calculateForceAndTorque();
-	eIMB.eLBM.collision();
-	eIMB.eLBM.set_bounceback();
-	eIMB.eLBM.stream();
-	eIMB.eDEM.forceResetter();
-	eIMB.eDEM.contactVerification();
-	eIMB.eDEM.forceCalculation();
-	eIMB.eDEM.updateVelPos();
-	eIMB.eDEM.updateContact();
-	updateGeom();
+
 }

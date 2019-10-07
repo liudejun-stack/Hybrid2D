@@ -2,7 +2,7 @@
 #include "Scene.h"
 
 double uMax = 0.1;
-double re = 100;
+double re = 5;
 Vec2d dim = { 500, 100 };
 double radius = dim[1] / 20 + 1;
 Vec2d cylinderCoord = { dim[1] / 2, dim[1] / 2 };
@@ -29,18 +29,15 @@ int main() {
 	S.domainSize = dim;
 	S.top_isSolid = true;
 	S.bot_isSolid = true;
+	S.bodies_areSolid = true;
 
 	//Bodies:
 	S.addCircle(1, radius, cylinderCoord, {0.0, 0.0});
-	//S.addCircle(0.5, 0.5, { 7,7 }, { 1.1,0 });
-	//S.addCircle(0.5, 0.5, { 2,2 }, { 1.5,1.5 });
-	//S.addCircle(0.5, 0.5, { 9,9 }, { 1,0 });
-	//S.addCircle(0.5, 0.5, { 5,5 }, { 1,0 });
 
 	//Fluid Parameters:
-	S.relaxationTime = 0.6;
-	S.kinViscosity = 1e-6;
-	S.latticeSpacing = 5e-5;
+	S.relaxationTime = calcVisc();
+	//S.kinViscosity = 1e-6;
+	//S.latticeSpacing = 5e-5;
 
 	//Particle Parameters:
 	S.localDamping = 0;
@@ -62,10 +59,10 @@ int main() {
 	S.eIMB.eLBM.set_zouBC();
 
 	for (int i = 0; i != 50000; ++i) {
-		S.moveToNextTimeStep_DEM();
+		S.moveToNextTimeStep_LBM();
 		if (i % 100 == 0) {
-			//S.fluidVTK("LBM");
-			S.solidVTK("DEM");
+			S.fluidVTK("LBM");
+			//S.solidVTK("DEM");
 		}
 		if (i % 1000 == 0) {
 			S.eIMB.eDEM.calculateEnergy();

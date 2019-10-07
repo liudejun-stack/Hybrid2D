@@ -12,7 +12,7 @@ public:
 	//Engine
 	void calculateTimeStep();
 	void calculateSolidFraction();
-	void calculateForceAndTorque();
+	//void calculateForceAndTorque();
 
 	std::vector<double>solidFunction;
 	double dt = 0.0;
