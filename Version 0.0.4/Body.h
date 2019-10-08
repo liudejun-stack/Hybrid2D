@@ -17,7 +17,6 @@ public:
 		vel           = _vel;
 		id            = _id;
 		inertiaMoment = _mass * _radius * _radius * 0.5;
-		functionR     = 0.5 * std::sqrt(_radius * _radius - 0.25) + _radius * _radius * atan(0.5 / (std::sqrt(_radius * _radius - 0.25))) - _radius + 0.5;
 	}
 
 	bool checkInteraction(int _bodyId);

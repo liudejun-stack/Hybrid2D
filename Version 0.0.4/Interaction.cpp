@@ -5,7 +5,7 @@
 bool Interaction::checkContact() {
 	auto b1 = body1.lock();
 	auto b2 = body2.lock();
-	if ((b1->pos - b2->pos).norm() < b1->radius + b2->radius) {
+	if ((b2->pos - b1->pos).norm() < b1->radius + b2->radius) {
 		return true;
 	}
 	return false;
@@ -24,10 +24,10 @@ void Interaction::set_ForceAndShearIncrements(double _dt, double _kn, double _ks
 	auto b1 = body1.lock();
 	auto b2 = body2.lock();
 
-	Vec2d RelVel = (b1->vel - b2->vel) - (b1->rotVel * b1->radius + b2->rotVel * b2->radius) * unitShear;
+	Vec2d relVel = (b1->vel - b2->vel) - (b1->rotVel * b1->radius + b2->rotVel * b2->radius) * unitShear;
 
-	double normalIncrement = (RelVel.dot(unitNormal)) * _dt;
-	double shearIncrement = (RelVel.dot(unitShear)) * _dt;
+	double normalIncrement = (relVel.dot(unitNormal)) * _dt;
+	double shearIncrement = (relVel.dot(unitShear)) * _dt;
 
 	normalForce += _kn * normalIncrement;
 	shearForce += _ks * shearIncrement;

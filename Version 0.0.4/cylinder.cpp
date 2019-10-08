@@ -3,7 +3,7 @@
 
 double uMax = 0.1;
 double re = 5;
-Vec2d dim = { 500, 100 };
+Vec2d dim = { 10, 10 };
 double radius = dim[1] / 20 + 1;
 Vec2d cylinderCoord = { dim[1] / 2, dim[1] / 2 };
 
@@ -32,7 +32,8 @@ int main() {
 	S.bodies_areSolid = true;
 
 	//Bodies:
-	S.addCircle(1, radius, cylinderCoord, {0.0, 0.0});
+	S.addCircle(1, 1, cylinderCoord, {0.0, 0.0});
+	//S.addCircle(1, 1, {5,7}, { 0.0, 0.0 });
 
 	//Fluid Parameters:
 	S.relaxationTime = calcVisc();
@@ -48,6 +49,7 @@ int main() {
 
 	//Prepare Scenario
 	S.prepareScenario();
+	S.eIMB.eDEM.calculateParticleTimeStep();
 	S.eIMB.eLBM.set_initCond(1.0, { 0.08, 0.0 });
 	
 	for (int j = 0; j < dim[1]; ++j) {
@@ -59,10 +61,10 @@ int main() {
 	S.eIMB.eLBM.set_zouBC();
 
 	for (int i = 0; i != 50000; ++i) {
-		S.moveToNextTimeStep_LBM();
+		S.moveToNextTimeStep_DEM();
 		if (i % 100 == 0) {
-			S.fluidVTK("LBM");
-			//S.solidVTK("DEM");
+			//S.fluidVTK("LBM");
+			S.solidVTK("DEM");
 		}
 		if (i % 1000 == 0) {
 			S.eIMB.eDEM.calculateEnergy();
