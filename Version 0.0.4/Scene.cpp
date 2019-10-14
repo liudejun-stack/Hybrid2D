@@ -5,7 +5,7 @@ void Scene::addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel) {
 	eIMB.eDEM.bodies.push_back(std::make_shared<Body>(_mass, _radius, _pos, _vel, id));
 }
 
-void Scene::set_bodiesSolid() {
+void Scene::setBodiesSolid() {
 	for (auto& B : eIMB.eDEM.bodies) {
 		for (auto& C : eIMB.eLBM.cells) {
 			double dist = (C->cellPos - B->pos).dot((C->cellPos - B->pos));
@@ -15,7 +15,7 @@ void Scene::set_bodiesSolid() {
 	}
 }
 
-void Scene::set_topSolid() {
+void Scene::setTopSolid() {
 	for (int i = 0; i < domainSize[0]; ++i) {
 		int id = eIMB.eLBM.getCell(i, domainSize[1] - 1);
 		eIMB.eLBM.cells[id]->node = eIMB.eLBM.isSolid;
@@ -23,7 +23,7 @@ void Scene::set_topSolid() {
 	}
 }
 
-void Scene::set_botSolid() {
+void Scene::setBotSolid() {
 	for (int i = 0; i < domainSize[0]; ++i) {
 		int id = eIMB.eLBM.getCell(i, 0);
 		eIMB.eLBM.cells[id]->node = eIMB.eLBM.isSolid;
@@ -31,7 +31,7 @@ void Scene::set_botSolid() {
 	}
 }
 
-void Scene::set_leftSolid() {
+void Scene::setLeftSolid() {
 	for (int j = 0; j < domainSize[1]; ++j) {
 		int id = eIMB.eLBM.getCell(0, j);
 		eIMB.eLBM.cells[id]->node = eIMB.eLBM.isSolid;
@@ -39,7 +39,7 @@ void Scene::set_leftSolid() {
 	}
 }
 
-void Scene::set_rightSolid() {
+void Scene::setRightSolid() {
 	for (int j = 0; j < domainSize[1]; ++j) {
 		int id = eIMB.eLBM.getCell(domainSize[0] - 1, j);
 		eIMB.eLBM.cells[id]->node = eIMB.eLBM.isSolid;
@@ -69,11 +69,14 @@ void Scene::prepareScenario() {
 	eIMB.eLBM.initializeCells();
 
 	//Setting solids for LBM simulation:
-	if (top_isSolid)	set_topSolid();
-	if (bot_isSolid)	set_botSolid();
-	if (right_isSolid)	set_rightSolid();
-	if (left_isSolid)	set_rightSolid();
-	if (bodies_areSolid)	set_bodiesSolid();
+	if (top_isSolid)	setTopSolid();
+	if (bot_isSolid)	setBotSolid();
+	if (right_isSolid)	setRightSolid();
+	if (left_isSolid)	setLeftSolid();
+	if (bodies_areSolid)	setBodiesSolid();
+
+	//Initialize particle distribution function
+	eIMB.eLBM.setInitCond(rhoInit, velInit);
 
 	//Directories for VTK output
 	int ignore;
@@ -163,7 +166,7 @@ void Scene::solidVTK(std::string _fileName) {
 
 void Scene::moveToNextTimeStep_LBM() {
 	eIMB.eLBM.collision();
-	eIMB.eLBM.set_bounceback();
+	eIMB.eLBM.setBounceBack();
 	eIMB.eLBM.stream();
 }
 

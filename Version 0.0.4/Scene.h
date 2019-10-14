@@ -9,11 +9,11 @@ public:
 
 	//Scenario prepartion:
 	void addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
-	void set_bodiesSolid();
-	void set_topSolid();
-	void set_botSolid();
-	void set_leftSolid();
-	void set_rightSolid();
+	void setBodiesSolid();
+	void setTopSolid();
+	void setBotSolid();
+	void setLeftSolid();
+	void setRightSolid();
 	void prepareScenario();
 	void simulationInfo(int& i);
 
@@ -38,6 +38,8 @@ public:
 	double latticeSpacing  = 1.0;
 	double kinViscosity    = 1e-6;
 	double relaxationTime  = 1.0;
+	double rhoInit         = 1.0;
+	Vec2d  velInit         = { 0.08, 0.0 };
 
 	//Particle parameters:
 	double frictionAngle   = 30;

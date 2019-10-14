@@ -1,11 +1,11 @@
-
+/*
 #include "Scene.h"
 
 double uMax = 0.1;
 double re = 100;
-Vec2d dim = { 500, 100 };
-double radius = dim[1] / 20 + 1;
-Vec2d cylinderCoord = { dim[1] / 2, dim[1] / 2 };
+Vec2d dim = { 100, 200 };
+double radius = dim[0] / 20 + 1;
+Vec2d cylinderCoord = { dim[0] / 2, dim[0] / 2 };
 
 
 double calcVisc() {
@@ -27,33 +27,22 @@ int main() {
 
 	//Geometry
 	S.domainSize = dim;
-	S.top_isSolid = true;
-	S.bot_isSolid = true;
-	S.bodies_areSolid = true;
-
-	//Bodies:
-	S.addCircle(1, radius, cylinderCoord, {0.0, 0.0});
+	S.left_isSolid = true;
+	S.right_isSolid = true;
 
 	//Fluid Parameters:
 	S.relaxationTime = calcVisc();
-	//S.kinViscosity = 1e-6;
-	//S.latticeSpacing = 5e-5;
-
-	//Particle Parameters:
-	S.localDamping = 0;
-	S.factorOfSafety = 0.5;
-	S.frictionAngle = 30;
-	S.normalStiffness = 1e6;
-	S.shearStiffness = 0.5e6;
+	S.rhoInit = 1.0;
+	S.velInit = { 0.0, 0.08 };
 
 	//Prepare Scenario
 	S.prepareScenario();
 	
-	for (int j = 0; j < dim[1]; ++j) {
+	for (int i = 0; i < dim[0]; ++i) {
 		Vec2d vel;
-		calcInitSpeed(0, j, vel);
-		S.eIMB.eLBM.setVelBC(0, j, vel);
-		S.eIMB.eLBM.setDenBC(dim[0] - 1, j, 1.0);
+		calcInitSpeed(i, dim[1]-1, vel);
+		S.eIMB.eLBM.setVelBC(i, dim[1]-1, vel);
+		S.eIMB.eLBM.setDenBC(i, 0, 1.0);
 	}
 	S.eIMB.eLBM.setZouBC();
 
@@ -71,3 +60,4 @@ int main() {
 
 	return 0;
 }
+*/
