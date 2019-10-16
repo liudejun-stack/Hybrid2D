@@ -48,6 +48,8 @@ public:
 	double normalStiffness = 1e6;
 	double shearStiffness  = 0.5e6;
 
+	double Tf;
+
 	//Output parameters:
 	int vtkCounter;
 

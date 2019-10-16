@@ -65,6 +65,9 @@ void Scene::prepareScenario() {
 	eIMB.eDEM.normalStiffness = normalStiffness;
 	eIMB.eDEM.shearStiffness  = shearStiffness;
 
+	//Calculate DEM TimeStep
+	//eIMB.eDEM.calculateParticleTimeStep();
+
 	//Cell initialization for LBM simualtion:
 	eIMB.eLBM.initializeCells();
 
@@ -92,7 +95,7 @@ void Scene::simulationInfo(int& i) {
 		std::cout << "             Domain Size: " << domainSize[0] << "x" << domainSize[1] << "\n";
 		std::cout << "        Number of Bodies: " << eIMB.eDEM.bodies.size()               << "\n";
 		std::cout << "         Number of cells: " << eIMB.eLBM.cells.size()                << "\n";
-		std::cout << "       Solution TimeStep: " << eIMB.dt                               << "\n";
+		//std::cout << "       Solution TimeStep: " << eIMB.dt                               << "\n";
 		std::cout << "         Lattice Spacing: " << eIMB.eLBM.dx                          << "\n";
 		std::cout << "         Relaxation Time: " << relaxationTime                        << "\n";
 		std::cout << "     Kinematic Viscosity: " << kinViscosity                          << "\n";
@@ -181,3 +184,33 @@ void Scene::moveToNextTimeStep_DEM() {
 void Scene::moveToNextTimeStep() {
 
 }
+
+/*double Time = 0.0;
+	double tlbm = 0.0;
+	int i = 0;
+	eIMB.eLBM.updateMacro();
+	ASSERT(eIMB.eDEM.dtDEM > 0);
+	while (Time < Tf) {
+		eIMB.eDEM.forceResetter();
+		eIMB.calculateForceAndTorque();
+		eIMB.eDEM.contactVerification();
+		eIMB.eDEM.forceCalculation();
+		eIMB.eDEM.updateVelPos();
+		eIMB.eDEM.updateContact();
+		if (Time >= tlbm) {
+			eIMB.eLBM.collision();
+			eIMB.eLBM.setBounceBack();
+			eIMB.eLBM.stream();
+			tlbm += eIMB.eLBM.dtLBM;
+		}
+		Time += eIMB.eDEM.dtDEM;
+
+		if ((int)Time % 1000 == 0) {
+			eIMB.eDEM.calculateEnergy();
+			simulationInfo(i);
+			fluidVTK("LBM");
+			solidVTK("DEM");
+			i += (int)Time;
+		}
+
+	}*/

@@ -10,14 +10,8 @@ public:
 	IMB() : eLBM(), eDEM() {};
 
 	//Engine
-	void calculateTimeStep();
-	void calculateSolidFraction();
-	//void calculateForceAndTorque();
-
-	std::vector<double>solidFunction;
-	double dt = 0.0;
-	int subCycleNumber = 0;
-
+	double calculateSolidFraction(Vec2d& _particlePos, Vec2d& _cellPos, double _particleRadius, double _dx);
+	void calculateForceAndTorque();
 
 	LBM eLBM;	//LBM engine
 	DEM eDEM;	//DEM engine
