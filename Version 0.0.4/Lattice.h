@@ -32,8 +32,8 @@ public:
 	}
 
 	//Methods:
-	double set_eqFun(double _rho, Vec2d _vel, int k);
-	double set_sourceTerm(double& _tau, double _dt, int k);
+	double setEqFun(double _rho, Vec2d _vel, int k);
+	double setSourceTerm(double& _tau, double _dt, int k);
 
 	friend class LBM;
 	friend class IMB;
@@ -50,7 +50,7 @@ public:
 	double solidFraction     = 0.0;
 	double solidFractionB    = 0.0;
 	double rho               = 0.0;
-	int    particleFluid_ID  = 0;
+	int    particleFluidID  = 0;
 	int    node              = 0;
 
 private:

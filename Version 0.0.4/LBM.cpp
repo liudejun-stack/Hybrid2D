@@ -88,7 +88,7 @@ void LBM::setInitCond(double _rhoInit, Vec2d _vel) {
 	for (auto& C : cells) {
 		if (C->node == isSolid)	continue;
 		for (int k = 0; k < C->Q; k++) {
-			C->f[k] = C->set_eqFun(_rhoInit, _vel, k);
+			C->f[k] = C->setEqFun(_rhoInit, _vel, k);
 		}
 	}
 	updateMacro();
@@ -123,8 +123,8 @@ void LBM::collision() {
 		Vec2d Vel = C->vel + C->sourceForce * dtLBM / (2 * C->rho);
 		double solidFunction = (C->solidFraction * (tau - 0.5)) / ((1 - C->solidFraction) + (tau - 0.5));
 		for (int k = 0; k < C->Q; k++) {
-			double EDF = C->set_eqFun(C->rho, Vel, k);
-			double source = C->set_sourceTerm(tau, dtLBM, k);
+			double EDF = C->setEqFun(C->rho, Vel, k);
+			double source = C->setSourceTerm(tau, dtLBM, k);
 			//C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
 			C->f[k] = C->f[k] - (1 - solidFunction) * tauInv * (C->f[k] - EDF) + solidFunction * C->omega[k];
 		}

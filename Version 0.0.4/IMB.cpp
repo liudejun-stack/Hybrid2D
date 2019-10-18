@@ -58,8 +58,8 @@ void IMB::calculateForceAndTorque() {
 			double Bn = (gamma * (eLBM.tau - 0.5)) / ((1.0 - gamma) + (eLBM.tau - 0.5));
 			Vec2d velP = B->vel;
 			for (int k = 0; k < C->Q; ++k) {
-				double Fvpp = C->set_eqFun(C->rho, velP, C->opNode[k]);
-				double Fvp = C->set_eqFun(C->rho, velP, k);
+				double Fvpp = C->setEqFun(C->rho, velP, C->opNode[k]);
+				double Fvp = C->setEqFun(C->rho, velP, k);
 				double Omega = C->f[C->opNode[k]] - Fvpp - (C->f[k] - Fvp);
 
 				C->omega[k] += gamma * Omega;
