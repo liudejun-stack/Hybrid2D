@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include "Interaction.h"
+#include "Math.h"
 
 
 class DEM {

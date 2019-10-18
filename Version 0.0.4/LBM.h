@@ -2,6 +2,7 @@
 #define LBM_H
 
 #include "Lattice.h"
+#include "Math.h"
 #include <memory>
 #include <string>
 #include <fstream>

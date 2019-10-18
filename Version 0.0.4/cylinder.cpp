@@ -1,4 +1,3 @@
-
 #include "Scene.h"
 
 double uMax = 0.1;

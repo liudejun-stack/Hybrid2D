@@ -3,6 +3,7 @@
 
 #include "LBM.h"
 #include "DEM.h"
+#include "Math.h"
 
 class IMB {
 public:

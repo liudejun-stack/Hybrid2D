@@ -2,6 +2,8 @@
 #define SCENE_H
 
 #include "IMB.h"
+#include "Math.h"
+#include "Timer.h"
 
 class Scene {
 public:

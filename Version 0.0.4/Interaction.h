@@ -1,6 +1,7 @@
 #ifndef INTERACTION_H
 #define INTERACTION_H
 #include "Body.h"
+#include "Math.h"
 #include <memory>
 
 class Interaction {

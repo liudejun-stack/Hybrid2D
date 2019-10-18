@@ -15,30 +15,6 @@ using Vec3d = Vector3<double>;
 
 template<typename Type> void print(Type value) { std::cout << value << "\n"; }
 
-//Classes
-class Timer {
-public:
-	Timer() {
-		startTimePoint = std::chrono::high_resolution_clock::now();
-	}
-
-	~Timer() {
-		Stop();
-	}
-
-	void Stop() {
-		auto endTimePoint = std::chrono::high_resolution_clock::now();
-		auto start        = std::chrono::time_point_cast<std::chrono::minutes>(startTimePoint).time_since_epoch().count();
-		auto end          = std::chrono::time_point_cast<std::chrono::minutes>(endTimePoint).time_since_epoch().count();
-		auto duration     = end - start;
-		std::cout << "------------------------------------------\n";
-		std::cout << "Simulation Time: "<< duration << " minutes\n";
-	}
-private:
-	std::chrono::time_point<std::chrono::high_resolution_clock> startTimePoint;
-};
-
-
 //Defines:
 #define ASSERT_FLAG 1		//PROBABLY CHANGE THIS TO BE TURNED OFF IN RELEASE MODE
 #if ASSERT_FLAG == 1
