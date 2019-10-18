@@ -1,9 +1,12 @@
 #ifndef BODY_H
 #define BODY_H
 
-#include "Math.h"
+//Standard Library
 #include <memory>
 #include <vector>
+
+//Hybrid Library
+#include "Math.h"
 
 class Interaction;
 

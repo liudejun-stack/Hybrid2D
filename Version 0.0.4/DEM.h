@@ -1,10 +1,14 @@
 #ifndef DEM_H
 #define DEM_H
 
+//Standard Library
 #include <string>
 #include <fstream>
-#include "Interaction.h"
+
+//Hybrid Library
 #include "Math.h"
+#include "Interaction.h"
+#include "Body.h"
 
 
 class DEM {

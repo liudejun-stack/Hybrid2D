@@ -1,19 +1,21 @@
 #ifndef LATTICE_H
 #define LATTICE_H
 
-#include "Math.h"
+//Standard Libray
 #include <vector>
+
+//Hybrid Library
+#include "Math.h"
 
 
 class Lattice {
 public:
 	//Constructor:
 	Lattice(int _ID, double _latticeSpeed, Vec2d _dim, Vec2d _cellPos) {
-		ID = _ID;
+		ID            = _ID;
 		latticeSpeed  = _latticeSpeed;
 		dim           = _dim;
 		cellPos       = _cellPos;
-		solidFraction = 0.0;
 
 		//Set neighbor node
 		for (int k = 0; k < Q; k++) {
@@ -40,16 +42,16 @@ public:
 	Vec2d  aux;
 	Vec2d  dim;
 	Vec2d  cellPos;
-	int    ID;
-	double solidFraction;
 	double latticeSpeed;
+	int    ID;
 
-	Vec2d sourceForce    = Vec2d::Zero();
-	Vec2d vel            = Vec2d::Zero();
-	double solidFunction = 0.0;
-	double rho           = 0.0;
-	int particleFluid_ID = 0;
-	int node             = 0;
+	Vec2d  sourceForce       = Vec2d::Zero();
+	Vec2d  vel               = Vec2d::Zero();
+	double solidFraction     = 0.0;
+	double solidFractionB    = 0.0;
+	double rho               = 0.0;
+	int    particleFluid_ID  = 0;
+	int    node              = 0;
 
 private:
 	//D2Q9 Variables:

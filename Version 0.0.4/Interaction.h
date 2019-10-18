@@ -1,8 +1,12 @@
 #ifndef INTERACTION_H
 #define INTERACTION_H
-#include "Body.h"
-#include "Math.h"
+
+//Hybrid Libary
 #include <memory>
+
+//Hybrid Libary
+#include "Math.h"
+#include "Body.h"
 
 class Interaction {
 public:

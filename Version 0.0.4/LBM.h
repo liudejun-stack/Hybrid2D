@@ -1,11 +1,14 @@
 #ifndef LBM_H
 #define LBM_H
 
-#include "Lattice.h"
-#include "Math.h"
+//Standard Library
 #include <memory>
 #include <string>
 #include <fstream>
+
+//Hybrid Library
+#include "Lattice.h"
+#include "Math.h"
 
 class LBM {
 public:
