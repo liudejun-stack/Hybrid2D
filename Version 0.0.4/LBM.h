@@ -24,9 +24,9 @@ public:
 
 	//LBM Engine:
 	void initializeCells();
-	void calculateFluidTimeStep();
-	void setInitCond(double _rhoInit, Vec2d _vel);
 	void updateMacro();
+	void setInitCond(double _rhoInit, Vec2d _vel);
+	void resetSolidFraction();
 	void applyForce();
 	void collision();
 	void stream();

@@ -36,17 +36,20 @@ int main() {
 
 	//Fluid Parameters:
 	S.relaxationTime = calcVisc();
+	S.velInit = { 0.0, 0.0 };
+	S.rhoInit = 1.0;
 
 	//Particle Parameters:
 	S.localDamping = 0;
-	S.factorOfSafety = 0.5;
+	S.factorOfSafety = 0.1;
 	S.frictionAngle = 30;
 	S.normalStiffness = 1e6;
 	S.shearStiffness = 0.5e6;
 
 	//Prepare Scenario
 	S.prepareScenario();
-	S.eIMB.eDEM.dtDEM = 0.01;
+	S.eIMB.eDEM.calculateParticleTimeStep();
+	//S.eIMB.eDEM.dtDEM = 1.0e-2;
 	
 	for (int j = 0; j < dim[1]; ++j) {
 		Vec2d vel;

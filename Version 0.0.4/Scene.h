@@ -54,7 +54,8 @@ public:
 	double Tf;
 
 	//Output parameters:
-	int vtkCounter;
+	int fluidVtkCounter;
+	int particleVtkCounter;
 
 	IMB eIMB;  //Coupling Engine
 };

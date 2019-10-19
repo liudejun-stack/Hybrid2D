@@ -45,13 +45,13 @@ public:
 	double latticeSpeed;
 	int    ID;
 
-	Vec2d  sourceForce       = Vec2d::Zero();
-	Vec2d  vel               = Vec2d::Zero();
-	double solidFraction     = 0.0;
-	double solidFractionB    = 0.0;
-	double rho               = 0.0;
-	int    particleFluidID  = 0;
-	int    node              = 0;
+	Vec2d  sourceForce           = Vec2d::Zero();
+	Vec2d  vel                   = Vec2d::Zero();
+	double solidFraction         = 0.0;
+	double previousSolidFraction = 0.0;
+	double rho                   = 0.0;
+	int    particleFluidID       = 0;
+	int    node                  = 0;
 
 private:
 	//D2Q9 Variables:

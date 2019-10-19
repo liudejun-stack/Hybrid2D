@@ -70,10 +70,6 @@ void LBM::setZouBC() {
 	}
 }
 
-void LBM::calculateFluidTimeStep() {
-	dtLBM = (tau - 0.5) * ((dx * dx) / kinViscosity) * (1.0 / 3.0);
-}
-
 void LBM::initializeCells() {
 	latticeSpeed = dx / dtLBM;
 	for (int j = 0; j < domainSize[1]; ++j)
@@ -84,15 +80,6 @@ void LBM::initializeCells() {
 		}
 }
 
-void LBM::setInitCond(double _rhoInit, Vec2d _vel) {
-	for (auto& C : cells) {
-		if (C->node == isSolid)	continue;
-		for (int k = 0; k < C->Q; k++) {
-			C->f[k] = C->setEqFun(_rhoInit, _vel, k);
-		}
-	}
-	updateMacro();
-}
 
 void LBM::updateMacro() {
 	for (auto& C : cells) {
@@ -106,6 +93,26 @@ void LBM::updateMacro() {
 			C->vel[1] = latticeSpeed * ((C->f[2] + C->f[5] + C->f[6] - C->f[4] - C->f[7] - C->f[8]) / C->rho);
 		}
 		ASSERT(!(std::isnan(C->rho) || std::isnan(C->vel.norm())));
+	}
+}
+
+void LBM::setInitCond(double _rhoInit, Vec2d _vel) {
+	for (auto& C : cells) {
+		if (C->node == isSolid)	continue;
+		for (int k = 0; k < C->Q; k++) {
+			C->f[k] = C->setEqFun(_rhoInit, _vel, k);
+		}
+	}
+	updateMacro();
+}
+
+void LBM::resetSolidFraction() {
+	for (auto& C : cells) {
+		C->previousSolidFraction = C->solidFraction;
+		C->solidFraction = 0.0;
+		for (int k = 0; k < C->Q; ++k) {
+			C->omega[k] = 0.0;
+		}
 	}
 }
 

@@ -118,7 +118,7 @@ void Scene::simulationInfo(int& i) {
 
 void Scene::fluidVTK(std::string _fileName) {
 	std::ofstream out;
-	out.open("fluidVTK/" + _fileName + std::to_string(vtkCounter) + ".vtk");
+	out.open("fluidVTK/" + _fileName + std::to_string(fluidVtkCounter) + ".vtk");
 	out << "# vtk DataFile Version 3.0\n";
 	out << "Fluid state\n";
 	out << "ASCII\n";
@@ -142,12 +142,12 @@ void Scene::fluidVTK(std::string _fileName) {
 		out << C->vel[0] << " " << C->vel[1] << " " << 0 << "\n";
 	}
 	out.close();
-	vtkCounter++;
+	fluidVtkCounter++;
 }
 
 void Scene::solidVTK(std::string _fileName) {
 	std::ofstream out;
-	out.open("solidVTK/" + _fileName + std::to_string(vtkCounter) + ".vtk");
+	out.open("solidVTK/" + _fileName + std::to_string(particleVtkCounter) + ".vtk");
 	out << "# vtk DataFile Version 3.0\n";
 	out << "DEM\n";
 	out << "ASCII\n";
@@ -164,7 +164,7 @@ void Scene::solidVTK(std::string _fileName) {
 		out << B->radius << std::endl;
 	}
 	out.close();
-	vtkCounter++;
+	particleVtkCounter++;
 }
 
 void Scene::moveToNextTimeStep_LBM() {
@@ -183,14 +183,13 @@ void Scene::moveToNextTimeStep_DEM() {
 
 void Scene::moveToNextTimeStep() {
 
-}
-
-/*double Time = 0.0;
+	double Time = 0.0;
 	double tlbm = 0.0;
 	int i = 0;
 	eIMB.eLBM.updateMacro();
-	ASSERT(eIMB.eDEM.dtDEM > 0);
+	ASSERT(eIMB.eDEM.dtDEM > 0 && eIMB.eLBM.dtLBM > 0);
 	while (Time < Tf) {
+		eIMB.eLBM.resetSolidFraction();
 		eIMB.eDEM.forceResetter();
 		eIMB.calculateForceAndTorque();
 		eIMB.eDEM.contactVerification();
@@ -205,12 +204,13 @@ void Scene::moveToNextTimeStep() {
 		}
 		Time += eIMB.eDEM.dtDEM;
 
-		if ((int)Time % 1000 == 0) {
+		if (i % 1000 == 0) {
 			eIMB.eDEM.calculateEnergy();
 			simulationInfo(i);
 			fluidVTK("LBM");
 			solidVTK("DEM");
-			i += (int)Time;
+			
 		}
-
-	}*/
+		++i;
+	}
+}

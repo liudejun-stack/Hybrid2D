@@ -1,6 +1,9 @@
 #ifndef IMB_H
 #define IMB_H
 
+//Standard Library
+#include <cmath>
+
 //Hybrid Libary
 #include "Math.h"
 #include "LBM.h"
@@ -13,7 +16,7 @@ public:
 
 	//Engine
 	double calculateSolidFraction(Vec2d& _particlePos, Vec2d& _cellPos, double _particleRadius, double _dx);
-	void calculateForceAndTorque();
+	void   calculateForceAndTorque();
 
 	LBM eLBM;	//LBM engine
 	DEM eDEM;	//DEM engine
