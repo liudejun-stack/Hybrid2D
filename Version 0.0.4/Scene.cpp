@@ -173,7 +173,6 @@ void Scene::moveToNextTimeStep_LBM() {
 }
 
 void Scene::moveToNextTimeStep_DEM() {
-	eIMB.eDEM.forceResetter();
 	eIMB.eDEM.contactVerification();
 	eIMB.eDEM.forceCalculation();
 	eIMB.eDEM.updateVelPos();
@@ -189,7 +188,6 @@ void Scene::moveToNextTimeStep() {
 	ASSERT(eIMB.eDEM.dtDEM > 0 && eIMB.eLBM.dtLBM > 0);
 	while (Time < Tf) {
 		eIMB.eLBM.resetSolidFraction();
-		eIMB.eDEM.forceResetter();
 		eIMB.calculateForceAndTorque();
 		eIMB.eDEM.contactVerification();
 		eIMB.eDEM.forceCalculation();

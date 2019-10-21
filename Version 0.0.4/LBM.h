@@ -33,16 +33,16 @@ public:
 
 	std::vector<std::shared_ptr<Lattice>> cells;
 
-	Vec2d gravity       = { 0.0, -9.81 };
-	Vec2d domainSize    = Vec2d::Zero();
-	double dx           = 1.0;
-	double dtLBM        = 1.0;
-	double tau          = 1.0;
-	double latticeSpeed = 1.0;
-	double kinViscosity = 1.0;
-	int isFluid         = 0;
-	int isSolid         = 1;
-	int vtkCounter      = 0;
+	Vec2d  gravity       = { 0.0, -9.81 };
+	Vec2d  domainSize    = Vec2d::Zero();
+	double dx            = 1.0;
+	double dtLBM         = 1.0;
+	double tau           = 1.0;
+	double latticeSpeed  = 1.0;
+	double kinViscosity  = 1.0;
+	int    isFluid       = 0;
+	int    isSolid       = 1;
+	int    vtkCounter    = 0;
 };
 #endif // !LBM_H
 

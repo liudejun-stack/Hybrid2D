@@ -23,13 +23,6 @@ Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body) {
 	return force;
 }
 
-void DEM::forceResetter() {
-	for (auto& B : bodies) {
-		B->force     = Vec2d::Zero();
-		B->moment    = 0.0;
-	}
-}
-
 void DEM::contactVerification() {
 	int bodySize = (int)bodies.size();
 	ASSERT(bodySize > 0);
@@ -56,6 +49,8 @@ void DEM::forceCalculation() {
 
 	//Force calculation:
 	for (auto& B : bodies) {
+		//Force Resetter:
+		B->force = Vec2d::Zero();
 
 		//Contact force
 		for (auto& I : B->inter) {
@@ -120,7 +115,6 @@ void DEM::updateContact() {
 		B->inter.erase(std::remove_if(std::begin(B->inter), std::end(B->inter), [](std::weak_ptr<Interaction> I) {return I.expired(); }), std::end(B->inter));
 	}
 	++nIter;
-	time += dtDEM;
 }
 
 void DEM::calculateEnergy() {
