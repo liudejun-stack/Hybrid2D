@@ -50,7 +50,8 @@ void DEM::forceCalculation() {
 	//Force calculation:
 	for (auto& B : bodies) {
 		//Force Resetter:
-		B->force = Vec2d::Zero();
+		B->force  = Vec2d::Zero();
+		B->moment = 0.0;
 
 		//Contact force
 		for (auto& I : B->inter) {
