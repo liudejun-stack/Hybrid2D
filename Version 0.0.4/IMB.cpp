@@ -51,7 +51,7 @@ void IMB::calculateForceAndTorque() {
 		B->forceLBM = Vec2d::Zero();
 		for (auto& C : eLBM.cells) {
 			double distCellPar = (C->cellPos - B->pos).dot((C->cellPos - B->pos));
-			if (distCellPar > B->radius * B->radius)	continue;
+			//if (distCellPar > B->radius * B->radius)	continue;
 			double len = calculateSolidFraction(B->pos, C->cellPos, B->radius, eLBM.dx);
 			if (std::abs(len) < 1.0e-12)	continue;
 			double gamma = len / (4.0 * eLBM.dx);

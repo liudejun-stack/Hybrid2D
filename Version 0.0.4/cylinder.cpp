@@ -49,15 +49,15 @@ int main() {
 	//Prepare Scenario
 	S.prepareScenario();
 	S.eIMB.eDEM.calculateParticleTimeStep();
-	//S.eIMB.eDEM.dtDEM = 1.0e-2;
+	//S.eIMB.eDEM.dtDEM = 1.0e-3;
 	
-	for (int j = 0; j < dim[1]; ++j) {
+	/*for (int j = 0; j < dim[1]; ++j) {
 		Vec2d vel;
 		calcInitSpeed(0, j, vel);
 		S.eIMB.eLBM.setVelBC(0, j, vel);
 		S.eIMB.eLBM.setDenBC(dim[0] - 1, j, 1.0);
 	}
-	S.eIMB.eLBM.setZouBC();
+	S.eIMB.eLBM.setZouBC();*/
 	
 	/*
 	for (int i = 0; i != 10000; ++i) {
