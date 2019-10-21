@@ -88,32 +88,31 @@ void Scene::prepareScenario() {
 }
 
 void Scene::simulationInfo(int& i) {
+	std::system("cls");
 	double totalEnergy = eIMB.eDEM.kinEnergy.back() + eIMB.eDEM.potEnergy.back();
-	if (i == 0) {
-		std::cout << "----------------------- LBM/DEM Simulation -----------------------"  << "\n";
-		std::cout << "Current Iteration Number: " << i                                     << "\n";
-		std::cout << "             Domain Size: " << domainSize[0] << "x" << domainSize[1] << "\n";
-		std::cout << "        Number of Bodies: " << eIMB.eDEM.bodies.size()               << "\n";
-		std::cout << "         Number of cells: " << eIMB.eLBM.cells.size()                << "\n";
-		//std::cout << "       Solution TimeStep: " << eIMB.dt                               << "\n";
-		std::cout << "         Lattice Spacing: " << eIMB.eLBM.dx                          << "\n";
-		std::cout << "         Relaxation Time: " << relaxationTime                        << "\n";
-		std::cout << "     Kinematic Viscosity: " << kinViscosity                          << "\n";
-		std::cout << "          Friction Angle: " << frictionAngle                         << "\n";
-		std::cout << "        Normal Stiffness: " << normalStiffness                       << "\n";
-		std::cout << "         Shear Stiffness: " << shearStiffness                        << "\n";
-		std::cout << "           Local Damping: " << localDamping                          << "\n";
-		std::cout << "  (DEM) Kinematic Energy: " << eIMB.eDEM.kinEnergy.back()            << "\n";
-		std::cout << "  (DEM) Potential Energy: " << eIMB.eDEM.potEnergy.back()            << "\n";
-		std::cout << "  (DEM)     Total Energy: " << totalEnergy                           << "\n";
-	}
-	else {
-		std::cout << "----------------------- LBM/DEM Simulation -----------------------" << "\n";
-		std::cout << "Current Iteration Number: " << i                                    << "\n";
-		std::cout << "  (DEM) Kinematic Energy: " << eIMB.eDEM.kinEnergy.back()           << "\n";
-		std::cout << "  (DEM) Potential Energy: " << eIMB.eDEM.potEnergy.back()           << "\n";
-		std::cout << "  (DEM)     Total Energy: " << totalEnergy                          << "\n";
-	}
+
+	std::cout << "----------------------- LBM/DEM Simulation -----------------------" << "\n";
+	std::cout << "   Iteration Number: " << i                                         << "\n";
+	std::cout << "        Domain Size: " << domainSize[0] << "x" << domainSize[1]     << "\n";
+	std::cout << "   Number of Bodies: " << eIMB.eDEM.bodies.size()                   << "\n";
+	std::cout << "    Number of cells: " << eIMB.eLBM.cells.size()                    << "\n";
+
+	std::cout << "----------------------- LBM Parameters ---------------------------" << "\n";
+	std::cout << "          Time Step: " << eIMB.eLBM.dtLBM                           << "\n";
+	std::cout << "    Lattice Spacing: " << eIMB.eLBM.dx                              << "\n";
+	std::cout << "    Relaxation Time: " << relaxationTime                            << "\n";
+	std::cout << "Kinematic Viscosity: " << kinViscosity                              << "\n";
+
+	std::cout << "----------------------- DEM Parameters ---------------------------" << "\n";
+	std::cout << "          Time Step: " << eIMB.eDEM.dtDEM                           << "\n";
+	std::cout << "     Friction Angle: " << frictionAngle                             << "\n";
+	std::cout << "   Normal Stiffness: " << normalStiffness                           << "\n";
+	std::cout << "    Shear Stiffness: " << shearStiffness                            << "\n";
+	std::cout << "      Local Damping: " << localDamping                              << "\n";
+	std::cout << "   Kinematic Energy: " << eIMB.eDEM.kinEnergy.back()                << "\n";
+	std::cout << "   Potential Energy: " << eIMB.eDEM.potEnergy.back()                << "\n";
+	std::cout << "       Total Energy: " << totalEnergy                               << "\n";
+
 }
 
 void Scene::fluidVTK(std::string _fileName) {

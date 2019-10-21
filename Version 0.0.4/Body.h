@@ -33,6 +33,7 @@ public:
 
 	//Smart pointers:
 	std::vector<std::weak_ptr<Interaction>> inter;
+	std::vector<int> fluidSolidInteraction;
 
 	//Vectors:
 	Vec2d pos         = Vec2d::Zero();
