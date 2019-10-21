@@ -51,21 +51,23 @@ void IMB::calculateForceAndTorque() {
 		B->forceLBM = Vec2d::Zero();
 		for (auto& C : eLBM.cells) {
 			double distCellPar = (C->cellPos - B->pos).dot((C->cellPos - B->pos));
-			//if (distCellPar > B->radius * B->radius)	continue;
-			double len = calculateSolidFraction(B->pos, C->cellPos, B->radius, eLBM.dx);
-			if (std::abs(len) < 1.0e-12)	continue;
-			double gamma = len / (4.0 * eLBM.dx);
-			ASSERT(gamma >= 0.0 && gamma <= 1.0);
-			C->solidFraction = std::min(gamma + C->solidFraction, 1.0);
-			double Bn = (gamma * (eLBM.tau - 0.5)) / ((1.0 - gamma) + (eLBM.tau - 0.5));
-			Vec2d velP = B->vel;
-			for (int k = 0; k < C->Q; ++k) {
-				double Fvpp = C->setEqFun(C->rho, C->vel, C->opNode[k]);
-				double Fvp = C->setEqFun(C->rho, velP, k);
-				double Omega = C->f[C->opNode[k]] - Fvpp - (C->f[k] - Fvp);
+			if (distCellPar <= B->radius * B->radius) {
 
-				C->omega[k] += Omega;
-				B->forceLBM += -Bn * Omega * C->latticeSpeed * eLBM.dx * C->discreteVelocity[k];
+				double len = calculateSolidFraction(B->pos, C->cellPos, B->radius, eLBM.dx);
+				if (std::abs(len) < 1.0e-12)	continue;
+				double gamma = len / (4.0 * eLBM.dx);
+				ASSERT(gamma >= 0.0 && gamma <= 1.0);
+				C->solidFraction = std::min(gamma + C->solidFraction, 1.0);
+				double Bn = (gamma * (eLBM.tau - 0.5)) / ((1.0 - gamma) + (eLBM.tau - 0.5));
+				Vec2d velP = B->vel;
+				for (int k = 0; k < C->Q; ++k) {
+					double Fvpp = C->setEqFun(C->rho, C->vel, C->opNode[k]);
+					double Fvp = C->setEqFun(C->rho, velP, k);
+					double Omega = C->f[C->opNode[k]] - Fvpp - (C->f[k] - Fvp);
+
+					C->omega[k] += Omega;
+					B->forceLBM += -Bn * Omega * C->latticeSpeed * eLBM.dx * C->discreteVelocity[k];
+				}
 			}
 		}
 	}
