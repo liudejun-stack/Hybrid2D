@@ -185,7 +185,6 @@ void Scene::moveToNextTimeStep() {
 	double tlbm = 0.0;
 	int i = 0;
 	eIMB.eLBM.updateMacro();
-	ASSERT(eIMB.eDEM.dtDEM > 0 && eIMB.eLBM.dtLBM > 0);
 	while (Time < Tf) {
 		eIMB.eLBM.resetSolidFraction();
 		eIMB.calculateForceAndTorque();
