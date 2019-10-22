@@ -17,9 +17,9 @@ Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body) {
 	Vec2d unitLeft = { -1, 0 };
 	Vec2d force = Vec2d::Zero();
 	if ((_body->pos[0] - _body->radius) < domainReference[0]) force += borderStifness * abs(_body->radius - _body->pos[0]) * unitRight;
-	if ((_body->pos[0] + _body->radius) > domainSize[0]) force += borderStifness * abs(_body->radius - (domainSize[0] - _body->pos[0])) * unitLeft;
+	if ((_body->pos[0] + _body->radius) > domainSize[0])      force += borderStifness * abs(_body->radius - (domainSize[0] - _body->pos[0])) * unitLeft;
 	if ((_body->pos[1] - _body->radius) < domainReference[1]) force += borderStifness * abs(_body->radius - _body->pos[1]) * unitUp;
-	if ((_body->pos[1] + _body->radius) > domainSize[1]) force += borderStifness * abs(_body->radius - (domainSize[1] - _body->pos[1])) * unitDown;
+	if ((_body->pos[1] + _body->radius) > domainSize[1])      force += borderStifness * abs(_body->radius - (domainSize[1] - _body->pos[1])) * unitDown;
 	return force;
 }
 
