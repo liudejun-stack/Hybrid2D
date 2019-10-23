@@ -184,9 +184,9 @@ void Scene::moveToNextTimeStep() {
 	double Time = 0.0;
 	double tlbm = 0.0;
 	int i = 0;
-	eIMB.eLBM.updateMacro();
 	while (Time < Tf) {
 		eIMB.eLBM.resetSolidFraction();
+		eIMB.checkFluidSolidContact();
 		eIMB.calculateForceAndTorque();
 		eIMB.eDEM.contactVerification();
 		eIMB.eDEM.forceCalculation();

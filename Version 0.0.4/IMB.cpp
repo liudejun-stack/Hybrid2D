@@ -1,5 +1,31 @@
 #include "IMB.h"
 
+bool IMB::checkFluidSolidContact(Vec2d _cellPos, Vec2d _particlePos, double _particleRadius, double _dx) {
+	Vec2d Delta;
+	Delta[0] = _particlePos[0] - std::max(_cellPos[0], std::min(_particlePos[0], _cellPos[0] + _dx));
+	Delta[1] = _particlePos[1] - std::max(_cellPos[1], std::min(_particlePos[1], _cellPos[1] + _dx));
+	if (Delta.dot(Delta) < (_particleRadius * _particleRadius)) {
+		return true;
+	}
+	return false;
+}
+
+void IMB::defineLinkedCells() {
+	for (auto& B : eDEM.bodies) {
+		Vec2d cellInitPos = B->pos - 2 * B->radius * Vec2d::Ones();
+		for (int j = 0; j < 4 * B->radius; ++j) {
+			for (int i = 0; i < 4 * B->radius; ++i) {
+				Vec2d aux = { i,j };
+				Vec2d cellCurrentPos = cellInitPos + aux;
+				if (checkFluidSolidContact(cellCurrentPos, B->pos, B->radius, eLBM.dx)) {
+					int cellID = eLBM.getCell(i, j);
+					B->fluidSolidInteraction.push_back(cellID);
+				}
+			}
+		}
+	}
+}+
+
 double IMB::calculateSolidFraction(Vec2d& _particlePos, Vec2d& _cellPos, double _particleRadius, double _dx) {
 	std::vector<Vec2d> P = { {0,0}, {0,0}, {0,0},{0,0} };
 	Vec2d e1 = { 1,0 };
@@ -73,3 +99,14 @@ void IMB::calculateForceAndTorque() {
 	}
 }
 
+void IMB::updateFluidSolidContact() {
+
+	for (auto& B : eDEM.bodies) {
+		B->fluidSolidInteraction.erase(std::remove_if(std::begin(B->fluidSolidInteraction), std::end(B->fluidSolidInteraction),[]()))
+	}
+	interactions.erase(std::remove_if(std::begin(interactions), std::end(interactions), [](std::shared_ptr<Interaction> I) {return !I->checkContact(); }), std::end(interactions));
+	for (auto& B : bodies) {
+		B->inter.erase(std::remove_if(std::begin(B->inter), std::end(B->inter), [](std::weak_ptr<Interaction> I) {return I.expired(); }), std::end(B->inter));
+	}
+	++nIter;
+}

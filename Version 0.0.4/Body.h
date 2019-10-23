@@ -7,7 +7,8 @@
 
 //Hybrid Library
 #include "Math.h"
-#include "Interaction.h"
+
+class Interaction;
 
 class Body {
 public:

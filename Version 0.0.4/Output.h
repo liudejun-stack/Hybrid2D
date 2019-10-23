@@ -13,9 +13,8 @@
 class Output {
 public:
 
-	void fluidVTK(std::string _fileName);
-	std::vector<std::shared_ptr<Lattice>> fluidInfo;
+
 	
 };
 
-#endif //BODY_H
+#endif //OUTPUT_H
