@@ -23,6 +23,7 @@ public:
 	}
 
 	bool checkInteraction(int _bodyId);
+	bool fluidInteraction(Vec2d _cellPos);
 
 	//Body variables:
 	double mass;

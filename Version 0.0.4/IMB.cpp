@@ -1,30 +1,20 @@
 #include "IMB.h"
 
-bool IMB::checkFluidSolidContact(Vec2d _cellPos, Vec2d _particlePos, double _particleRadius, double _dx) {
-	Vec2d Delta;
-	Delta[0] = _particlePos[0] - std::max(_cellPos[0], std::min(_particlePos[0], _cellPos[0] + _dx));
-	Delta[1] = _particlePos[1] - std::max(_cellPos[1], std::min(_particlePos[1], _cellPos[1] + _dx));
-	if (Delta.dot(Delta) < (_particleRadius * _particleRadius)) {
-		return true;
-	}
-	return false;
-}
-
 void IMB::defineLinkedCells() {
 	for (auto& B : eDEM.bodies) {
-		Vec2d cellInitPos = B->pos - 2 * B->radius * Vec2d::Ones();
-		for (int j = 0; j < 4 * B->radius; ++j) {
-			for (int i = 0; i < 4 * B->radius; ++i) {
+		Vec2d cellInitPos = B->pos - 2 * (int)B->radius * Vec2d::Ones();
+		for (int j = 0; j < 4 * (int)B->radius; ++j) {
+			for (int i = 0; i < 4 * (int)B->radius; ++i) {
 				Vec2d aux = { i,j };
 				Vec2d cellCurrentPos = cellInitPos + aux;
-				if (checkFluidSolidContact(cellCurrentPos, B->pos, B->radius, eLBM.dx)) {
+				if (B->fluidInteraction(cellCurrentPos)) {
 					int cellID = eLBM.getCell(i, j);
 					B->fluidSolidInteraction.push_back(cellID);
 				}
 			}
 		}
 	}
-}+
+}
 
 double IMB::calculateSolidFraction(Vec2d& _particlePos, Vec2d& _cellPos, double _particleRadius, double _dx) {
 	std::vector<Vec2d> P = { {0,0}, {0,0}, {0,0},{0,0} };
@@ -75,38 +65,28 @@ double IMB::calculateSolidFraction(Vec2d& _particlePos, Vec2d& _cellPos, double 
 void IMB::calculateForceAndTorque() {
 	for (auto& B : eDEM.bodies) {
 		B->forceLBM = Vec2d::Zero();
-		for (auto& C : eLBM.cells) {
-			double distCellPar = (C->cellPos - B->pos).dot((C->cellPos - B->pos));
-			if (distCellPar <= B->radius * B->radius) {
-
-				double len = calculateSolidFraction(B->pos, C->cellPos, B->radius, eLBM.dx);
-				if (std::abs(len) < 1.0e-12)	continue;
-				double gamma = len / (4.0 * eLBM.dx);
-				ASSERT(gamma >= 0.0 && gamma <= 1.0);
-				C->solidFraction = std::min(gamma + C->solidFraction, 1.0);
-				double Bn = (gamma * (eLBM.tau - 0.5)) / ((1.0 - gamma) + (eLBM.tau - 0.5));
-				Vec2d velP = B->vel;
-				for (int k = 0; k < C->Q; ++k) {
-					double Fvpp = C->setEqFun(C->rho, C->vel, C->opNode[k]);
-					double Fvp = C->setEqFun(C->rho, velP, k);
-					double Omega = C->f[C->opNode[k]] - Fvpp - (C->f[k] - Fvp);
-
-					C->omega[k] += Omega;
-					B->forceLBM += -Bn * Omega * C->latticeSpeed * eLBM.dx * C->discreteVelocity[k];
-				}
+		for (auto& ID : B->fluidSolidInteraction) {
+			Vec2d cellPos = eLBM.cells[ID]->cellPos;
+			double len = calculateSolidFraction(B->pos, cellPos, B->radius, eLBM.dx);
+			if (std::abs(len) < 1.0e-12)	continue;
+			double gamma = len / (4.0 * eLBM.dx);
+			ASSERT(gamma >= 0.0 && gamma <= 1.0);
+			eLBM.cells[ID]->solidFraction = std::min(gamma + eLBM.cells[ID]->solidFraction, 1.0);
+			double Bn = (gamma * (eLBM.tau - 0.5)) / ((1.0 - gamma) + (eLBM.tau - 0.5));
+			Vec2d velP = B->vel;
+			for (int k = 0; k < eLBM.cells[ID]->Q; ++k) {
+				double Fvpp = eLBM.cells[ID]->setEqFun(eLBM.cells[ID]->rho, eLBM.cells[ID]->vel, eLBM.cells[ID]->opNode[k]);
+				double Fvp = eLBM.cells[ID]->setEqFun(eLBM.cells[ID]->rho, velP, k);
+				double Omega = eLBM.cells[ID]->f[eLBM.cells[ID]->opNode[k]] - Fvpp - (eLBM.cells[ID]->f[k] - Fvp);
+				eLBM.cells[ID]->omega[k] += Omega;
+				B->forceLBM += -Bn * Omega * eLBM.cells[ID]->latticeSpeed * eLBM.dx * eLBM.cells[ID]->discreteVelocity[k];
 			}
 		}
 	}
 }
 
 void IMB::updateFluidSolidContact() {
-
 	for (auto& B : eDEM.bodies) {
-		B->fluidSolidInteraction.erase(std::remove_if(std::begin(B->fluidSolidInteraction), std::end(B->fluidSolidInteraction),[]()))
+		B->fluidSolidInteraction.clear();
 	}
-	interactions.erase(std::remove_if(std::begin(interactions), std::end(interactions), [](std::shared_ptr<Interaction> I) {return !I->checkContact(); }), std::end(interactions));
-	for (auto& B : bodies) {
-		B->inter.erase(std::remove_if(std::begin(B->inter), std::end(B->inter), [](std::weak_ptr<Interaction> I) {return I.expired(); }), std::end(B->inter));
-	}
-	++nIter;
 }

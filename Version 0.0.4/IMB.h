@@ -15,7 +15,6 @@ public:
 	IMB() : eLBM(), eDEM() {};
 
 	//Engine
-	bool   checkFluidSolidContact(Vec2d _cellPos, Vec2d _particlePos, double _particleRadius, double _dx);
 	void   defineLinkedCells();
 	double calculateSolidFraction(Vec2d& _particlePos, Vec2d& _cellPos, double _particleRadius, double _dx);
 	void   calculateForceAndTorque();

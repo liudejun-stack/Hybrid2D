@@ -186,7 +186,7 @@ void Scene::moveToNextTimeStep() {
 	int i = 0;
 	while (Time < Tf) {
 		eIMB.eLBM.resetSolidFraction();
-		eIMB.checkFluidSolidContact();
+		eIMB.defineLinkedCells();
 		eIMB.calculateForceAndTorque();
 		eIMB.eDEM.contactVerification();
 		eIMB.eDEM.forceCalculation();
@@ -199,6 +199,7 @@ void Scene::moveToNextTimeStep() {
 			tlbm += eIMB.eLBM.dtLBM;
 		}
 		Time += eIMB.eDEM.dtDEM;
+		eIMB.updateFluidSolidContact();
 
 		if (i % 1000 == 0) {
 			eIMB.eDEM.calculateEnergy();
