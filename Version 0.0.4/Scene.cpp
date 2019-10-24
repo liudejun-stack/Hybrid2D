@@ -209,11 +209,11 @@ void Scene::moveToNextTimeStep() {
 			eIMB.eDEM.updateVelPos();
 			eIMB.eDEM.updateContact();
 			tdem += eIMB.eDEM.dtDEM;
-			if (j % 10000000 == 0)	solidVTK("DEM");
+			if (j % 1000000 == 0)	solidVTK("DEM");
 			++j;
 		}
-		eIMB.updateFluidSolidContact();
 		fluidVTK("LBM");
+		eIMB.updateFluidSolidContact();
 		++i;
 		Time += eIMB.eLBM.dtLBM;
 	}
