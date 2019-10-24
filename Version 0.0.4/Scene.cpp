@@ -85,8 +85,8 @@ void Scene::prepareScenario() {
 
 	//Directories for VTK output
 	int ignore;
-	ignore = system("mkdir -p fluidVTK");
-	ignore = system("mkdir -p solidVTK");
+	ignore = system("mkdir VTK_Fluid");
+	ignore = system("mkdir VTK_Solid");
 }
 
 void Scene::simulationInfo(int& i) {
@@ -120,7 +120,7 @@ void Scene::simulationInfo(int& i) {
 
 void Scene::fluidVTK(std::string _fileName) {
 	std::ofstream out;
-	out.open("fluidVTK/" + _fileName + std::to_string(fluidVtkCounter) + ".vtk");
+	out.open("VTK_Fluid/" + _fileName + std::to_string(fluidVtkCounter) + ".vtk");
 	out << "# vtk DataFile Version 3.0\n";
 	out << "Fluid state\n";
 	out << "ASCII\n";
@@ -149,7 +149,7 @@ void Scene::fluidVTK(std::string _fileName) {
 
 void Scene::solidVTK(std::string _fileName) {
 	std::ofstream out;
-	out.open("solidVTK/" + _fileName + std::to_string(particleVtkCounter) + ".vtk");
+	out.open("VTK_Solid/" + _fileName + std::to_string(particleVtkCounter) + ".vtk");
 	out << "# vtk DataFile Version 3.0\n";
 	out << "DEM\n";
 	out << "ASCII\n";
@@ -188,11 +188,11 @@ void Scene::moveToNextTimeStep() {
 	int i = 0;
 	while (Time < Tf) {
 
-		//Simulation Info
+		//Print Simulation Info
 		eIMB.eDEM.calculateEnergy();
 		if (i % 1 == 0)	simulationInfo(i);
 
-		//Fluid Resolution:
+		//Fluid Resolution
 		eIMB.eLBM.resetSolidFraction();
 		eIMB.defineLinkedCells();
 		eIMB.calculateForceAndTorque();
@@ -209,9 +209,10 @@ void Scene::moveToNextTimeStep() {
 			eIMB.eDEM.updateVelPos();
 			eIMB.eDEM.updateContact();
 			tdem += eIMB.eDEM.dtDEM;
-			if (j % 100000 == 0)	solidVTK("DEM");
+			if (j % 10000000 == 0)	solidVTK("DEM");
 			++j;
 		}
+		eIMB.updateFluidSolidContact();
 		fluidVTK("LBM");
 		++i;
 		Time += eIMB.eLBM.dtLBM;
