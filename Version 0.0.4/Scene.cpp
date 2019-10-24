@@ -66,7 +66,9 @@ void Scene::prepareScenario() {
 	eIMB.eDEM.shearStiffness  = shearStiffness;
 
 	//Calculate DEM TimeStep
-	//eIMB.eDEM.calculateParticleTimeStep();
+	eIMB.eDEM.calculateParticleTimeStep();
+	subCycleNumber = (int)(eIMB.eLBM.dtLBM / eIMB.eDEM.dtDEM) + 1;
+	eIMB.eDEM.dtDEM = (eIMB.eLBM.dtLBM / subCycleNumber);
 
 	//Cell initialization for LBM simualtion:
 	eIMB.eLBM.initializeCells();
@@ -105,6 +107,7 @@ void Scene::simulationInfo(int& i) {
 
 	std::cout << "----------------------- DEM Parameters ---------------------------" << "\n";
 	std::cout << "          Time Step: " << eIMB.eDEM.dtDEM                           << "\n";
+	std::cout << "    SubCycle Number: " << subCycleNumber                            << "\n";
 	std::cout << "     Friction Angle: " << frictionAngle                             << "\n";
 	std::cout << "   Normal Stiffness: " << normalStiffness                           << "\n";
 	std::cout << "    Shear Stiffness: " << shearStiffness                            << "\n";
@@ -180,8 +183,42 @@ void Scene::moveToNextTimeStep_DEM() {
 }
 
 void Scene::moveToNextTimeStep() {
-
 	double Time = 0.0;
+	double tlbm = 0.0;
+	int i = 0;
+	while (Time < Tf) {
+
+		//Simulation Info
+		eIMB.eDEM.calculateEnergy();
+		if (i % 1 == 0)	simulationInfo(i);
+
+		//Fluid Resolution:
+		eIMB.eLBM.resetSolidFraction();
+		eIMB.defineLinkedCells();
+		eIMB.calculateForceAndTorque();
+		eIMB.eLBM.collision();
+		eIMB.eLBM.setBounceBack();
+		eIMB.eLBM.stream();
+
+		//Subcycle for DEM
+		double tdem = 0.0;
+		int j = 0;
+		while (tdem < subCycleNumber) {
+			eIMB.eDEM.contactVerification();
+			eIMB.eDEM.forceCalculation();
+			eIMB.eDEM.updateVelPos();
+			eIMB.eDEM.updateContact();
+			tdem += eIMB.eDEM.dtDEM;
+			if (j % 100000 == 0)	solidVTK("DEM");
+			++j;
+		}
+		fluidVTK("LBM");
+		++i;
+		Time += eIMB.eLBM.dtLBM;
+	}
+}
+
+	/*double Time = 0.0;
 	double tlbm = 0.0;
 	int i = 0;
 	while (Time < Tf) {
@@ -209,5 +246,4 @@ void Scene::moveToNextTimeStep() {
 			
 		}
 		++i;
-	}
-}
+	}*/

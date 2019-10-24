@@ -52,6 +52,7 @@ public:
 	double shearStiffness  = 0.5e6;
 
 	double Tf;
+	int subCycleNumber = 0;
 
 	//Output parameters:
 	int fluidVtkCounter;

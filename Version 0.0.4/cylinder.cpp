@@ -32,7 +32,8 @@ int main() {
 	S.Tf = 40000.0;
 
 	//Bodies:
-	S.addCircle(1, radius, cylinderCoord, {0.0, 0.0});
+	S.addCircle(1, radius, { radius, radius }, { 0.0, 0.0 });
+	S.addCircle(1, radius, { 5*radius, radius }, { 0.0, 0.0 });
 
 	//Fluid Parameters:
 	S.relaxationTime = calcVisc();
@@ -48,8 +49,6 @@ int main() {
 
 	//Prepare Scenario
 	S.prepareScenario();
-	S.eIMB.eDEM.calculateParticleTimeStep();
-	//S.eIMB.eDEM.dtDEM = 1.0e-3;
 	
 	for (int j = 0; j < dim[1]; ++j) {
 		Vec2d vel;
