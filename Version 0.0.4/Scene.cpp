@@ -11,6 +11,7 @@ void Scene::setBodiesSolid() {
 			double dist = (C->cellPos - B->pos).dot((C->cellPos - B->pos));
 			if (dist >= B->radius * B->radius)	continue;
 			C->node = eIMB.eLBM.isSolid;
+			C->solidFraction = 1.0;
 		}
 	}
 }
@@ -153,14 +154,13 @@ void Scene::solidVTK(std::string _fileName) {
 	out << "# vtk DataFile Version 3.0\n";
 	out << "DEM\n";
 	out << "ASCII\n";
-	out << " \n";
 	out << "DATASET POLYDATA\n";
 	out << "POINTS " << std::to_string((int)eIMB.eDEM.bodies.size()) << " float\n";
 	for (auto& B : eIMB.eDEM.bodies) {
-		out << B->pos[0] << " " << B->pos[1] << " " << 0 << std::endl;
+		out << B->pos[0] << " " << B->pos[1] << " " << 0 << "\n";
 	}
 	out << "POINT_DATA " << std::to_string((int)eIMB.eDEM.bodies.size()) << std::endl;
-	out << "SCALARS radii double\n";
+	out << "SCALARS radii float\n";
 	out << "LOOKUP_TABLE default\n";
 	for (auto& B : eIMB.eDEM.bodies) {
 		out << B->radius << std::endl;

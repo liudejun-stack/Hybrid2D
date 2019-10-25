@@ -26,26 +26,18 @@ int main() {
 
 	//Geometry
 	S.domainSize = dim;
-	//S.top_isSolid = true;
-	//S.bot_isSolid = true;
-	//S.bodies_areSolid = true;
+	S.top_isSolid = true;
+	S.bot_isSolid = true;
+	S.bodies_areSolid = true;
 	S.Tf = 40000.0;
 
 	//Bodies:
-	//S.addCircle(1, radius, { radius, radius }, { 0.0, 0.0 });
-	S.addCircle(1, radius, {10, 10}, { 0.0, 0.0 });
+	S.addCircle(1, radius, cylinderCoord, { 0.0, 0.0 });
 
 	//Fluid Parameters:
 	S.relaxationTime = calcVisc();
-	S.velInit = { 0.0, 0.0 };
+	S.velInit = { 0.08, 0.0 };
 	S.rhoInit = 1.0;
-
-	//Particle Parameters:
-	S.localDamping = 0;
-	S.factorOfSafety = 0.1;
-	S.frictionAngle = 30;
-	S.normalStiffness = 1e6;
-	S.shearStiffness = 0.5e6;
 
 	//Prepare Scenario
 	S.prepareScenario();
@@ -58,7 +50,6 @@ int main() {
 	}
 	S.eIMB.eLBM.setZouBC();
 	
-	/*
 	for (int i = 0; i != 10000; ++i) {
 		S.moveToNextTimeStep_LBM();
 		if (i % 100 == 0) {
@@ -70,8 +61,5 @@ int main() {
 			S.simulationInfo(i);
 		}
 	}
-	*/
-
-	S.moveToNextTimeStep();
 	return 0;
 }
