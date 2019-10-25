@@ -11,9 +11,12 @@
 class Lattice {
 public:
 	//Constructor:
-	Lattice(int _ID, double _latticeSpeed, Vec2d _dim, Vec2d _cellPos) {
+	Lattice(int _ID, double _dx, double _dt, double _tau, Vec2d _dim, Vec2d _cellPos) {
 		ID            = _ID;
-		latticeSpeed  = _latticeSpeed;
+		dx            = _dx;
+		dt            = _dt; 
+		tau           = _tau;
+		latticeSpeed  = _dx / _dt;
 		dim           = _dim;
 		cellPos       = _cellPos;
 
@@ -43,6 +46,9 @@ public:
 	Vec2d  dim;
 	Vec2d  cellPos;
 	double latticeSpeed;
+	double dx;
+	double dt;
+	double tau;
 	int    ID;
 
 	Vec2d  sourceForce           = Vec2d::Zero();

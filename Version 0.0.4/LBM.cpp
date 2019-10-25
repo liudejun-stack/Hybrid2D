@@ -72,12 +72,11 @@ void LBM::setZouBC() {
 
 void LBM::initializeCells() {
 	ASSERT(dtLBM > 0.0);
-	latticeSpeed = dx / dtLBM;
 	for (int j = 0; j < domainSize[1]; ++j)
 		for (int i = 0; i < domainSize[0]; ++i) {
 			Vec2d cellPos = { i,j };
 			int id = cells.size();
-			cells.emplace_back(std::make_shared<Lattice>(id, latticeSpeed, domainSize, cellPos));
+			cells.emplace_back(std::make_shared<Lattice>(id, dx, dtLBM, tau, domainSize, cellPos));
 		}
 }
 
