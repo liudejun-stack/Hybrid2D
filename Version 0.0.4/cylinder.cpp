@@ -47,7 +47,7 @@ int main() {
 		S.eIMB.eLBM.setVelBC(0, j, vel);
 		S.eIMB.eLBM.setDenBC(dim[0] - 1, j, 1.0);
 	}
-	S.eIMB.eLBM.setZouBC();
+	//S.eIMB.eLBM.setZouBC();
 	
 	for (int i = 0; i != 10000; ++i) {
 		S.moveToNextTimeStep_LBM();

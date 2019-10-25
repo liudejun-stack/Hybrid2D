@@ -4,12 +4,12 @@ int LBM::getCell(int i, int j) {return i + domainSize[0] * j;}
 
 void LBM::setVelBC(int i, int j, Vec2d _vel) {
 	int id = getCell(i, j);
-	cells[id]->vel = _vel;
+	cells[id]->velBC = _vel;
 }
 
 void LBM::setDenBC(int i, int j, double _rho) {
 	int id = getCell(i, j);
-	cells[id]->rho = _rho;
+	cells[id]->rhoBC = _rho;
 }
 
 void LBM::setZouBC() {
@@ -22,11 +22,11 @@ void LBM::setZouBC() {
 
 			if (C->ID == getCell(0, j)) {
 				//Left side:
-				double rho = (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[3] + C->f[6] + C->f[7])) / (1.0 - C->vel[0]);
+				double rho = (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[3] + C->f[6] + C->f[7])) / (1.0 - C->velBC[0]);
 
-				C->f[1] = C->f[3] + aux * rho * C->vel[0];
-				C->f[5] = C->f[7] + div * rho * C->vel[0] + 0.5 * rho * C->vel[1] - 0.5 * (C->f[2] - C->f[4]);
-				C->f[8] = C->f[6] + div * rho * C->vel[0] - 0.5 * rho * C->vel[1] + 0.5 * (C->f[2] - C->f[4]);
+				C->f[1] = C->f[3] + aux * rho * C->velBC[0];
+				C->f[5] = C->f[7] + div * rho * C->velBC[0] + 0.5 * rho * C->velBC[1] - 0.5 * (C->f[2] - C->f[4]);
+				C->f[8] = C->f[6] + div * rho * C->velBC[0] - 0.5 * rho * C->velBC[1] + 0.5 * (C->f[2] - C->f[4]);
 				C->updateMacro();
 			}
 		}
@@ -34,10 +34,10 @@ void LBM::setZouBC() {
 		for (int j = 0; j < domainSize[1]; ++j) {
 
 			if (C->ID == getCell(domainSize[0] - 1, j)) {
-				double vx = -1.0 + (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[1] + C->f[5] + C->f[8])) / C->rho;
-				C->f[3] = C->f[1] - aux * C->rho * vx;
-				C->f[7] = C->f[5] - div * C->rho * vx + 0.5 * (C->f[2] + C->f[4]);
-				C->f[6] = C->f[8] - div * C->rho * vx - 0.5 * (C->f[2] + C->f[4]);
+				double vx = -1.0 + (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[1] + C->f[5] + C->f[8])) / C->rhoBC;
+				C->f[3] = C->f[1] - aux * C->rhoBC * vx;
+				C->f[7] = C->f[5] - div * C->rhoBC * vx + 0.5 * (C->f[2] + C->f[4]);
+				C->f[6] = C->f[8] - div * C->rhoBC * vx - 0.5 * (C->f[2] + C->f[4]);
 				C->updateMacro();
 			}
 		}

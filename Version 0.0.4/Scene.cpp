@@ -170,6 +170,7 @@ void Scene::solidVTK(std::string _fileName) {
 }
 
 void Scene::moveToNextTimeStep_LBM() {
+	eIMB.eLBM.setZouBC();
 	eIMB.eLBM.collision();
 	eIMB.eLBM.setBounceBack();
 	eIMB.eLBM.stream();
