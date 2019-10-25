@@ -84,8 +84,9 @@ void LBM::collision() {
 	double tauInv = 1.0 / tau;
 	for (auto& C : cells) {
 		if (C->node == isSolid)	continue;
+		C->updateMacro();
 		Vec2d Vel = C->vel + C->sourceForce * dtLBM / (2 * C->rho);
-		double solidFunction = (C->solidFraction * (tau - 0.5)) / ((1 - C->solidFraction) + (tau - 0.5));
+		double solidFunction = (C->solidFraction * (tau - 0.5)) / ((1.0 - C->solidFraction) + (tau - 0.5));
 		for (int k = 0; k < C->Q; k++) {
 			double EDF = C->setEqFun(C->rho, Vel, k);
 			double source = C->setSourceTerm(tau, dtLBM, k);
