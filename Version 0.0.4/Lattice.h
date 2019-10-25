@@ -43,14 +43,16 @@ public:
 	friend class IMB;
 
 	//Cell variables:
-	Vec2d  aux;
-	Vec2d  dim;
-	Vec2d  cellPos;
-	double latticeSpeed;
-	double dx;
-	double dt;
-	double tau;
-	int    ID;
+	int    ID;                 
+	double dx;                  
+	double dt;                  
+	double tau;                
+	double latticeSpeed;        
+	double rhoBC;               //Prescribed Density for Zou & He Boundary Condition
+	Vec2d  velBC;               //Prescribed Velocity for Zou & He Boundary Condition
+	Vec2d  aux;                 //Auxiliar vector to calculate neighbour node
+	Vec2d  dim;                 //Domain size
+	Vec2d  cellPos;             
 
 	Vec2d  sourceForce           = Vec2d::Zero();
 	Vec2d  vel                   = Vec2d::Zero();
