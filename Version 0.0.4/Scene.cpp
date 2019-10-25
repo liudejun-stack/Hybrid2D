@@ -8,10 +8,10 @@ void Scene::addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel) {
 void Scene::setBodiesSolid() {
 	for (auto& B : eIMB.eDEM.bodies) {
 		for (auto& C : eIMB.eLBM.cells) {
-			double dist = (C->cellPos - B->pos).dot((C->cellPos - B->pos));
-			if (dist >= B->radius * B->radius)	continue;
-			C->node = eIMB.eLBM.isSolid;
-			C->solidFraction = 1.0;
+			bool inContact = B->fluidInteraction(C->cellPos, C->dx);
+			if (inContact) {
+				C->node = C->isSolid;
+			}
 		}
 	}
 }
@@ -49,11 +49,6 @@ void Scene::setRightSolid() {
 }
 
 void Scene::prepareScenario() {
-
-	//Directories for VTK output
-	int ignore;
-	ignore = system("mkdir VTK_Fluid");
-	ignore = system("mkdir VTK_Solid");
 
 	//Boundary definition:
 	eIMB.eLBM.domainSize = domainSize;
@@ -166,28 +161,33 @@ void Scene::solidVTK(std::string _fileName) {
 	particleVtkCounter++;
 }
 
-void Scene::moveToNextTimeStep_LBM() {
+void Scene::LBMSolver() {
+
+	//Create Directory
+	int ignore = system("mkdir VTK_Fluid");
 	int i = 0;
+
 	while (Time < simDuration) {
 
 		//Print Simulation Info
-		eIMB.eDEM.calculateEnergy();
-		simulationInfo(i);
+		if (i % 1000 == 0) {
+			eIMB.eDEM.calculateEnergy();
+			simulationInfo(i);
+		}
 
 		//Fluid Engine
 		eIMB.eLBM.collision();
 		eIMB.eLBM.setBounceBack();
 		eIMB.eLBM.stream();
-		eIMB.eLBM.setZouBC();
 
 		//Output VTK
-		if (i % 1000 == 0)	fluidVTK("LBM");
+		if (i % 100 == 0)	fluidVTK("LBM");
 		Time += eIMB.eLBM.dtLBM;
 		++i;
 	}
 }
 
-void Scene::moveToNextTimeStep_DEM() {
+void Scene::DEMSolver() {
 	eIMB.eDEM.contactVerification();
 	eIMB.eDEM.forceCalculation();
 	eIMB.eDEM.updateVelPos();
@@ -198,7 +198,7 @@ void Scene::moveToNextTimeStep() {
 	double Time = 0.0;
 	double tlbm = 0.0;
 	int i = 0;
-	while (Time < Tf) {
+	while (Time < simDuration) {
 
 		//Print Simulation Info
 		eIMB.eDEM.calculateEnergy();

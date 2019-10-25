@@ -48,6 +48,9 @@ int main() {
 		S.eIMB.eLBM.setDenBC(dim[0] - 1, j, 1.0);
 	}
 	S.eIMB.eLBM.setInitCond(S.rhoInit, S.velInit);
+	S.eIMB.eLBM.setZouBC();
+
+	S.LBMSolver();
 
 	return 0;
 }

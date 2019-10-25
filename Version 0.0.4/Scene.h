@@ -21,8 +21,8 @@ public:
 	void simulationInfo(int& i);
 
 	//Solver:
-	void moveToNextTimeStep_LBM();
-	void moveToNextTimeStep_DEM();
+	void LBMSolver();
+	void DEMSolver();
 	void moveToNextTimeStep();
 
 	//Outputs
