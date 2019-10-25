@@ -27,44 +27,18 @@ void LBM::setZouBC() {
 				C->f[1] = C->f[3] + aux * rho * C->vel[0];
 				C->f[5] = C->f[7] + div * rho * C->vel[0] + 0.5 * rho * C->vel[1] - 0.5 * (C->f[2] - C->f[4]);
 				C->f[8] = C->f[6] + div * rho * C->vel[0] - 0.5 * rho * C->vel[1] + 0.5 * (C->f[2] - C->f[4]);
+				C->updateMacro();
 			}
-			/*
-			if (C->ID == getCell(domainSize[0] - 1, j)) {
-				//Right side:
-				double rho = (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[1] + C->f[5] + C->f[8])) / (1.0 + C->vel[0]);
-
-				C->f[3] = C->f[1] - aux * rho * C->vel[0];
-				C->f[7] = C->f[5] - div * rho * C->vel[0] + 0.5 * (C->f[2] - C->f[4]);
-				C->f[6] = C->f[8] - div * rho * C->vel[0] - 0.5 * (C->f[2] - C->f[4]);
-			}
-
-			if (C->ID == getCell(j, domainSize[1] - 1)) {
-				double rho = (C->f[0] + C->f[1] + C->f[3] + 2.0 * (C->f[2] + C->f[5] + C->f[6])) / (1.0 - C->vel[1]);
-
-				C->f[4] = C->f[2] - aux * rho * C->vel[1];
-				C->f[7] = C->f[5] - div * rho * C->vel[1] + 0.5 * (C->f[1] - C->f[3]);
-				C->f[8] = C->f[6] - div * rho * C->vel[1] + 0.5 * (C->f[3] - C->f[1]);
-			}
-			*/
 		}
 		//Prescribed density
 		for (int j = 0; j < domainSize[1]; ++j) {
 
 			if (C->ID == getCell(domainSize[0] - 1, j)) {
 				double vx = -1.0 + (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[1] + C->f[5] + C->f[8])) / C->rho;
-
 				C->f[3] = C->f[1] - aux * C->rho * vx;
 				C->f[7] = C->f[5] - div * C->rho * vx + 0.5 * (C->f[2] + C->f[4]);
 				C->f[6] = C->f[8] - div * C->rho * vx - 0.5 * (C->f[2] + C->f[4]);
-				/*
-				if (C->ID == getCell(j, 0)) {
-					double vx = -1.0 + (C->f[0] + C->f[1] + C->f[3] + 2.0 * (C->f[4] + C->f[7] + C->f[8])) / C->rho;
-
-					C->f[2] = C->f[4] - aux * C->rho * vx;
-					C->f[5] = C->f[7] - div * C->rho * vx + 0.5 * (C->f[3] - C->f[1]);
-					C->f[6] = C->f[8] - div * C->rho * vx + 0.5 * (C->f[1] - C->f[3]);
-				}
-				*/
+				C->updateMacro();
 			}
 		}
 	}
@@ -76,7 +50,7 @@ void LBM::initializeCells() {
 		for (int i = 0; i < domainSize[0]; ++i) {
 			Vec2d cellPos = { i,j };
 			int id = cells.size();
-			cells.emplace_back(std::make_shared<Lattice>(id, dx, dtLBM, tau, domainSize, cellPos));
+			cells.push_back(std::make_shared<Lattice>(id, dx, dtLBM, tau, domainSize, cellPos));
 		}
 }
 
