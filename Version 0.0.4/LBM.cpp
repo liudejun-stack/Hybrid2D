@@ -47,7 +47,7 @@ void LBM::initializeCells() {
 	for (int j = 0; j < domainSize[1]; ++j)
 		for (int i = 0; i < domainSize[0]; ++i) {
 			Vec2d cellPos = { i,j };
-			int id = cells.size();
+			int id = getCell(i, j);
 			cells.push_back(std::make_shared<Lattice>(id, dx, dtLBM, tau, domainSize, cellPos));
 		}
 }
@@ -70,7 +70,7 @@ void LBM::resetSolidFraction() {
 	}
 }
 
-void LBM::applyForce() {
+void LBM::applyBodyForce() {
 	for (auto& C : cells) {
 		C->sourceForce = C->rho * gravity;
 	}

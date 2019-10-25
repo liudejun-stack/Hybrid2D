@@ -52,13 +52,13 @@ void Scene::setRightSolid() {
 void Scene::prepareScenario() {
 
 	//Boundary definition:
-	eIMB.eLBM.domainSize = domainSize;
-	eIMB.eDEM.domainSize = domainSize;
+	eIMB.eLBM.domainSize      = domainSize;
+	eIMB.eDEM.domainSize      = domainSize;
 
 	//Fluid parameters definition:
-	eIMB.eLBM.dx           = latticeSpacing;
-	eIMB.eLBM.tau          = relaxationTime;
-	eIMB.eLBM.kinViscosity = kinViscosity;
+	eIMB.eLBM.dx              = latticeSpacing;
+	eIMB.eLBM.tau             = relaxationTime;
+	eIMB.eLBM.kinViscosity    = kinViscosity;
 
 	//Particle parameters definition:
 	eIMB.eDEM.factorOfSafety  = factorOfSafety;
@@ -69,22 +69,22 @@ void Scene::prepareScenario() {
 
 	//Calculate DEM TimeStep
 	eIMB.eDEM.calculateParticleTimeStep();
-	subCycleNumber = (int)(eIMB.eLBM.dtLBM / eIMB.eDEM.dtDEM) + 1;
+	subCycleNumber  = (int)(eIMB.eLBM.dtLBM / eIMB.eDEM.dtDEM) + 1;
 	eIMB.eDEM.dtDEM = (eIMB.eLBM.dtLBM / subCycleNumber);
 
 	//Cell initialization for LBM simualtion:
 	eIMB.eLBM.initializeCells();
 
 	//Setting solids for LBM simulation:
-	if (top_isSolid)	setTopSolid();
-	if (bot_isSolid)	setBotSolid();
-	if (right_isSolid)	setRightSolid();
-	if (left_isSolid)	setLeftSolid();
+	if (top_isSolid)	    setTopSolid();
+	if (bot_isSolid)	    setBotSolid();
+	if (right_isSolid)	    setRightSolid();
+	if (left_isSolid)	    setLeftSolid();
 	if (bodies_areSolid)	setBodiesSolid();
 }
 
 void Scene::simulationInfo(int& i) {
-	std::system("cls");
+	//std::system("cls");
 	double totalEnergy = eIMB.eDEM.kinEnergy.back() + eIMB.eDEM.potEnergy.back();
 
 	std::cout << "----------------------- LBM/DEM Simulation -----------------------" << "\n";
@@ -177,6 +177,7 @@ void Scene::LBMSolver() {
 		}
 
 		//Fluid Engine
+		//eIMB.eLBM.setZouBC();
 		eIMB.eLBM.collision();
 		eIMB.eLBM.setBounceBack();
 		eIMB.eLBM.stream();
