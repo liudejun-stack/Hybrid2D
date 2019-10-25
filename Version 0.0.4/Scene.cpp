@@ -69,8 +69,8 @@ void Scene::prepareScenario() {
 
 	//Calculate DEM TimeStep
 	eIMB.eDEM.calculateParticleTimeStep();
-	subCycleNumber  = (int)(eIMB.eLBM.dtLBM / eIMB.eDEM.dtDEM) + 1;
-	eIMB.eDEM.dtDEM = (eIMB.eLBM.dtLBM / subCycleNumber);
+	//subCycleNumber  = (int)(eIMB.eLBM.dtLBM / eIMB.eDEM.dtDEM) + 1;
+	//eIMB.eDEM.dtDEM = (eIMB.eLBM.dtLBM / subCycleNumber);
 
 	//Cell initialization for LBM simualtion:
 	eIMB.eLBM.initializeCells();
@@ -84,7 +84,7 @@ void Scene::prepareScenario() {
 }
 
 void Scene::simulationInfo(int& i) {
-	//std::system("cls");
+	std::system("cls");
 	double totalEnergy = eIMB.eDEM.kinEnergy.back() + eIMB.eDEM.potEnergy.back();
 
 	std::cout << "----------------------- LBM/DEM Simulation -----------------------" << "\n";
@@ -190,14 +190,29 @@ void Scene::LBMSolver() {
 }
 
 void Scene::DEMSolver() {
-	eIMB.eDEM.contactVerification();
-	eIMB.eDEM.forceCalculation();
-	eIMB.eDEM.updateVelPos();
-	eIMB.eDEM.updateContact();
+	//Create Directory
+	int ignore = system("mkdir VTK_Solid");
+	
+	for (int i = 0; i != simDuration; ++i) {
+
+		//Print Simulation Info
+		if (i % 1000 == 0) {
+			eIMB.eDEM.calculateEnergy();
+			simulationInfo(i);
+		}
+
+		//Solid Engine
+		eIMB.eDEM.contactVerification();
+		eIMB.eDEM.forceCalculation();
+		eIMB.eDEM.updateVelPos();
+		eIMB.eDEM.updateContact();
+
+		//Output VTK
+		if (i % 100 == 0)	solidVTK("DEM");
+	}
 }
 
 void Scene::moveToNextTimeStep() {
-	double Time = 0.0;
 	double tlbm = 0.0;
 	int i = 0;
 	while (Time < simDuration) {
