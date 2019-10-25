@@ -51,7 +51,8 @@ public:
 	double normalStiffness = 1e6;
 	double shearStiffness  = 0.5e6;
 
-	double Tf;
+	double simDuration = 10000.0;
+	double Time = 0.0;
 	int subCycleNumber = 0;
 
 	//Output parameters:

@@ -85,9 +85,6 @@ void Scene::prepareScenario() {
 	if (right_isSolid)	setRightSolid();
 	if (left_isSolid)	setLeftSolid();
 	if (bodies_areSolid)	setBodiesSolid();
-
-	//Initialize particle distribution function
-	eIMB.eLBM.setInitCond(rhoInit, velInit);
 }
 
 void Scene::simulationInfo(int& i) {
@@ -170,10 +167,24 @@ void Scene::solidVTK(std::string _fileName) {
 }
 
 void Scene::moveToNextTimeStep_LBM() {
-	eIMB.eLBM.setZouBC();
-	eIMB.eLBM.collision();
-	eIMB.eLBM.setBounceBack();
-	eIMB.eLBM.stream();
+	int i = 0;
+	while (Time < simDuration) {
+
+		//Print Simulation Info
+		eIMB.eDEM.calculateEnergy();
+		simulationInfo(i);
+
+		//Fluid Engine
+		eIMB.eLBM.collision();
+		eIMB.eLBM.setBounceBack();
+		eIMB.eLBM.stream();
+		eIMB.eLBM.setZouBC();
+
+		//Output VTK
+		if (i % 1000 == 0)	fluidVTK("LBM");
+		Time += eIMB.eLBM.dtLBM;
+		++i;
+	}
 }
 
 void Scene::moveToNextTimeStep_DEM() {

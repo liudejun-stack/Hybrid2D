@@ -27,7 +27,6 @@ void LBM::setZouBC() {
 				C->f[1] = C->f[3] + aux * rho * C->velBC[0];
 				C->f[5] = C->f[7] + div * rho * C->velBC[0] + 0.5 * rho * C->velBC[1] - 0.5 * (C->f[2] - C->f[4]);
 				C->f[8] = C->f[6] + div * rho * C->velBC[0] - 0.5 * rho * C->velBC[1] + 0.5 * (C->f[2] - C->f[4]);
-				C->updateMacro();
 			}
 		}
 		//Prescribed density
@@ -38,7 +37,6 @@ void LBM::setZouBC() {
 				C->f[3] = C->f[1] - aux * C->rhoBC * vx;
 				C->f[7] = C->f[5] - div * C->rhoBC * vx + 0.5 * (C->f[2] + C->f[4]);
 				C->f[6] = C->f[8] - div * C->rhoBC * vx - 0.5 * (C->f[2] + C->f[4]);
-				C->updateMacro();
 			}
 		}
 	}
@@ -59,7 +57,6 @@ void LBM::setInitCond(double _rhoInit, Vec2d _vel) {
 		for (int k = 0; k < C->Q; k++) {
 			C->f[k] = C->setEqFun(_rhoInit, _vel, k);
 		}
-		C->updateMacro();
 	}
 }
 
@@ -116,6 +113,6 @@ void LBM::stream() {
 		std::vector<double> Temp = C->f;
 		C->f = C->fTemp;
 		C->fTemp = Temp;
-		C->updateMacro();
+		//C->updateMacro();
 	}
 }
