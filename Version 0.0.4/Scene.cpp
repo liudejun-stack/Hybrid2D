@@ -11,6 +11,7 @@ void Scene::setBodiesSolid() {
 			bool inContact = B->fluidInteraction(C->cellPos, C->dx);
 			if (inContact) {
 				C->node = C->isSolid;
+				C->solidFraction = 1.0;
 			}
 		}
 	}
@@ -19,7 +20,7 @@ void Scene::setBodiesSolid() {
 void Scene::setTopSolid() {
 	for (int i = 0; i < domainSize[0]; ++i) {
 		int id = eIMB.eLBM.getCell(i, domainSize[1] - 1);
-		eIMB.eLBM.cells[id]->node = eIMB.eLBM.isSolid;
+		eIMB.eLBM.cells[id]->node = eIMB.eLBM.cells[id]->isSolid;
 		eIMB.eLBM.cells[id]->solidFraction = 1.0;
 	}
 }
@@ -27,7 +28,7 @@ void Scene::setTopSolid() {
 void Scene::setBotSolid() {
 	for (int i = 0; i < domainSize[0]; ++i) {
 		int id = eIMB.eLBM.getCell(i, 0);
-		eIMB.eLBM.cells[id]->node = eIMB.eLBM.isSolid;
+		eIMB.eLBM.cells[id]->node = eIMB.eLBM.cells[id]->isSolid;
 		eIMB.eLBM.cells[id]->solidFraction = 1.0;
 	}
 }
@@ -35,7 +36,7 @@ void Scene::setBotSolid() {
 void Scene::setLeftSolid() {
 	for (int j = 0; j < domainSize[1]; ++j) {
 		int id = eIMB.eLBM.getCell(0, j);
-		eIMB.eLBM.cells[id]->node = eIMB.eLBM.isSolid;
+		eIMB.eLBM.cells[id]->node = eIMB.eLBM.cells[id]->isSolid;
 		eIMB.eLBM.cells[id]->solidFraction = 1.0;
 	}
 }
@@ -43,7 +44,7 @@ void Scene::setLeftSolid() {
 void Scene::setRightSolid() {
 	for (int j = 0; j < domainSize[1]; ++j) {
 		int id = eIMB.eLBM.getCell(domainSize[0] - 1, j);
-		eIMB.eLBM.cells[id]->node = eIMB.eLBM.isSolid;
+		eIMB.eLBM.cells[id]->node = eIMB.eLBM.cells[id]->isSolid;
 		eIMB.eLBM.cells[id]->solidFraction = 1.0;
 	}
 }

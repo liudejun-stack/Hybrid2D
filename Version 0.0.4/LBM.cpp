@@ -16,7 +16,7 @@ void LBM::setZouBC() {
 	double div = 1.0 / 6.0;
 	double aux = 2.0 / 3.0;
 	for (auto& C : cells) {
-		if (C->node == isSolid)	continue;
+		if (C->node == C->isSolid)	continue;
 		//Prescribed velocity (Left & Right sides)
 		for (int j = 0; j < domainSize[1]; ++j) {
 
@@ -80,7 +80,7 @@ void LBM::collision() {
 	ASSERT(tau > 0.5);
 	double tauInv = 1.0 / tau;
 	for (auto& C : cells) {
-		if (C->node == isSolid)	continue;
+		if (C->node == C->isSolid)	continue;
 		C->updateMacro();
 		Vec2d Vel = C->vel + C->sourceForce * dtLBM / (2 * C->rho);
 		double solidFunction = (C->solidFraction * (tau - 0.5)) / ((1.0 - C->solidFraction) + (tau - 0.5));
@@ -95,7 +95,7 @@ void LBM::collision() {
 
 void LBM::setBounceBack() {
 	for (auto& C : cells) {
-		if (C->node == isFluid)	continue;
+		if (C->node == C->isFluid)	continue;
 		for (int k = 0; k < C->Q; k++)	C->fTemp[k] = C->f[k];
 		for (int k = 0; k < C->Q; k++)	C->f[k] = C->fTemp[C->opNode[k]];
 	}
