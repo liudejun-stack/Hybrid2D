@@ -33,6 +33,19 @@ public:
 
 	std::vector<std::shared_ptr<Lattice>> cells;
 
+	//Velocity Boundary Condition Vectos:
+	std::vector<Vec2d> rVelBC;
+	std::vector<Vec2d> lVelBC;
+	std::vector<Vec2d> tVelBC;
+	std::vector<Vec2d> bVelBC;
+
+	//Density Boundary Condition Vectos:
+	std::vector<Vec2d> rDenBC;
+	std::vector<Vec2d> lDenBC;
+	std::vector<Vec2d> tDenBC;
+	std::vector<Vec2d> bDenBC;
+
+
 	Vec2d  gravity       = { 0.0, -9.81 };
 	Vec2d  domainSize    = Vec2d::Zero();
 	double dx            = 1.0;

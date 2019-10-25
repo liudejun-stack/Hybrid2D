@@ -81,28 +81,28 @@ void LBM::initializeCells() {
 }
 
 
-void LBM::updateMacro() {
-	for (auto& C : cells) {
-		if (C->node == isSolid) {
-			C->rho = 0.0;
-			C->vel = Vec2d::Zero();
-		}
-		else {
-			C->rho = C->f[0] + C->f[1] + C->f[2] + C->f[3] + C->f[4] + C->f[5] + C->f[6] + C->f[7] + C->f[8];
-			C->vel[0] = latticeSpeed * ((C->f[1] + C->f[5] + C->f[8] - C->f[3] - C->f[6] - C->f[7]) / C->rho);
-			C->vel[1] = latticeSpeed * ((C->f[2] + C->f[5] + C->f[6] - C->f[4] - C->f[7] - C->f[8]) / C->rho);
-		}
-		ASSERT(!(std::isnan(C->rho) || std::isnan(C->vel.norm())));
-	}
-}
+//void LBM::updateMacro() {
+//	for (auto& C : cells) {
+//		if (C->node == isSolid) {
+//			C->rho = 0.0;
+//			C->vel = Vec2d::Zero();
+//		}
+//		else {
+//			C->rho = C->f[0] + C->f[1] + C->f[2] + C->f[3] + C->f[4] + C->f[5] + C->f[6] + C->f[7] + C->f[8];
+//			C->vel[0] = latticeSpeed * ((C->f[1] + C->f[5] + C->f[8] - C->f[3] - C->f[6] - C->f[7]) / C->rho);
+//			C->vel[1] = latticeSpeed * ((C->f[2] + C->f[5] + C->f[6] - C->f[4] - C->f[7] - C->f[8]) / C->rho);
+//		}
+//		ASSERT(!(std::isnan(C->rho) || std::isnan(C->vel.norm())));
+//	}
+//}
 
 void LBM::setInitCond(double _rhoInit, Vec2d _vel) {
 	for (auto& C : cells) {
 		for (int k = 0; k < C->Q; k++) {
 			C->f[k] = C->setEqFun(_rhoInit, _vel, k);
 		}
+		C->updateMacro();
 	}
-	updateMacro();
 }
 
 void LBM::resetSolidFraction() {
@@ -131,8 +131,8 @@ void LBM::collision() {
 		for (int k = 0; k < C->Q; k++) {
 			double EDF = C->setEqFun(C->rho, Vel, k);
 			double source = C->setSourceTerm(tau, dtLBM, k);
-			//C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
-			C->f[k] = C->f[k] - (1 - solidFunction) * tauInv * (C->f[k] - EDF) + solidFunction * C->omega[k];
+			C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
+			//C->f[k] = C->f[k] - (1 - solidFunction) * tauInv * (C->f[k] - EDF) + solidFunction * C->omega[k];
 		}
 	}
 }
@@ -157,6 +157,6 @@ void LBM::stream() {
 		std::vector<double> Temp = C->f;
 		C->f = C->fTemp;
 		C->fTemp = Temp;
+		C->updateMacro();
 	}
-	updateMacro();
 }

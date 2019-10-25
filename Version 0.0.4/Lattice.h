@@ -37,6 +37,7 @@ public:
 	//Methods:
 	double setEqFun(double _rho, Vec2d _vel, int k);
 	double setSourceTerm(double& _tau, double _dt, int k);
+	void updateMacro();
 
 	friend class LBM;
 	friend class IMB;
@@ -58,6 +59,8 @@ public:
 	double rho                   = 0.0;
 	int    particleFluidID       = 0;
 	int    node                  = 0;
+	int isSolid = 1;
+	int isFluid = 0;
 
 private:
 	//D2Q9 Variables:
