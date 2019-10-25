@@ -98,7 +98,6 @@ void LBM::updateMacro() {
 
 void LBM::setInitCond(double _rhoInit, Vec2d _vel) {
 	for (auto& C : cells) {
-		if (C->node == isSolid)	continue;
 		for (int k = 0; k < C->Q; k++) {
 			C->f[k] = C->setEqFun(_rhoInit, _vel, k);
 		}

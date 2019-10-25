@@ -1,7 +1,7 @@
 #include "Scene.h"
 
 double uMax = 0.1;
-double re = 100;
+double re = 5;
 Vec2d dim = { 500, 100 };
 double radius = dim[1] / 20 + 1;
 Vec2d cylinderCoord = { dim[1] / 2, dim[1] / 2 };
@@ -29,7 +29,6 @@ int main() {
 	S.top_isSolid = true;
 	S.bot_isSolid = true;
 	S.bodies_areSolid = true;
-	S.Tf = 40000.0;
 
 	//Bodies:
 	S.addCircle(1, radius, cylinderCoord, { 0.0, 0.0 });
