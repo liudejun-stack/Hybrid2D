@@ -24,7 +24,6 @@ public:
 
 	//LBM Engine:
 	void initializeCells();
-	void updateMacro();
 	void setInitCond(double _rhoInit, Vec2d _vel);
 	void resetSolidFraction();
 	void applyForce();
