@@ -2,12 +2,12 @@
 
 void IMB::defineLinkedCells() {
 	for (auto& B : eDEM.bodies) {
-		Vec2d cellInitPos = B->pos - 2 * (int)B->radius * Vec2d::Ones();
+		Vec2d cellInitPos = B->pos - 2 * (int)B->radius * Vec2d::Ones() - 0.5 * eLBM.dx * Vec2d::Ones();
 		for (int j = 0; j < 4 * (int)B->radius; ++j) {
 			for (int i = 0; i < 4 * (int)B->radius; ++i) {
 				Vec2d aux = { i,j };
 				Vec2d cellCurrentPos = cellInitPos + aux;
-				if (B->fluidInteraction(cellCurrentPos)) {
+				if (B->fluidInteraction(cellCurrentPos, eLBM.dx)) {
 					int cellID = eLBM.getCell(i, j);
 					B->fluidSolidInteraction.push_back(cellID);
 				}
@@ -82,6 +82,7 @@ void IMB::calculateForceAndTorque() {
 				B->forceLBM += -Bn * Omega * eLBM.cells[ID]->latticeSpeed * eLBM.dx * eLBM.cells[ID]->discreteVelocity[k];
 			}
 		}
+		ASSERT(B->forceLBM != Vec2d::Zero());
 	}
 }
 

@@ -49,6 +49,11 @@ void Scene::setRightSolid() {
 
 void Scene::prepareScenario() {
 
+	//Directories for VTK output
+	int ignore;
+	ignore = system("mkdir VTK_Fluid");
+	ignore = system("mkdir VTK_Solid");
+
 	//Boundary definition:
 	eIMB.eLBM.domainSize = domainSize;
 	eIMB.eDEM.domainSize = domainSize;
@@ -82,11 +87,6 @@ void Scene::prepareScenario() {
 
 	//Initialize particle distribution function
 	eIMB.eLBM.setInitCond(rhoInit, velInit);
-
-	//Directories for VTK output
-	int ignore;
-	ignore = system("mkdir VTK_Fluid");
-	ignore = system("mkdir VTK_Solid");
 }
 
 void Scene::simulationInfo(int& i) {
@@ -194,11 +194,11 @@ void Scene::moveToNextTimeStep() {
 
 		//Fluid Resolution
 		eIMB.eLBM.resetSolidFraction();
-		eIMB.defineLinkedCells();
-		eIMB.calculateForceAndTorque();
 		eIMB.eLBM.collision();
 		eIMB.eLBM.setBounceBack();
 		eIMB.eLBM.stream();
+		eIMB.defineLinkedCells();
+		eIMB.calculateForceAndTorque();
 
 		//Subcycle for DEM
 		double tdem = 0.0;
@@ -209,7 +209,7 @@ void Scene::moveToNextTimeStep() {
 			eIMB.eDEM.updateVelPos();
 			eIMB.eDEM.updateContact();
 			tdem += eIMB.eDEM.dtDEM;
-			if (j % 1000000 == 0)	solidVTK("DEM");
+			if (j % 10000 == 0)	solidVTK("DEM");
 			++j;
 		}
 		fluidVTK("LBM");

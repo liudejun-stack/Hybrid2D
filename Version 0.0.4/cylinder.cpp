@@ -33,7 +33,7 @@ int main() {
 
 	//Bodies:
 	//S.addCircle(1, radius, { radius, radius }, { 0.0, 0.0 });
-	S.addCircle(1, (2.0/3.0)*radius, { 5*radius, 2*radius	 }, { 0.0, 0.0 });
+	S.addCircle(1, radius, {10, 10}, { 0.0, 0.0 });
 
 	//Fluid Parameters:
 	S.relaxationTime = calcVisc();
