@@ -5,47 +5,54 @@ void Scene::addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel) {
 	eIMB.eDEM.bodies.push_back(std::make_shared<Body>(_mass, _radius, _pos, _vel, id));
 }
 
-void Scene::setBodiesSolid() {
-	for (auto& B : eIMB.eDEM.bodies) {
-		for (auto& C : eIMB.eLBM.cells) {
-			bool inContact = B->fluidInteraction(C->cellPos, C->dx);
-			if (inContact) {
-				C->node = C->isSolid;
-				C->solidFraction = 1.0;
+void Scene::setDomain() {
+
+	//Set Bodies solid
+	if (bodiesAreSolid) {
+		for (auto& B : eIMB.eDEM.bodies) {
+			for (auto& C : eIMB.eLBM.cells) {
+				bool inContact = B->fluidInteraction(C->cellPos, C->dx);
+				if (inContact) {
+					C->node = C->isSolid;
+					C->solidFraction = 1.0;
+				}
 			}
 		}
 	}
-}
 
-void Scene::setTopSolid() {
-	for (int i = 0; i < domainSize[0]; ++i) {
-		int id = eIMB.eLBM.getCell(i, domainSize[1] - 1);
-		eIMB.eLBM.cells[id]->node = eIMB.eLBM.cells[id]->isSolid;
-		eIMB.eLBM.cells[id]->solidFraction = 1.0;
+	//Set Top Solid
+	if (topIsSolid) {
+		for (int i = 0; i < domainSize[0]; ++i) {
+			int id = eIMB.eLBM.getCell(i, domainSize[1] - 1);
+			eIMB.eLBM.cells[id]->node = eIMB.eLBM.cells[id]->isSolid;
+			eIMB.eLBM.cells[id]->solidFraction = 1.0;
+		}
 	}
-}
 
-void Scene::setBotSolid() {
-	for (int i = 0; i < domainSize[0]; ++i) {
-		int id = eIMB.eLBM.getCell(i, 0);
-		eIMB.eLBM.cells[id]->node = eIMB.eLBM.cells[id]->isSolid;
-		eIMB.eLBM.cells[id]->solidFraction = 1.0;
+	//Set Bot Solid
+	if (botIsSolid) {
+		for (int i = 0; i < domainSize[0]; ++i) {
+			int id = eIMB.eLBM.getCell(i, 0);
+			eIMB.eLBM.cells[id]->node = eIMB.eLBM.cells[id]->isSolid;
+			eIMB.eLBM.cells[id]->solidFraction = 1.0;
+		}
 	}
-}
 
-void Scene::setLeftSolid() {
-	for (int j = 0; j < domainSize[1]; ++j) {
-		int id = eIMB.eLBM.getCell(0, j);
-		eIMB.eLBM.cells[id]->node = eIMB.eLBM.cells[id]->isSolid;
-		eIMB.eLBM.cells[id]->solidFraction = 1.0;
+	//Set Left Solid
+	if (leftIsSolid) {
+		for (int j = 0; j < domainSize[1]; ++j) {
+			int id = eIMB.eLBM.getCell(0, j);
+			eIMB.eLBM.cells[id]->node = eIMB.eLBM.cells[id]->isSolid;
+			eIMB.eLBM.cells[id]->solidFraction = 1.0;
+		}
 	}
-}
 
-void Scene::setRightSolid() {
-	for (int j = 0; j < domainSize[1]; ++j) {
-		int id = eIMB.eLBM.getCell(domainSize[0] - 1, j);
-		eIMB.eLBM.cells[id]->node = eIMB.eLBM.cells[id]->isSolid;
-		eIMB.eLBM.cells[id]->solidFraction = 1.0;
+	if (rightIsSolid) {
+		for (int j = 0; j < domainSize[1]; ++j) {
+			int id = eIMB.eLBM.getCell(domainSize[0] - 1, j);
+			eIMB.eLBM.cells[id]->node = eIMB.eLBM.cells[id]->isSolid;
+			eIMB.eLBM.cells[id]->solidFraction = 1.0;
+		}
 	}
 }
 
@@ -76,40 +83,36 @@ void Scene::prepareScenario() {
 	eIMB.eLBM.initializeCells();
 
 	//Setting solids for LBM simulation:
-	if (top_isSolid)	    setTopSolid();
-	if (bot_isSolid)	    setBotSolid();
-	if (right_isSolid)	    setRightSolid();
-	if (left_isSolid)	    setLeftSolid();
-	if (bodies_areSolid)	setBodiesSolid();
+	setDomain();
 }
 
 void Scene::simulationInfo(int& i) {
 	std::system("cls");
 	double totalEnergy = eIMB.eDEM.kinEnergy.back() + eIMB.eDEM.potEnergy.back();
 
-	std::cout << "----------------------- LBM/DEM Simulation -----------------------" << "\n";
-	std::cout << "   Iteration Number: " << i                                         << "\n";
-	std::cout << "        Domain Size: " << domainSize[0] << "x" << domainSize[1]     << "\n";
-	std::cout << "   Number of Bodies: " << eIMB.eDEM.bodies.size()                   << "\n";
-	std::cout << "    Number of cells: " << eIMB.eLBM.cells.size()                    << "\n";
+	std::cout << "----------------------- LBM/DEM Simulation --------------------------------" << "\n";
+	std::cout << "   Iteration Number: " << i                                                  << "\n";
+	std::cout << "        Domain Size: " << domainSize[0] << "x" << domainSize[1]              << "\n";
+	std::cout << "   Number of Bodies: " << eIMB.eDEM.bodies.size()                            << "\n";
+	std::cout << "    Number of cells: " << eIMB.eLBM.cells.size()                             << "\n";
+	std::cout << "    Simulation Time: " << std::setprecision(3) << Time << "/" << simDuration << "\n";
 
-	std::cout << "----------------------- LBM Parameters ---------------------------" << "\n";
-	std::cout << "          Time Step: " << eIMB.eLBM.dtLBM                           << "\n";
-	std::cout << "    Lattice Spacing: " << eIMB.eLBM.dx                              << "\n";
-	std::cout << "    Relaxation Time: " << relaxationTime                            << "\n";
-	std::cout << "Kinematic Viscosity: " << kinViscosity                              << "\n";
+	std::cout << "----------------------- LBM Parameters ------------------------------------" << "\n";
+	std::cout << "          Time Step: " << eIMB.eLBM.dtLBM                                    << "\n";
+	std::cout << "    Lattice Spacing: " << eIMB.eLBM.dx                                       << "\n";
+	std::cout << "    Relaxation Time: " << relaxationTime                                     << "\n";
+	std::cout << "Kinematic Viscosity: " << kinViscosity                                       << "\n";
 
-	std::cout << "----------------------- DEM Parameters ---------------------------" << "\n";
-	std::cout << "          Time Step: " << eIMB.eDEM.dtDEM                           << "\n";
-	std::cout << "    SubCycle Number: " << subCycleNumber                            << "\n";
-	std::cout << "     Friction Angle: " << frictionAngle                             << "\n";
-	std::cout << "   Normal Stiffness: " << normalStiffness                           << "\n";
-	std::cout << "    Shear Stiffness: " << shearStiffness                            << "\n";
-	std::cout << "      Local Damping: " << localDamping                              << "\n";
-	std::cout << "   Kinematic Energy: " << eIMB.eDEM.kinEnergy.back()                << "\n";
-	std::cout << "   Potential Energy: " << eIMB.eDEM.potEnergy.back()                << "\n";
-	std::cout << "       Total Energy: " << totalEnergy                               << "\n";
-
+	std::cout << "----------------------- DEM Parameters ------------------------------------" << "\n";
+	std::cout << "          Time Step: " << eIMB.eDEM.dtDEM                                    << "\n";
+	std::cout << "    SubCycle Number: " << subCycleNumber                                     << "\n";
+	std::cout << "     Friction Angle: " << frictionAngle                                      << "\n";
+	std::cout << "   Normal Stiffness: " << normalStiffness                                    << "\n";
+	std::cout << "    Shear Stiffness: " << shearStiffness                                     << "\n";
+	std::cout << "      Local Damping: " << localDamping                                       << "\n";
+	std::cout << "   Kinematic Energy: " << eIMB.eDEM.kinEnergy.back()                         << "\n";
+	std::cout << "   Potential Energy: " << eIMB.eDEM.potEnergy.back()                         << "\n";
+	std::cout << "       Total Energy: " << totalEnergy                                        << "\n";
 }
 
 void Scene::fluidVTK(std::string _fileName) {
@@ -218,7 +221,6 @@ void Scene::moveToNextTimeStep() {
 	int ignore = system("mkdir VTK_Fluid");
 	    ignore = system("mkdir VTK_Solid");
 
-	double Time = 0.0;
 	double tlbm = 0.0;
 	int i = 0;
 	while (Time < simDuration) {
@@ -247,42 +249,3 @@ void Scene::moveToNextTimeStep() {
 		++i;
 	}
 }
-
-
-
-
-	////Create directories
-	//int ignore = system("mkdir VTK_Fluid");
-	//    ignore = system("mkdir VTK_Solid");
-
-	//double tlbm = 0.0;
-	//int i = 0;
-
-	//while (Time < simDuration) {
-
-	//	//Print Simulation Info
-	//	eIMB.eDEM.calculateEnergy();
-	//	if (i % 1 == 0)	simulationInfo(i);
-
-	//	//Fluid Resolution
-	//	eIMB.eLBM.resetSolidFraction();
-	//	eIMB.eLBM.collision();
-	//	eIMB.eLBM.setBounceBack();
-	//	eIMB.eLBM.stream();
-	//	eIMB.defineLinkedCells();
-	//	eIMB.calculateForceAndTorque();
-
-	//	//Subcycle for DEM
-	//	for (int i = 0; i != subCycleNumber; ++i) {
-	//		eIMB.eDEM.contactVerification();
-	//		eIMB.eDEM.forceCalculation();
-	//		eIMB.eDEM.updateVelPos();
-	//		eIMB.eDEM.updateContact();
-	//		if (i % 100 == 0)	solidVTK("DEM");
-	//	}
-
-	//	fluidVTK("LBM");
-	//	eIMB.updateFluidSolidContact();
-	//	++i;
-	//	Time += eIMB.eLBM.dtLBM;
-	//}

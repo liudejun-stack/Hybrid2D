@@ -1,6 +1,9 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+//Standard Libary
+#include <iomanip>
+
 //Hybrid Libary
 #include "IMB.h"
 #include "Math.h"
@@ -12,11 +15,7 @@ public:
 
 	//Scenario prepartion:
 	void addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
-	void setBodiesSolid();
-	void setTopSolid();
-	void setBotSolid();
-	void setLeftSolid();
-	void setRightSolid();
+	void setDomain();
 	void prepareScenario();
 	void simulationInfo(int& i);
 
@@ -31,11 +30,11 @@ public:
 
 	//Geometry parameters:
 	Vec2d domainSize       = Vec2d::Zero();
-	bool top_isSolid       = false;
-	bool bot_isSolid       = false;
-	bool left_isSolid      = false;
-	bool right_isSolid     = false;
-	bool bodies_areSolid   = false;
+	bool topIsSolid        = false;
+	bool botIsSolid        = false;
+	bool leftIsSolid       = false;
+	bool rightIsSolid      = false;
+	bool bodiesAreSolid    = false;
 	
 	//Fluid parameters:
 	double latticeSpacing  = 1.0;

@@ -26,12 +26,12 @@ int main() {
 
 	//Geometry
 	S.domainSize = dim;
-	S.top_isSolid = false;
-	S.bot_isSolid = false;
-	S.bodies_areSolid = false;
+	S.topIsSolid = true;
+	S.botIsSolid = true;
+	S.bodiesAreSolid = true;
 
 	//Bodies:
-	S.addCircle(1, radius, {radius, radius}, { 0.0, 0.0 });
+	S.addCircle(1, radius, cylinderCoord, { 0.0, 0.0 });
 
 	//Fluid Parameters:
 	S.relaxationTime = calcVisc();
