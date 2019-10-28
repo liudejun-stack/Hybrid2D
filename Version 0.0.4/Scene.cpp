@@ -69,8 +69,8 @@ void Scene::prepareScenario() {
 
 	//Calculate DEM TimeStep
 	eIMB.eDEM.calculateParticleTimeStep();
-	//subCycleNumber  = (int)(eIMB.eLBM.dtLBM / eIMB.eDEM.dtDEM) + 1;
-	//eIMB.eDEM.dtDEM = (eIMB.eLBM.dtLBM / subCycleNumber);
+	subCycleNumber  = (int)(eIMB.eLBM.dtLBM / eIMB.eDEM.dtDEM) + 1;
+	eIMB.eDEM.dtDEM = (eIMB.eLBM.dtLBM / subCycleNumber);
 
 	//Cell initialization for LBM simualtion:
 	eIMB.eLBM.initializeCells();
@@ -213,45 +213,15 @@ void Scene::DEMSolver() {
 }
 
 void Scene::moveToNextTimeStep() {
+
+	//Create directories
+	int ignore = system("mkdir VTK_Fluid");
+	    ignore = system("mkdir VTK_Solid");
+
+	double Time = 0.0;
 	double tlbm = 0.0;
 	int i = 0;
 	while (Time < simDuration) {
-
-		//Print Simulation Info
-		eIMB.eDEM.calculateEnergy();
-		if (i % 1 == 0)	simulationInfo(i);
-
-		//Fluid Resolution
-		eIMB.eLBM.resetSolidFraction();
-		eIMB.eLBM.collision();
-		eIMB.eLBM.setBounceBack();
-		eIMB.eLBM.stream();
-		eIMB.defineLinkedCells();
-		eIMB.calculateForceAndTorque();
-
-		//Subcycle for DEM
-		double tdem = 0.0;
-		int j = 0;
-		while (tdem < subCycleNumber) {
-			eIMB.eDEM.contactVerification();
-			eIMB.eDEM.forceCalculation();
-			eIMB.eDEM.updateVelPos();
-			eIMB.eDEM.updateContact();
-			tdem += eIMB.eDEM.dtDEM;
-			if (j % 10000 == 0)	solidVTK("DEM");
-			++j;
-		}
-		fluidVTK("LBM");
-		eIMB.updateFluidSolidContact();
-		++i;
-		Time += eIMB.eLBM.dtLBM;
-	}
-}
-
-	/*double Time = 0.0;
-	double tlbm = 0.0;
-	int i = 0;
-	while (Time < Tf) {
 		eIMB.eLBM.resetSolidFraction();
 		eIMB.defineLinkedCells();
 		eIMB.calculateForceAndTorque();
@@ -273,7 +243,46 @@ void Scene::moveToNextTimeStep() {
 			simulationInfo(i);
 			fluidVTK("LBM");
 			solidVTK("DEM");
-			
 		}
 		++i;
-	}*/
+	}
+}
+
+
+
+
+	////Create directories
+	//int ignore = system("mkdir VTK_Fluid");
+	//    ignore = system("mkdir VTK_Solid");
+
+	//double tlbm = 0.0;
+	//int i = 0;
+
+	//while (Time < simDuration) {
+
+	//	//Print Simulation Info
+	//	eIMB.eDEM.calculateEnergy();
+	//	if (i % 1 == 0)	simulationInfo(i);
+
+	//	//Fluid Resolution
+	//	eIMB.eLBM.resetSolidFraction();
+	//	eIMB.eLBM.collision();
+	//	eIMB.eLBM.setBounceBack();
+	//	eIMB.eLBM.stream();
+	//	eIMB.defineLinkedCells();
+	//	eIMB.calculateForceAndTorque();
+
+	//	//Subcycle for DEM
+	//	for (int i = 0; i != subCycleNumber; ++i) {
+	//		eIMB.eDEM.contactVerification();
+	//		eIMB.eDEM.forceCalculation();
+	//		eIMB.eDEM.updateVelPos();
+	//		eIMB.eDEM.updateContact();
+	//		if (i % 100 == 0)	solidVTK("DEM");
+	//	}
+
+	//	fluidVTK("LBM");
+	//	eIMB.updateFluidSolidContact();
+	//	++i;
+	//	Time += eIMB.eLBM.dtLBM;
+	//}

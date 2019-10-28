@@ -82,7 +82,7 @@ void IMB::calculateForceAndTorque() {
 				B->forceLBM += -Bn * Omega * eLBM.cells[ID]->latticeSpeed * eLBM.dx * eLBM.cells[ID]->discreteVelocity[k];
 			}
 		}
-		ASSERT(B->forceLBM != Vec2d::Zero());
+		//ASSERT(B->forceLBM != Vec2d::Zero());
 	}
 }
 
