@@ -13,6 +13,21 @@ double Lattice::setSourceTerm(double& _tau, double _dt, int k) {
 	return (1 - _dt / (2 * _tau)) * weight[k] * (3 / (latticeSpeed * latticeSpeed) * cminusv + 9 / (latticeSpeed * latticeSpeed) * cdotv * discreteVelocity[k]).dot(sourceForce);
 }
 
+double Lattice::getDensityAndVelocity(Vec2d& _vel) {
+	double density;
+	if (node == isSolid) {
+		density = 0.0;
+		_vel    = Vec2d::Zero();
+		return density;
+	}
+	density = f[0] + f[1] + f[2] + f[3] + f[4] + f[5] + f[6] + f[7] + f[8];
+	_vel[0] = latticeSpeed * ((f[1] + f[5] + f[8] - f[3] - f[6] - f[7]) / density);
+	_vel[1] = latticeSpeed * ((f[2] + f[5] + f[6] - f[4] - f[7] - f[8]) / density);
+
+	ASSERT(!(std::isnan(density) || std::isnan(_vel.norm())));
+	return density;
+}
+
 void Lattice::updateMacro() {
 	if (node == isSolid) {
 		vel = Vec2d::Zero();

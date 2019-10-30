@@ -31,7 +31,7 @@ int main() {
 	S.bodiesAreSolid = true;
 
 	//Bodies:
-	S.addCircle(1, radius, cylinderCoord, { 0.0, 0.0 });
+	S.addCircle(1, radius, { radius, radius }, { 0.0, 0.0 });
 
 	//Fluid Parameters:
 	S.relaxationTime = calcVisc();

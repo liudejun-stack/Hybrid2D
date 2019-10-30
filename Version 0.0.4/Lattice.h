@@ -37,6 +37,7 @@ public:
 	//Methods:
 	double setEqFun(double _rho, Vec2d _vel, int k);
 	double setSourceTerm(double& _tau, double _dt, int k);
+	double getDensityAndVelocity(Vec2d& _vel);
 	void updateMacro();
 
 	friend class LBM;

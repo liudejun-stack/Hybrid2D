@@ -64,9 +64,15 @@ void LBM::resetSolidFraction() {
 	for (auto& C : cells) {
 		C->previousSolidFraction = C->solidFraction;
 		C->solidFraction = 0.0;
+		C->node = 0;
 		for (int k = 0; k < C->Q; ++k) {
 			C->omega[k] = 0.0;
 		}
+
+		/*if (C->previousSolidFraction == C->isSolid) {
+			C->solidFraction = 1.0;
+			C->node = 1;
+		}*/
 	}
 }
 
@@ -81,14 +87,14 @@ void LBM::collision() {
 	double tauInv = 1.0 / tau;
 	for (auto& C : cells) {
 		if (C->node == C->isSolid)	continue;
-		C->updateMacro();
-		Vec2d Vel = C->vel + C->sourceForce * dtLBM / (2 * C->rho);
+		Vec2d Vel;
+		double density = C->getDensityAndVelocity(Vel);
 		double solidFunction = (C->solidFraction * (tau - 0.5)) / ((1.0 - C->solidFraction) + (tau - 0.5));
 		for (int k = 0; k < C->Q; k++) {
-			double EDF = C->setEqFun(C->rho, Vel, k);
+			double EDF = C->setEqFun(density, Vel, k);
 			double source = C->setSourceTerm(tau, dtLBM, k);
-			C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
-			//C->f[k] = C->f[k] - (1 - solidFunction) * tauInv * (C->f[k] - EDF) + solidFunction * C->omega[k];
+			//C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
+			C->f[k] = C->f[k] - (1 - solidFunction) * tauInv * (C->f[k] - EDF) + solidFunction * C->omega[k];
 		}
 	}
 }
@@ -113,6 +119,6 @@ void LBM::stream() {
 		std::vector<double> Temp = C->f;
 		C->f = C->fTemp;
 		C->fTemp = Temp;
-		//C->updateMacro();
+		C->updateMacro();
 	}
 }
