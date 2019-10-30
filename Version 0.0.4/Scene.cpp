@@ -231,7 +231,7 @@ void Scene::moveToNextTimeStep() {
 		eIMB.eDEM.updateVelPos();
 		eIMB.eDEM.updateContact();
 		if (Time >= tlbm) {
-			eIMB.eLBM.collision();
+			eIMB.eLBM.collisionNT();
 			eIMB.eLBM.setBounceBack();
 			eIMB.eLBM.stream();
 			tlbm += eIMB.eLBM.dtLBM;
