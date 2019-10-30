@@ -28,6 +28,7 @@ public:
 	void resetSolidFraction();
 	void applyBodyForce();
 	void collision();
+	void collisionNT();
 	void stream();
 
 	std::vector<std::shared_ptr<Lattice>> cells;

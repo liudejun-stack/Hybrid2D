@@ -89,11 +89,23 @@ void LBM::collision() {
 		if (C->node == C->isSolid)	continue;
 		Vec2d Vel;
 		double density = C->getDensityAndVelocity(Vel);
-		double solidFunction = (C->solidFraction * (tau - 0.5)) / ((1.0 - C->solidFraction) + (tau - 0.5));
 		for (int k = 0; k < C->Q; k++) {
 			double EDF = C->setEqFun(density, Vel, k);
-			double source = C->setSourceTerm(tau, dtLBM, k);
-			//C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
+			C->f[k] = (1 - tauInv) * C->f[k] + tauInv * EDF;
+		}
+	}
+}
+
+void LBM::collisionNT() {
+	ASSERT(tau > 0.5);
+	double tauInv = 1.0 / tau;
+	for (auto& C : cells) {
+		if (C->node == C->isSolid)	continue;
+		Vec2d Vel;
+		double density = C->getDensityAndVelocity(Vel);
+		double solidFunction = (C->solidFraction * (tau - 0.5)) / ((1.0 - C->solidFraction) + (tau - 0.5));
+		for (int k = 0; k < C->Q; ++k) {
+			double EDF = C->setEqFun(density, Vel, k);
 			C->f[k] = C->f[k] - (1 - solidFunction) * tauInv * (C->f[k] - EDF) + solidFunction * C->omega[k];
 		}
 	}
