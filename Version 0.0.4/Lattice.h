@@ -44,11 +44,11 @@ public:
 	friend class IMB;
 
 	//Cell variables:
-	int    ID;                 
-	double dx;                  
-	double dt;                  
-	double tau;                
-	double latticeSpeed;        
+	int    ID;                  //Cell ID               
+	double dx;                  //Lattice Spacing
+	double dt;                  //Time step
+	double tau;                 //Relaxation Time
+	double latticeSpeed;        //Speed of the model
 	double rhoBC;               //Prescribed Density for Zou & He Boundary Condition
 	Vec2d  velBC;               //Prescribed Velocity for Zou & He Boundary Condition
 	Vec2d  aux;                 //Auxiliar vector to calculate neighbour node
