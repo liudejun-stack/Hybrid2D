@@ -17,16 +17,17 @@ void LBM::setZouBC() {
 	double aux = 2.0 / 3.0;
 	for (auto& C : cells) {
 		if (C->node == C->isSolid)	continue;
-		//Prescribed velocity (Left & Right sides)
+		//Prescribed velocity
 		for (int j = 0; j < domainSize[1]; ++j) {
 
 			if (C->ID == getCell(0, j)) {
 				//Left side:
 				double rho = (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[3] + C->f[6] + C->f[7])) / (1.0 - C->velBC[0]);
-
+				
 				C->f[1] = C->f[3] + aux * rho * C->velBC[0];
 				C->f[5] = C->f[7] + div * rho * C->velBC[0] + 0.5 * rho * C->velBC[1] - 0.5 * (C->f[2] - C->f[4]);
-				C->f[8] = C->f[6] + div * rho * C->velBC[0] - 0.5 * rho * C->velBC[1] + 0.5 * (C->f[2] - C->f[4]);
+				C->f[8] = C->f[6] + div * rho * C->velBC[0] - 0.5 * rho * C->velBC[1] - 0.5 * (C->f[4] - C->f[2]);
+				C->updateMacro();
 			}
 		}
 		//Prescribed density
@@ -35,8 +36,9 @@ void LBM::setZouBC() {
 			if (C->ID == getCell(domainSize[0] - 1, j)) {
 				double vx = -1.0 + (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[1] + C->f[5] + C->f[8])) / C->rhoBC;
 				C->f[3] = C->f[1] - aux * C->rhoBC * vx;
-				C->f[7] = C->f[5] - div * C->rhoBC * vx + 0.5 * (C->f[2] + C->f[4]);
-				C->f[6] = C->f[8] - div * C->rhoBC * vx - 0.5 * (C->f[2] + C->f[4]);
+				C->f[7] = C->f[5] - div * C->rhoBC * vx + 0.5 * (C->f[2] - C->f[4]);
+				C->f[6] = C->f[8] - div * C->rhoBC * vx + 0.5 * (C->f[4] - C->f[2]);
+				C->updateMacro();
 			}
 		}
 	}

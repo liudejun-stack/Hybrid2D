@@ -12,7 +12,6 @@ int main() {
 	double uMax           = 0.1;
 	double Re             = 100;
 
-
 	//Geometry
 	S.domainSize     = domainSize;
 	S.topIsSolid     = true;
@@ -30,6 +29,7 @@ int main() {
 
 	//Prepare Scenario
 	S.prepareScenario();
+	S.eIMB.eLBM.setInitCond(S.rhoInit, S.velInit);
 	
 	for (int j = 0; j < domainSize[1]; ++j) {
 		double L = domainSize[1] - 2;
@@ -40,8 +40,7 @@ int main() {
 		S.eIMB.eLBM.setVelBC(0, j, Vel);
 		S.eIMB.eLBM.setDenBC(domainSize[0] - 1, j, 1.0);
 	}
-	S.eIMB.eLBM.setInitCond(S.rhoInit, S.velInit);
-	S.eIMB.eLBM.setZouBC();
+	//S.eIMB.eLBM.setZouBC();
 
 	S.LBMSolver();
 	//S.moveToNextTimeStep();

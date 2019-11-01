@@ -180,7 +180,7 @@ void Scene::LBMSolver() {
 		}
 
 		//Fluid Engine
-		//eIMB.eLBM.setZouBC();
+		eIMB.eLBM.setZouBC();
 		eIMB.eLBM.collision();
 		eIMB.eLBM.setBounceBack();
 		eIMB.eLBM.stream();
