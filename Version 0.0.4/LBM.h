@@ -31,6 +31,16 @@ public:
 	void collisionNT();
 	void stream();
 
+	bool setVelNorth = false;
+	bool setVelEast  = false;
+	bool setVelWest  = false;
+	bool setVelSouth = false;
+
+	bool setDenNorth   = false;
+	bool setDenEast = false;
+	bool setDenWest  = false;
+	bool setDenSouth  = false;
+
 	std::vector<std::shared_ptr<Lattice>> cells;
 
 	Vec2d  gravity       = { 0.0, -9.81 };

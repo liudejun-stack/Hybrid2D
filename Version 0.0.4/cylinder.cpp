@@ -17,6 +17,8 @@ int main() {
 	S.topIsSolid     = true;
 	S.botIsSolid     = true;
 	S.bodiesAreSolid = true;
+	S.eIMB.eLBM.setVelWest = true;
+	S.eIMB.eLBM.setDenEast = true;
 
 	//Bodies:
 	S.addCircle(1, particleRadius, cylinderCoord, { 0.0, 0.0 });
@@ -40,7 +42,6 @@ int main() {
 		S.eIMB.eLBM.setVelBC(0, j, Vel);
 		S.eIMB.eLBM.setDenBC(domainSize[0] - 1, j, 1.0);
 	}
-	//S.eIMB.eLBM.setZouBC();
 
 	S.LBMSolver();
 	//S.moveToNextTimeStep();
