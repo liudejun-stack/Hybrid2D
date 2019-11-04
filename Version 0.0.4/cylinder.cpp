@@ -44,7 +44,6 @@ int main() {
 	}
 
 	S.LBMSolver();
-	//S.moveToNextTimeStep();
 
 	return 0;
 }

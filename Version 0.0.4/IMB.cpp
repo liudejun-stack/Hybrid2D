@@ -72,6 +72,7 @@ void IMB::calculateForceAndTorque() {
 			double gamma = len / (4.0 * eLBM.dx);
 			ASSERT(gamma >= 0.0 && gamma <= 1.0);
 			eLBM.cells[ID]->solidFraction = std::min(gamma + eLBM.cells[ID]->solidFraction, 1.0);
+			//std::cout << eLBM.cells[ID]->solidFraction << std::endl;
 			double Bn = (gamma * (eLBM.tau - 0.5)) / ((1.0 - gamma) + (eLBM.tau - 0.5));
 			Vec2d velP = B->vel;
 			for (int k = 0; k < eLBM.cells[ID]->Q; ++k) {
