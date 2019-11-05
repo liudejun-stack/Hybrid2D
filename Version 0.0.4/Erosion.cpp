@@ -8,7 +8,7 @@ int main() {
 	//General Information
 	Vec2d  domainSize = { 500, 100 };
 	double particleRadius = domainSize[1] / 20 + 1;
-	Vec2d  cylinderCoord = { particleRadius, particleRadius };
+	Vec2d  cylinderCoord = { 2*particleRadius, particleRadius };
 	double uMax = 0.1;
 	double Re = 100;
 
@@ -34,6 +34,16 @@ int main() {
 	//Prepare Scenario
 	S.prepareScenario();
 	S.eIMB.eLBM.setInitCond(S.rhoInit, S.velInit);
+
+	//for (int j = 0; j < domainSize[1]; ++j) {
+	//	double L = domainSize[1] - 2;
+	//	double yp = j - 1.5;
+	//	Vec2d Vel = Vec2d::Zero();
+	//	Vel[0] = uMax * 4 / (L * L) * (L * yp - yp * yp);
+	//	Vel[1] = 0.0;
+	//	S.eIMB.eLBM.setVelBC(0, j, Vel);
+	//	S.eIMB.eLBM.setDenBC(domainSize[0] - 1, j, 1.0);
+	//}
 
 	S.moveToNextTimeStep();
 	

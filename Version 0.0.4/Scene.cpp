@@ -92,10 +92,10 @@ void Scene::simulationInfo(int& i) {
 
 	std::cout << "----------------------- LBM/DEM Simulation --------------------------------" << "\n";
 	std::cout << "   Iteration Number: " << i                                                  << "\n";
+	std::cout << "    Simulation Time: " << std::setprecision(3) << Time << "/" << simDuration << "\n";
 	std::cout << "        Domain Size: " << domainSize[0] << "x" << domainSize[1]              << "\n";
 	std::cout << "   Number of Bodies: " << eIMB.eDEM.bodies.size()                            << "\n";
 	std::cout << "    Number of cells: " << eIMB.eLBM.cells.size()                             << "\n";
-	std::cout << "    Simulation Time: " << std::setprecision(3) << Time << "/" << simDuration << "\n";
 
 	std::cout << "----------------------- LBM Parameters ------------------------------------" << "\n";
 	std::cout << "          Time Step: " << eIMB.eLBM.dtLBM                                    << "\n";
@@ -238,7 +238,7 @@ void Scene::moveToNextTimeStep() {
 		}
 		Time += eIMB.eDEM.dtDEM;
 		eIMB.eLBM.resetSolidFraction();
-		setDomain();
+		/*setDomain();*/
 		eIMB.updateFluidSolidContact();
 
 		if (i % 1000 == 0) {
