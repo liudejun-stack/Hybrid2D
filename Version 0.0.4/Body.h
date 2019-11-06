@@ -2,6 +2,8 @@
 #define BODY_H
 
 //Standard Library
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <memory>
 #include <vector>
 
@@ -13,22 +15,23 @@ class Interaction;
 class Body {
 public:
 	
-	Body(double _mass, double _radius, Vec2d _pos, Vec2d _vel, int _id) {
-		mass          = _mass;
+	Body(double _density, double _radius, Vec2d _pos, Vec2d _vel, int _id) {
+		mass          = _density;
 		radius        = _radius;
 		pos           = _pos;
 		vel           = _vel;
 		id            = _id;
-		inertiaMoment = _mass * _radius * _radius * 0.5;
+		mass          = _density * M_PI * _radius * _radius;
+		inertiaMoment = 0.5 * mass * _radius * _radius;
 	}
 
 	bool checkInteraction(int _bodyId);
 	bool fluidInteraction(Vec2d _cellPos, double _dx);
 
 	//Body variables:
-	double mass;
+	double density;
 	double radius;
-	double functionR;
+	double mass;
 	double inertiaMoment;
 	int    id;
 

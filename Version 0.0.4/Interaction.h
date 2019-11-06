@@ -2,6 +2,8 @@
 #define INTERACTION_H
 
 //Hybrid Libary
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <memory>
 
 //Hybrid Libary

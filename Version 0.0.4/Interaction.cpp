@@ -1,6 +1,4 @@
-#define _USE_MATH_DEFINES
 #include "Interaction.h"
-#include <math.h>
 
 bool Interaction::checkContact() {
 	auto b1 = body1.lock();
