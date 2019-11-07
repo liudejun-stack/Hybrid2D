@@ -8,7 +8,8 @@
 
 //Hybrid Libary
 #include "Math.h"
-#include "Body.h"
+
+class Body;
 
 class Interaction {
 public:
@@ -16,8 +17,8 @@ public:
 
 	//Methods:
 	bool checkContact();
-	void set_UnitVectorandContact();
-	void set_ForceAndShearIncrements(double _dt, double _kn, double _ks);
+	void calculateUnitVectorandContact();
+	void calculateForceAndShearIncrements(double _dt, double _kn, double _ks);
 	void applyFrictionLaw(double _phi);
 
 	//Smart pointers:

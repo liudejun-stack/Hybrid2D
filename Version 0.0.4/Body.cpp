@@ -8,7 +8,9 @@ bool Body::checkInteraction(int _bodyId) {
 		auto Ilb1 = Il->body1.lock();
 		auto Ilb2 = Il->body2.lock();
 
-		if ((Ilb1->id == id && Ilb2->id == _bodyId) || (Ilb2->id == id && Ilb1->id == _bodyId))  return true;
+		if ((Ilb1->id == id && Ilb2->id == _bodyId) || (Ilb2->id == id && Ilb1->id == _bodyId)) {
+			return true;
+		}
 	}
 	return false;
 }

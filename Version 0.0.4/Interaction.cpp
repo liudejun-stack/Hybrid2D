@@ -1,4 +1,5 @@
 #include "Interaction.h"
+#include "Body.h"
 
 bool Interaction::checkContact() {
 	auto b1 = body1.lock();
@@ -9,18 +10,17 @@ bool Interaction::checkContact() {
 	return false;
 }
 
-void Interaction::set_UnitVectorandContact() {
+void Interaction::calculateUnitVectorandContact() {
 	auto b1 = body1.lock();
 	auto b2 = body2.lock();
 
 	unitNormal = (b2->pos - b1->pos) / (b2->pos - b1->pos).norm();
 	unitShear = { unitNormal[1], -unitNormal[0] };
-	double overlap = b1->radius + b2->radius - (b1->pos - b2->pos).norm();
-	contact = b1->pos + (b1->radius - 0.5 * overlap) * unitNormal;
-	//contact = (b1->pos + b2->pos) * 0.5;
+
+	contact = (b1->pos + b2->pos) * 0.5;
 }
 
-void Interaction::set_ForceAndShearIncrements(double _dt, double _kn, double _ks) {
+void Interaction::calculateForceAndShearIncrements(double _dt, double _kn, double _ks) {
 	auto b1 = body1.lock();
 	auto b2 = body2.lock();
 

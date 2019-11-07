@@ -15,14 +15,13 @@ class Interaction;
 class Body {
 public:
 	
-	Body(double _density, double _radius, Vec2d _pos, Vec2d _vel, int _id) {
-		mass          = _density;
+	Body(double _mass, double _radius, Vec2d _pos, Vec2d _vel, int _id) {
+		mass          = _mass;
 		radius        = _radius;
+		inertiaMoment = _mass * _radius * _radius * 0.5;
 		pos           = _pos;
 		vel           = _vel;
 		id            = _id;
-		mass          = _density * M_PI * _radius * _radius;
-		inertiaMoment = 0.5 * mass * _radius * _radius;
 	}
 
 	bool checkInteraction(int _bodyId);

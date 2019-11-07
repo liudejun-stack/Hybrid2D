@@ -76,8 +76,8 @@ void Scene::prepareScenario() {
 
 	//Calculate DEM TimeStep
 	eIMB.eDEM.calculateParticleTimeStep();
-	subCycleNumber  = (int)(eIMB.eLBM.dtLBM / eIMB.eDEM.dtDEM) + 1;
-	eIMB.eDEM.dtDEM = (eIMB.eLBM.dtLBM / subCycleNumber);
+	//subCycleNumber  = (int)(eIMB.eLBM.dtLBM / eIMB.eDEM.dtDEM) + 1;
+	//eIMB.eDEM.dtDEM = (eIMB.eLBM.dtLBM / subCycleNumber);
 
 	//Cell initialization for LBM simualtion:
 	eIMB.eLBM.initializeCells();
@@ -151,12 +151,12 @@ void Scene::solidVTK(std::string _fileName) {
 	out << "DEM\n";
 	out << "ASCII\n";
 	out << "DATASET POLYDATA\n";
-	out << "POINTS " << std::to_string((int)eIMB.eDEM.bodies.size()) << " float\n";
-	for (auto& B : eIMB.eDEM.bodies) {
+	out << "POINTS " << std::to_string((int)eIMB.eDEM.bodies.size()) << " double\n";
+	for (const auto& B : eIMB.eDEM.bodies) {
 		out << B->pos[0] << " " << B->pos[1] << " " << 0 << "\n";
 	}
 	out << "POINT_DATA " << std::to_string((int)eIMB.eDEM.bodies.size()) << std::endl;
-	out << "SCALARS radii float\n";
+	out << "SCALARS radii double\n";
 	out << "LOOKUP_TABLE default\n";
 	for (auto& B : eIMB.eDEM.bodies) {
 		out << B->radius << std::endl;
@@ -203,8 +203,9 @@ void Scene::DEMSolver() {
 			eIMB.eDEM.calculateEnergy();
 			simulationInfo(i);
 		}
-
+		
 		//Solid Engine
+		//eIMB.eDEM.Cycle();
 		eIMB.eDEM.contactVerification();
 		eIMB.eDEM.forceCalculation();
 		eIMB.eDEM.updateVelPos();

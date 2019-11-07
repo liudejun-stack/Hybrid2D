@@ -23,6 +23,8 @@ public:
 	Vec2d applyBorderForce(std::shared_ptr<Body> _body);
 	void calculateEnergy();
 
+	void Cycle();
+
 	//Output:
 	void energyCSV(std::string _fileName);
 
