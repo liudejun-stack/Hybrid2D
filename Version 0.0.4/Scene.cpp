@@ -84,6 +84,9 @@ void Scene::prepareScenario() {
 
 	//Setting solids for LBM simulation:
 	setDomain();
+
+	//Initial cell condition
+	eIMB.eLBM.setInitCond(rhoInit, velInit);
 }
 
 void Scene::simulationInfo(int& i) {
