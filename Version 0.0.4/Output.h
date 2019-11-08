@@ -12,7 +12,8 @@
 
 class Output {
 public:
-
+	Scene S = S.getScene();
+	
 
 	
 };

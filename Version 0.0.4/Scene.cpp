@@ -1,5 +1,8 @@
 #include "Scene.h"
 
+static Scene scene;
+Scene& Scene::getScene() { return scene; }
+
 void Scene::addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel) {
 	int id = eIMB.eDEM.bodies.size();
 	eIMB.eDEM.bodies.push_back(std::make_shared<Body>(_mass, _radius, _pos, _vel, id));

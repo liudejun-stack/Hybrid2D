@@ -13,6 +13,8 @@ class Scene {
 public:
 	Scene() : eIMB() {};
 
+	Scene& getScene();
+
 	//Scenario prepartion:
 	void addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
 	void setDomain();
