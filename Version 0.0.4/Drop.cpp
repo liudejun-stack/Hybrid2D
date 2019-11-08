@@ -6,8 +6,8 @@ int main() {
 	//Geometry
 	S.domainSize = { 10, 10 };
 	//S.addCircle(1.0, 2.0, { 6.5, 5 }, { 0.0, 0.0 });
-	S.addCircle(0.5, 0.5, { 5, 5 }, { 2, 0.0 });
-	//S.addCircle(0.5, 0.5, { 5, 0.5 }, { 0.0, 0.0 });
+	S.addCircle(0.5, 0.5, { 5, 5 }, { 0.0, 0.0 });
+	S.addCircle(0.5, 0.5, { 5, 0.5 }, { 0.0, 0.0 });
 
 	//Solid Properties:
 	S.frictionAngle = 30;
