@@ -52,13 +52,13 @@ public:
 	double normalStiffness = 1e6;
 	double shearStiffness  = 0.5e6;
 
-	int simDuration = 10000;
-	double Time = 0.0;
-	int subCycleNumber = 0;
+	double Time            = 0.0;
+	int simDuration        = 10000;
+	int subCycleNumber     = 0;
 
 	//Output parameters:
-	int fluidVtkCounter;
-	int particleVtkCounter;
+	int fluidVtkCounter    = 0;
+	int particleVtkCounter = 0;
 
 	IMB eIMB;  //Coupling Engine
 };

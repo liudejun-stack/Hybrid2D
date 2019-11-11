@@ -9,11 +9,7 @@
 
 class Output {
 public:
-	void simulationInfo();
-	void fluidVTK(std::string _fileName);
-
-
-	
+	void print();
 
 	
 };
