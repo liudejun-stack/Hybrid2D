@@ -47,12 +47,10 @@ int main() {
 	int ignore = system("mkdir VTK_Fluid");
 	int i = 0;
 	while (S.Time < S.simDuration) {
-		if (i % 100 == 0) {
-			Out.displaySimulationInfo();
-			Out.fluidVTK("LBM");
-		}
+		if (i % 100 == 0)	Out.displaySimulationInfo();
 
 		S.LBMEngine();
+		if (i % 100 == 0)	Out.fluidVTK("LBM");
 		S.Time += S.eIMB.eLBM.dtLBM;
 		++i;
 	}

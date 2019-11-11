@@ -8,7 +8,7 @@
 //	//Geometry
 //	S.domainSize = { 10, 10 };
 //	//S.addCircle(1.0, 2.0, { 6.5, 5 }, { 0.0, 0.0 });
-//	S.addCircle(0.5, 2, { 5, 5 }, { 4, 0.0 });
+//	S.addCircle(0.5, 1, { 5, 5 }, { 4, 0.0 });
 //	//S.addCircle(0.5, 0.5, { 5, 0.5 }, { 0.0, 0.0 });
 //
 //	//Solid Properties:
