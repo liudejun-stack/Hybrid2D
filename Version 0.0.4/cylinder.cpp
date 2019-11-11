@@ -1,16 +1,18 @@
 #include "Scene.h"
+#include "Output.h"
 
 int main() {
 	
 	Timer Time;
-	Scene S;
+	Scene& S = S.getScene();
+	Output Out;
 
 	//General Information
 	Vec2d  domainSize     = { 500, 100 };
 	Vec2d  cylinderCoord  = { domainSize[1] / 2, domainSize[1] / 2 };
 	double particleRadius = domainSize[1] / 20 + 1;
 	double uMax           = 0.1;
-	double Re             = 5;
+	double Re             = 100;
 
 	//Geometry
 	S.domainSize     = domainSize;
@@ -42,7 +44,18 @@ int main() {
 		S.eIMB.eLBM.setDenBC(domainSize[0] - 1, j, 1.0);
 	}
 
-	S.LBMSolver();
+	int ignore = system("mkdir VTK_Fluid");
+	int i = 0;
+	while (S.Time < S.simDuration) {
+		if (i % 100 == 0) {
+			Out.displaySimulationInfo();
+			Out.fluidVTK("LBM");
+		}
+
+		S.LBMEngine();
+		S.Time += S.eIMB.eLBM.dtLBM;
+		++i;
+	}
 
 	return 0;
 }

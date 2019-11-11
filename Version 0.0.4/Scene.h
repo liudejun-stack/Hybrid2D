@@ -6,7 +6,6 @@
 
 //Hybrid Libary
 #include "IMB.h"
-#include "Output.h"
 #include "Math.h"
 #include "Timer.h"
 
@@ -23,17 +22,14 @@ public:
 	void addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
 	void setDomain();
 	void prepareScenario();
-	void simulationInfo(int& i);
 
 	//Solver:
-	void LBMSolver();
-	void DEMSolver();
+	void LBMEngine();
+	void DEMEngine();
 	void moveToNextTimeStep();
 
-	//Outputs
+	//Method to acess the class Scene
 	Scene& getScene();
-	void fluidVTK(std::string _fileName);
-	void solidVTK(std::string _fileName);
 
 	//Geometry parameters:
 	Vec2d domainSize       = Vec2d::Zero();
