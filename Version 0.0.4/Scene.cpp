@@ -182,7 +182,7 @@ void Scene::LBMSolver() {
 
 		//Print Simulation Info
 		if (i % 1000 == 0) {
-			Out.teste();
+			//out.displaySimulationInfo();
 		}
 
 		//Fluid Engine

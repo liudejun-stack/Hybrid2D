@@ -1,7 +1,7 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
-//Standard Libray
+//Standard Library
 #include <iostream>
 
 //Hybrid Library
@@ -9,8 +9,7 @@
 
 class Output {
 public:
-	
-
+	void displaySimulationInfo();
 };
 
 #endif // !OUTPUT_H

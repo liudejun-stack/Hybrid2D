@@ -12,9 +12,12 @@
 
 class Scene {
 public:
-	Scene() : eIMB(), Out() {};
+	
+	//Scene constructor:
+	Scene() : eIMB() {};
 
-	Scene& getScene();
+	//Classes
+	IMB eIMB;
 
 	//Scenario prepartion:
 	void addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
@@ -28,6 +31,7 @@ public:
 	void moveToNextTimeStep();
 
 	//Outputs
+	Scene& getScene();
 	void fluidVTK(std::string _fileName);
 	void solidVTK(std::string _fileName);
 
@@ -60,9 +64,6 @@ public:
 	//Output parameters:
 	int fluidVtkCounter    = 0;
 	int particleVtkCounter = 0;
-
-	Output Out;
-	IMB eIMB;  //Coupling Engine
 };
 
 #endif // !SCENE_H
