@@ -1,17 +1,16 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
-//Standard Library
-#include <string>
+//Standard Libray
+#include <iostream>
 
 //Hybrid Library
 #include "Scene.h"
 
 class Output {
 public:
-	void print();
-
 	
+
 };
 
-#endif //OUTPUT_H
+#endif // !OUTPUT_H

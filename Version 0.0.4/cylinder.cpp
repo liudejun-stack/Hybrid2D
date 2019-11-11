@@ -3,7 +3,7 @@
 int main() {
 	
 	Timer Time;
-	Scene& S = S.getScene();
+	Scene S;
 
 	//General Information
 	Vec2d  domainSize     = { 500, 100 };

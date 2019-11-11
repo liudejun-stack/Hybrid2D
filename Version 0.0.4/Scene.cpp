@@ -94,6 +94,7 @@ void Scene::prepareScenario() {
 
 void Scene::simulationInfo(int& i) {
 	std::system("cls");
+	eIMB.eDEM.calculateEnergy();
 	double totalEnergy = eIMB.eDEM.kinEnergy.back() + eIMB.eDEM.potEnergy.back();
 
 	std::cout << "----------------------- LBM/DEM Simulation --------------------------------" << "\n";
@@ -162,7 +163,7 @@ void Scene::solidVTK(std::string _fileName) {
 		out << B->pos[0] << " " << B->pos[1] << " " << 0 << "\n";
 	}
 	out << "POINT_DATA " << std::to_string((int)eIMB.eDEM.bodies.size()) << std::endl;
-	out << "SCALARS radii double\n";
+	out << "SCALARS Radius double\n";
 	out << "LOOKUP_TABLE default\n";
 	for (auto& B : eIMB.eDEM.bodies) {
 		out << B->radius << std::endl;
@@ -181,7 +182,7 @@ void Scene::LBMSolver() {
 
 		//Print Simulation Info
 		if (i % 1000 == 0) {
-
+			Out.teste();
 		}
 
 		//Fluid Engine

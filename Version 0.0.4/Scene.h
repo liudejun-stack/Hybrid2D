@@ -6,12 +6,13 @@
 
 //Hybrid Libary
 #include "IMB.h"
+#include "Output.h"
 #include "Math.h"
 #include "Timer.h"
 
 class Scene {
 public:
-	Scene() : eIMB() {};
+	Scene() : eIMB(), Out() {};
 
 	Scene& getScene();
 
@@ -60,6 +61,7 @@ public:
 	int fluidVtkCounter    = 0;
 	int particleVtkCounter = 0;
 
+	Output Out;
 	IMB eIMB;  //Coupling Engine
 };
 
