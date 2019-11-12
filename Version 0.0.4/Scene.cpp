@@ -79,8 +79,8 @@ void Scene::prepareScenario() {
 
 	//Calculate DEM TimeStep
 	eIMB.eDEM.calculateParticleTimeStep();
-	//subCycleNumber  = (int)(eIMB.eLBM.dtLBM / eIMB.eDEM.dtDEM) + 1;
-	//eIMB.eDEM.dtDEM = (eIMB.eLBM.dtLBM / subCycleNumber);
+	subCycleNumber  = (int)(eIMB.eLBM.dtLBM / eIMB.eDEM.dtDEM) + 1;
+	eIMB.eDEM.dtDEM = (eIMB.eLBM.dtLBM / subCycleNumber);
 
 	//Cell initialization for LBM simualtion:
 	eIMB.eLBM.initializeCells();
@@ -104,33 +104,4 @@ void Scene::DEMEngine() {
 	eIMB.eDEM.forceCalculation();
 	eIMB.eDEM.updateVelPos();
 	eIMB.eDEM.updateContact();
-}
-
-void Scene::moveToNextTimeStep() {
-
-	//Create directories
-	int ignore = system("mkdir VTK_Fluid");
-	    ignore = system("mkdir VTK_Solid");
-
-	double tlbm = 0.0;
-	int i = 0;
-	while (Time < simDuration) {
-		eIMB.defineLinkedCells();
-		eIMB.calculateForceAndTorque();
-		eIMB.eDEM.contactVerification();
-		eIMB.eDEM.forceCalculation();
-		eIMB.eDEM.updateVelPos();
-		eIMB.eDEM.updateContact();
-		if (Time >= tlbm) {
-			eIMB.eLBM.collisionNT();
-			eIMB.eLBM.setBounceBack();
-			eIMB.eLBM.stream();
-			tlbm += eIMB.eLBM.dtLBM;
-		}
-		Time += eIMB.eDEM.dtDEM;
-		eIMB.eLBM.resetSolidFraction();
-		/*setDomain();*/
-		eIMB.updateFluidSolidContact();
-		++i;
-	}
 }

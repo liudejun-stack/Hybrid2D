@@ -26,7 +26,6 @@ public:
 	//Solver:
 	void LBMEngine();
 	void DEMEngine();
-	void moveToNextTimeStep();
 
 	//Method to acess the class Scene
 	Scene& getScene();
@@ -56,10 +55,6 @@ public:
 	double Time            = 0.0;
 	int simDuration        = 10000;
 	int subCycleNumber     = 0;
-
-	//Output parameters:
-	int fluidVtkCounter    = 0;
-	int particleVtkCounter = 0;
 };
 
 #endif // !SCENE_H
