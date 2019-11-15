@@ -1,9 +1,6 @@
 #ifndef IMB_H
 #define IMB_H
 
-//Standard Library
-#include <cmath>
-
 //Hybrid Libary
 #include "Math.h"
 #include "LBM.h"

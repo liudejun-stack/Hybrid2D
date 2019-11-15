@@ -7,7 +7,6 @@
 //Hybrid Library
 #include "Math.h"
 
-
 class Lattice {
 public:
 	//Constructor:
@@ -53,7 +52,7 @@ public:
 	Vec2d  velBC;               //Prescribed Velocity for Zou & He Boundary Condition
 	Vec2d  aux;                 //Auxiliar vector to calculate neighbour node
 	Vec2d  dim;                 //Domain size
-	Vec2d  cellPos;             
+	Vec2d  cellPos;             //Cell position
 
 	Vec2d  sourceForce           = Vec2d::Zero();
 	Vec2d  vel                   = Vec2d::Zero();
@@ -62,8 +61,8 @@ public:
 	double rho                   = 0.0;
 	int    particleFluidID       = 0;
 	int    node                  = 0;
-	int isSolid = 1;
-	int isFluid = 0;
+	int    isSolid               = 1;
+	int    isFluid               = 0;
 
 private:
 	//D2Q9 Variables:

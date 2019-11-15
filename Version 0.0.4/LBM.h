@@ -3,8 +3,7 @@
 
 //Standard Library
 #include <memory>
-#include <string>
-#include <fstream>
+#include <vector>
 
 //Hybrid Library
 #include "Lattice.h"
@@ -36,10 +35,10 @@ public:
 	bool setVelWest  = false;
 	bool setVelSouth = false;
 
-	bool setDenNorth   = false;
-	bool setDenEast = false;
+	bool setDenNorth = false;
+	bool setDenEast  = false;
 	bool setDenWest  = false;
-	bool setDenSouth  = false;
+	bool setDenSouth = false;
 
 	std::vector<std::shared_ptr<Lattice>> cells;
 
@@ -50,7 +49,6 @@ public:
 	double tau           = 1.0;
 	double latticeSpeed  = 1.0;
 	double kinViscosity  = 1.0;
-	int    vtkCounter    = 0;
 };
 #endif // !LBM_H
 

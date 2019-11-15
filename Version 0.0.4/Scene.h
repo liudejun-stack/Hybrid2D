@@ -53,8 +53,8 @@ public:
 	double shearStiffness  = 0.5e6;
 
 	double Time            = 0.0;
-	int simDuration        = 10000;
-	int subCycleNumber     = 0;
+	int    simDuration     = 10000;
+	int    subCycleNumber  = 0;
 };
 
 #endif // !SCENE_H

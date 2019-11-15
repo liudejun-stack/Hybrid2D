@@ -2,14 +2,13 @@
 #define DEM_H
 
 //Standard Library
-#include <string>
-#include <fstream>
+#include <vector>
+#include <memory>
 
 //Hybrid Library
 #include "Math.h"
 #include "Interaction.h"
 #include "Body.h"
-
 
 class DEM {
 public:
@@ -22,11 +21,6 @@ public:
 	void updateContact();
 	Vec2d applyBorderForce(std::shared_ptr<Body> _body);
 	void calculateEnergy();
-
-	void Cycle();
-
-	//Output:
-	void energyCSV(std::string _fileName);
 
 	//Smart pointers to classes:
 	std::vector<std::shared_ptr<Body>> bodies;
