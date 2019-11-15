@@ -2,6 +2,9 @@
 
 void IMB::defineLinkedCells() {
 	for (auto& B : eDEM.bodies) {
+		//Reset Interaction Vector:
+		B->fluidSolidInteraction.clear();
+
 		Vec2d cellInitPos = B->pos - 2 * (int)B->radius * Vec2d::Ones() - 0.5 * eLBM.dx * Vec2d::Ones();
 		for (int j = 0; j < 4 * (int)B->radius; ++j) {
 			for (int i = 0; i < 4 * (int)B->radius; ++i) {
@@ -13,6 +16,8 @@ void IMB::defineLinkedCells() {
 				}
 			}
 		}
+
+		ASSERT(B->fluidSolidInteraction.size() > 0);
 	}
 }
 
@@ -83,12 +88,5 @@ void IMB::calculateForceAndTorque() {
 				B->forceLBM += -Bn * Omega * eLBM.cells[ID]->latticeSpeed * eLBM.dx * eLBM.cells[ID]->discreteVelocity[k];
 			}
 		}
-		//ASSERT(B->forceLBM != Vec2d::Zero());
-	}
-}
-
-void IMB::updateFluidSolidContact() {
-	for (auto& B : eDEM.bodies) {
-		B->fluidSolidInteraction.clear();
 	}
 }

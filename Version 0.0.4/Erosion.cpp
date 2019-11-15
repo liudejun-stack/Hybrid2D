@@ -63,7 +63,6 @@ int main() {
 			tlbm += S.eIMB.eLBM.dtLBM;
 		}
 		S.eIMB.eLBM.resetSolidFraction();
-		S.eIMB.updateFluidSolidContact();
 		if (i % 1000 == 0) {
 			Out.fluidVTK("LBM");
 			Out.solidVTK("DEM");
@@ -71,7 +70,6 @@ int main() {
 		S.Time += S.eIMB.eDEM.dtDEM;
 		++i;
 	}
-	S.moveToNextTimeStep();
-	
+
 	return 0;
 }
