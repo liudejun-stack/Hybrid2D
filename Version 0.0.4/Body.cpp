@@ -15,8 +15,8 @@ bool Body::checkInteraction(int _bodyId) {
 	return false;
 }
 
-bool Body::fluidInteraction(Vec2d _cellPos, double _dx) {
-	Vec2d Delta;
+bool Body::fluidInteraction(Vector2r _cellPos, double _dx) {
+	Vector2r Delta;
 	Delta[0] = pos[0] - std::max(_cellPos[0], std::min(pos[0], _cellPos[0] + _dx));
 	Delta[1] = pos[1] - std::max(_cellPos[1], std::min(pos[1], _cellPos[1] + _dx));
 	if (Delta.dot(Delta) < radius * radius) {

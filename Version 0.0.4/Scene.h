@@ -19,7 +19,7 @@ public:
 	IMB eIMB;
 
 	//Scenario prepartion:
-	void addCircle(double _mass, double _radius, Vec2d _pos, Vec2d _vel);
+	void addCircle(double _mass, double _radius, Vector2r _pos, Vector2r _vel);
 	void setDomain();
 	void prepareScenario();
 
@@ -31,7 +31,7 @@ public:
 	Scene& getScene();
 
 	//Geometry parameters:
-	Vec2d domainSize       = Vec2d::Zero();
+	Vector2r domainSize       = Vector2r::Zero();
 	bool topIsSolid        = false;
 	bool botIsSolid        = false;
 	bool leftIsSolid       = false;
@@ -43,7 +43,7 @@ public:
 	double kinViscosity    = 1e-6;
 	double relaxationTime  = 1.0;
 	double rhoInit         = 1.0;
-	Vec2d  velInit         = { 0.08, 0.0 };
+	Vector2r  velInit         = { 0.08, 0.0 };
 
 	//Particle parameters:
 	double frictionAngle   = 30;

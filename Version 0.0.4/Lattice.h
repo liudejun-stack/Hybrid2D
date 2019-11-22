@@ -10,7 +10,7 @@
 class Lattice {
 public:
 	//Constructor:
-	Lattice(int _ID, double _dx, double _dt, double _tau, Vec2d _dim, Vec2d _cellPos) {
+	Lattice(int _ID, double _dx, double _dt, double _tau, Vector2r _dim, Vector2r _cellPos) {
 		ID            = _ID;
 		dx            = _dx;
 		dt            = _dt; 
@@ -34,9 +34,9 @@ public:
 	}
 
 	//Methods:
-	double setEqFun(double _rho, Vec2d _vel, int k);
+	double setEqFun(double _rho, Vector2r _vel, int k);
 	double setSourceTerm(double& _tau, double _dt, int k);
-	double getDensityAndVelocity(Vec2d& _vel);
+	double getDensityAndVelocity(Vector2r& _vel);
 	void updateMacro();
 
 	friend class LBM;
@@ -49,13 +49,13 @@ public:
 	double tau;                 //Relaxation Time
 	double latticeSpeed;        //Speed of the model
 	double rhoBC;               //Prescribed Density for Zou & He Boundary Condition
-	Vec2d  velBC;               //Prescribed Velocity for Zou & He Boundary Condition
-	Vec2d  aux;                 //Auxiliar vector to calculate neighbour node
-	Vec2d  dim;                 //Domain size
-	Vec2d  cellPos;             //Cell position
+	Vector2r  velBC;               //Prescribed Velocity for Zou & He Boundary Condition
+	Vector2r  aux;                 //Auxiliar vector to calculate neighbour node
+	Vector2r  dim;                 //Domain size
+	Vector2r  cellPos;             //Cell position
 
-	Vec2d  sourceForce           = Vec2d::Zero();
-	Vec2d  vel                   = Vec2d::Zero();
+	Vector2r  sourceForce           = Vector2r::Zero();
+	Vector2r  vel                   = Vector2r::Zero();
 	double solidFraction         = 0.0;
 	double previousSolidFraction = 0.0;
 	double rho                   = 0.0;
@@ -69,7 +69,7 @@ private:
 	const int Q = 9;
 	const std::vector<int>    opNode           = { 0, 3, 4, 1, 2, 7, 8, 5, 6 };
 	const std::vector<double> weight           = { 4.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0, 1.0 / 36.0, 1.0 / 36.0, 1.0 / 36.0, 1.0 / 36.0 };
-	const std::vector<Vec2d>  discreteVelocity = { {0,0}, {1,0}, {0,1}, {-1,0}, {0,-1}, {1,1}, {-1,1}, {-1,-1}, {1,-1} };
+	const std::vector<Vector2r>  discreteVelocity = { {0,0}, {1,0}, {0,1}, {-1,0}, {0,-1}, {1,1}, {-1,1}, {-1,-1}, {1,-1} };
 	
 	std::vector<double> f     = { 0,0,0,0,0,0,0,0,0 };
 	std::vector<double> fTemp = { 0,0,0,0,0,0,0,0,0 };

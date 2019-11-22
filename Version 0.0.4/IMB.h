@@ -13,7 +13,7 @@ public:
 
 	//Engine
 	void   defineLinkedCells();
-	double calculateSolidFraction(Vec2d& _particlePos, Vec2d& _cellPos, double _particleRadius, double _dx);
+	double calculateSolidFraction(Vector2r& _particlePos, Vector2r& _cellPos, double _particleRadius, double _dx);
 	void   calculateForceAndTorque();
 
 	LBM eLBM;	//LBM engine

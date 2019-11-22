@@ -15,7 +15,7 @@ class Interaction;
 class Body {
 public:
 	
-	Body(double _mass, double _radius, Vec2d _pos, Vec2d _vel, int _id) {
+	Body(double _mass, double _radius, Vector2r _pos, Vector2r _vel, int _id) {
 		mass          = _mass;
 		radius        = _radius;
 		inertiaMoment = _mass * _radius * _radius * 0.5;
@@ -25,7 +25,7 @@ public:
 	}
 
 	bool checkInteraction(int _bodyId);
-	bool fluidInteraction(Vec2d _cellPos, double _dx);
+	bool fluidInteraction(Vector2r _cellPos, double _dx);
 
 	//Body variables:
 	double density;
@@ -39,12 +39,12 @@ public:
 	std::vector<int> fluidSolidInteraction;
 
 	//Vectors:
-	Vec2d pos         = Vec2d::Zero();
-	Vec2d vel         = Vec2d::Zero();
-	Vec2d force       = Vec2d::Zero();
-	Vec2d forceLBM    = Vec2d::Zero();
-	Vec2d torqueLBM   = Vec2d::Zero();
-	Vec2d blockedDOFs = { 1,1 };
+	Vector2r pos         = Vector2r::Zero();
+	Vector2r vel         = Vector2r::Zero();
+	Vector2r force       = Vector2r::Zero();
+	Vector2r forceLBM    = Vector2r::Zero();
+	Vector2r torqueLBM   = Vector2r::Zero();
+	Vector2r blockedDOFs = { 1,1 };
 
 	//Body motion variables:
 	double rot          = 0.0;

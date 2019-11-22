@@ -26,9 +26,9 @@ public:
 	std::weak_ptr<Body> body2;
 
 	//Variables:
-	Vec2d  unitNormal  = Vec2d::Zero();
-	Vec2d  unitShear   = Vec2d::Zero();
-	Vec2d  contact     = Vec2d::Zero();
+	Vector2r  unitNormal  = Vector2r::Zero();
+	Vector2r  unitShear   = Vector2r::Zero();
+	Vector2r  contact     = Vector2r::Zero();
 	double normalForce = 0.0;
 	double shearForce  = 0.0;
 };

@@ -3,9 +3,9 @@
 
 double uMax = 0.1;
 double re = 100;
-Vec2d dim = { 100, 200 };
+Vector2r dim = { 100, 200 };
 double radius = dim[0] / 20 + 1;
-Vec2d cylinderCoord = { dim[0] / 2, dim[0] / 2 };
+Vector2r cylinderCoord = { dim[0] / 2, dim[0] / 2 };
 
 
 double calcVisc() {
@@ -13,7 +13,7 @@ double calcVisc() {
 	return 3.0 * kinVisc + 0.5;
 }
 
-void calcInitSpeed(int x, int y, Vec2d& _vel) {
+void calcInitSpeed(int x, int y, Vector2r& _vel) {
 	double L = dim[1] - 2;
 	double yp = y - 1.5;
 	_vel[0] = uMax * 4 / (L * L) * (L * yp - yp * yp);
@@ -39,7 +39,7 @@ int main() {
 	S.prepareScenario();
 	
 	for (int i = 0; i < dim[0]; ++i) {
-		Vec2d vel;
+		Vector2r vel;
 		calcInitSpeed(i, dim[1]-1, vel);
 		S.eIMB.eLBM.setVelBC(i, dim[1]-1, vel);
 		S.eIMB.eLBM.setDenBC(i, 0, 1.0);

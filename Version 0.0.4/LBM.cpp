@@ -2,7 +2,7 @@
 
 int LBM::getCell(int i, int j) {return i + domainSize[0] * j;}
 
-void LBM::setVelBC(int i, int j, Vec2d _vel) {
+void LBM::setVelBC(int i, int j, Vector2r _vel) {
 	int id = getCell(i, j);
 	cells[id]->velBC = _vel;
 }
@@ -128,13 +128,13 @@ void LBM::initializeCells() {
 	ASSERT(dtLBM > 0.0);
 	for (int j = 0; j < domainSize[1]; ++j)
 		for (int i = 0; i < domainSize[0]; ++i) {
-			Vec2d cellPos = { i,j };
+			Vector2r cellPos = { i,j };
 			int id = getCell(i, j);
 			cells.push_back(std::make_shared<Lattice>(id, dx, dtLBM, tau, domainSize, cellPos));
 		}
 }
 
-void LBM::setInitCond(double _rhoInit, Vec2d _vel) {
+void LBM::setInitCond(double _rhoInit, Vector2r _vel) {
 	for (auto& C : cells) {
 		for (int k = 0; k < C->Q; k++) {
 			C->f[k] = C->setEqFun(_rhoInit, _vel, k);
@@ -169,7 +169,7 @@ void LBM::collision() {
 	double tauInv = 1.0 / tau;
 	for (auto& C : cells) {
 		if (C->node == C->isSolid)	continue;
-		Vec2d Vel;
+		Vector2r Vel;
 		double density = C->getDensityAndVelocity(Vel);
 		for (int k = 0; k < C->Q; k++) {
 			double EDF = C->setEqFun(density, Vel, k);
@@ -183,7 +183,7 @@ void LBM::collisionNT() {
 	double tauInv = 1.0 / tau;
 	for (auto& C : cells) {
 		if (C->node == C->isSolid)	continue;
-		Vec2d Vel;
+		Vector2r Vel;
 		double density = C->getDensityAndVelocity(Vel);
 		double solidFunction = (C->solidFraction * (tau - 0.5)) / ((1.0 - C->solidFraction) + (tau - 0.5));
 		for (int k = 0; k < C->Q; ++k) {

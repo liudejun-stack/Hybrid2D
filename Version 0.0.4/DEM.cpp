@@ -10,13 +10,13 @@ void DEM::calculateParticleTimeStep() {
 	ASSERT(dtDEM > 0.0);
 }
 
-Vec2d DEM::applyBorderForce(std::shared_ptr<Body> _body) {
+Vector2r DEM::applyBorderForce(std::shared_ptr<Body> _body) {
 	//Vectors:
-	Vec2d unitUp = { 0, 1 };
-	Vec2d unitDown = { 0,-1 };
-	Vec2d unitRight = { 1, 0 };
-	Vec2d unitLeft = { -1, 0 };
-	Vec2d force = Vec2d::Zero();
+	Vector2r unitUp = { 0, 1 };
+	Vector2r unitDown = { 0,-1 };
+	Vector2r unitRight = { 1, 0 };
+	Vector2r unitLeft = { -1, 0 };
+	Vector2r force = Vector2r::Zero();
 	if ((_body->pos[0] - _body->radius) < domainReference[0]) force += borderStifness * abs(_body->radius - _body->pos[0]) * unitRight;
 	if ((_body->pos[0] + _body->radius) > domainSize[0])      force += borderStifness * abs(_body->radius - (domainSize[0] - _body->pos[0])) * unitLeft;
 	if ((_body->pos[1] - _body->radius) < domainReference[1]) force += borderStifness * abs(_body->radius - _body->pos[1]) * unitUp;
@@ -51,7 +51,7 @@ void DEM::forceCalculation() {
 	//Force calculation:
 	for (auto& B : bodies) {
 		//Force Resetter:
-		B->force  = Vec2d::Zero();
+		B->force  = Vector2r::Zero();
 		B->moment = 0.0;
 
 		//Contact force
@@ -82,8 +82,8 @@ void DEM::updateVelPos() {
 	for (auto& B : bodies) {
 
 		//Calculate accelaration from forces:
-		Vec2d  linAccel = { 0.0, 0.0 };
-		Vec2d  f = B->force;
+		Vector2r  linAccel = { 0.0, 0.0 };
+		Vector2r  f = B->force;
 		double m = B->moment;
 		double rotAccel = 0.0;
 		int    signV;

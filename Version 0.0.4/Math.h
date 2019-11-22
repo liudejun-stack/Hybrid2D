@@ -6,13 +6,12 @@
 #include <string>
 #include <Eigen/Core>
 
+using Real = double;
+
 //Templates:
 template<typename Scalar> using Vector2 = Eigen::Matrix<Scalar, 2, 1, Eigen::DontAlign>;
-using Vec2d = Vector2<double>;
-using Vec2i = Vector2<int>;
-
-template<typename Scalar> using Vector3 = Eigen::Matrix<Scalar, 3, 1, Eigen::DontAlign>;
-using Vec3d = Vector3<double>;
+using Vector2r = Vector2<Real>;
+using Vector2i = Vector2<int>;
 
 //Defines:
 #define ASSERT_FLAG 1		//PROBABLY CHANGE THIS TO BE TURNED OFF IN RELEASE MODE

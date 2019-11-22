@@ -16,14 +16,14 @@ public:
 	int getCell(int i, int j);
 
 	//Boundary conditions:
-	void setVelBC(int i, int j, Vec2d _vel);
+	void setVelBC(int i, int j, Vector2r _vel);
 	void setDenBC(int i, int j, double _rho);
 	void setZouBC();
 	void setBounceBack();
 
 	//LBM Engine:
 	void initializeCells();
-	void setInitCond(double _rhoInit, Vec2d _vel);
+	void setInitCond(double _rhoInit, Vector2r _vel);
 	void resetSolidFraction();
 	void applyBodyForce();
 	void collision();
@@ -42,8 +42,8 @@ public:
 
 	std::vector<std::shared_ptr<Lattice>> cells;
 
-	Vec2d  gravity       = { 0.0, -9.81 };
-	Vec2d  domainSize    = Vec2d::Zero();
+	Vector2r  gravity       = { 0.0, -9.81 };
+	Vector2r  domainSize    = Vector2r::Zero();
 	double dx            = 1.0;
 	double dtLBM         = 1.0;
 	double tau           = 1.0;

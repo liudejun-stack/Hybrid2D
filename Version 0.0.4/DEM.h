@@ -19,7 +19,7 @@ public:
 	void forceCalculation();
 	void updateVelPos();
 	void updateContact();
-	Vec2d applyBorderForce(std::shared_ptr<Body> _body);
+	Vector2r applyBorderForce(std::shared_ptr<Body> _body);
 	void calculateEnergy();
 
 	//Smart pointers to classes:
@@ -31,9 +31,9 @@ public:
 	std::vector<double> potEnergy;
 
 	//Model variables:
-	Vec2d  domainReference  = Vec2d::Zero();
-	Vec2d  domainSize       = Vec2d::Zero();
-	Vec2d  gravity          = { 0.0, -9.81 };
+	Vector2r  domainReference  = Vector2r::Zero();
+	Vector2r  domainSize       = Vector2r::Zero();
+	Vector2r  gravity          = { 0.0, -9.81 };
 	double normalStiffness  = 1e6;
 	double shearStiffness   = 0.5e6;
 	double localDamping     = 0.8;
