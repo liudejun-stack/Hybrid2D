@@ -6,11 +6,11 @@
 #include <string>
 #include <Eigen/Core>
 
-using Real = double;
+using real = double;
 
 //Templates:
 template<typename Scalar> using Vector2 = Eigen::Matrix<Scalar, 2, 1, Eigen::DontAlign>;
-using Vector2r = Vector2<Real>;
+using Vector2r = Vector2<real>;
 using Vector2i = Vector2<int>;
 
 //Defines:

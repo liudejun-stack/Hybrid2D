@@ -8,14 +8,15 @@ int main() {
 	Output Out;
 
 	//General Information
-	Vector2r  domainSize     = { 500, 100 };
-	Vector2r  cylinderCoord  = { domainSize[1] / 2, domainSize[1] / 2 };
-	double particleRadius = domainSize[1] / 10 + 1;
-	double uMax           = 0.1;
-	double Re             = 100;
+	Vector2r domainSize     = { 800, 100 };
+	Vector2r cylinderCoord  = { domainSize[1] / 2, domainSize[1] / 2. + 3 };
+	double   particleRadius = domainSize[1] / 20 + 1;
+	double   uMax           = 0.1;
+	double   Re             = 100;
 
 	//Geometry
 	S.domainSize     = domainSize;
+	S.simDuration    = 30000.0;
 	S.topIsSolid     = true;
 	S.botIsSolid     = true;
 	S.bodiesAreSolid = true;
@@ -42,6 +43,7 @@ int main() {
 		Vel[1] = 0.0;
 		S.eIMB.eLBM.setVelBC(0, j, Vel);
 		S.eIMB.eLBM.setDenBC(domainSize[0] - 1, j, 1.0);
+		//S.eIMB.eLBM.setDenBC(0, j, 1.0);
 	}
 
 	int ignore = system("mkdir VTK_Fluid");

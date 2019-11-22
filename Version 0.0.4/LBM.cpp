@@ -61,6 +61,7 @@ void LBM::setZouBC() {
 		if (setVelWest) {
 			for (int j = 0; j < domainSize[1]; ++j) {
 				if (C->ID == getCell(0, j)) {
+					if (C->node == C->isSolid)	continue;
 					double rho = (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[3] + C->f[6] + C->f[7])) / (1.0 - C->velBC[0]);
 					C->f[1] = C->f[3] + aux * rho * C->velBC[0];
 					C->f[5] = C->f[7] + div * rho * C->velBC[0] - 0.5 * (C->f[2] - C->f[4]);
@@ -101,6 +102,7 @@ void LBM::setZouBC() {
 		if (setDenEast) {
 			for (int j = 0; j < domainSize[1]; ++j) {
 				if (C->ID == getCell(domainSize[0] - 1, j)) {
+					if (C->node == C->isSolid)	continue;
 					double vx = -1.0 + (C->f[0] + C->f[2] + C->f[4] + 2.0 * (C->f[1] + C->f[5] + C->f[8])) / C->rhoBC;
 					C->f[3] = C->f[1] - aux * C->rhoBC * vx;
 					C->f[7] = C->f[5] - div * C->rhoBC * vx + 0.5 * (C->f[2] - C->f[4]);
