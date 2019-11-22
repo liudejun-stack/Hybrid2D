@@ -13,6 +13,7 @@ public:
 	void displaySimulationInfo();
 	void fluidVTK(std::string _fileName);
 	void solidVTK(std::string _fileName);
+	void fluidVelocityProfile(std::string _fileName, int _fixedPos);
 
 	int fluidVtkCounter = 0;
 	int solidVtkCounter = 0;

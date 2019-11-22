@@ -81,3 +81,15 @@ void Output::solidVTK(std::string _fileName) {
 	out.close();
 	solidVtkCounter++;
 }
+
+void Output::fluidVelocityProfile(std::string _fileName, int _fixedPos) {
+	Scene& S = S.getScene();
+	std::ofstream out;
+	out.open("VTK_Fluid/" + _fileName + std::to_string(S.Time) + ".csv");
+	for (int j = 0; j < S.domainSize[1]; ++j) {
+		int id = S.eIMB.eLBM.getCell(_fixedPos, j);
+		auto C = S.eIMB.eLBM.cells[id];
+		out << C->cellPos[0] << ", " << C->cellPos[1] << ", " << C->vel[0] << ", " << C->vel[1] << ", " << C->vel.norm() << "\n";
+	}
+
+}
