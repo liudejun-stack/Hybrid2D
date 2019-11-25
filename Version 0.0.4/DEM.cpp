@@ -5,9 +5,8 @@ void DEM::calculateParticleTimeStep() {
 	for (auto& B : bodies) {
 		if (B->mass < minMass)	minMass = B->mass;
 	}
-	ASSERT(minMass > 0);
 	dtDEM = factorOfSafety * std::sqrt(minMass / normalStiffness);
-	ASSERT(dtDEM > 0.0);
+	ASSERT(dtDEM > 0.0 && minMass > 0.0);
 }
 
 Vector2r DEM::applyBorderForce(std::shared_ptr<Body> _body) {
@@ -82,19 +81,19 @@ void DEM::updateVelPos() {
 	for (auto& B : bodies) {
 
 		//Calculate accelaration from forces:
-		Vector2r  linAccel = { 0.0, 0.0 };
-		Vector2r  f = B->force;
-		double m = B->moment;
-		double rotAccel = 0.0;
-		int    signV;
-		int    signM;
+		Vector2r  linAccel = Vector2r::Zero();
+		Vector2r  f        = B->force;
+		double    m        = B->moment;
+		double    rotAccel = 0.0;
+		int       signV    = 0;
+		int       signM    = 0;
 
 		for (int i = 0; i < linAccel.size(); ++i) {
-			B->vel[i] > 0 ? signV = 1 : signV = -1;
+			if (B->vel[i] > 0)	signV = 1; if (B->vel[i] < 0)	signV = -1;
 			linAccel[i] = ((f[i] - localDamping * abs(f[i]) * signV) / B->mass) * B->blockedDOFs[i];
 		}
 
-		B->rotVel > 0 ? signM = 1 : signM = -1;
+		if (B->rotVel > 0)	signM = 1; if (B->rotVel < 0)	signM = -1;
 		rotAccel = ((m - localDamping * abs(m) * signM) / B->inertiaMoment) * B->blockedMDOFs;
 
 		//Update velocity and position (LeapFrog method):
@@ -109,6 +108,8 @@ void DEM::updateVelPos() {
 		B->pos += B->vel * dtDEM;
 		B->rot += B->rotVel * dtDEM;
 	}
+	++nIter;
+	ASSERT(nIter > 0);
 }
 
 void DEM::updateContact() {
@@ -116,7 +117,6 @@ void DEM::updateContact() {
 	for (auto& B : bodies) {
 		B->inter.erase(std::remove_if(std::begin(B->inter), std::end(B->inter), [](std::weak_ptr<Interaction> I) {return I.expired(); }), std::end(B->inter));
 	}
-	++nIter;
 }
 
 void DEM::calculateEnergy() {
