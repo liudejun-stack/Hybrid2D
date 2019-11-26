@@ -89,11 +89,11 @@ void DEM::updateVelPos() {
 		int       signM    = 0;
 
 		for (int i = 0; i < linAccel.size(); ++i) {
-			if (B->vel[i] > 0)	signV = 1; if (B->vel[i] < 0)	signV = -1;
+			B->vel[i] > 0 ? signV = 1 : signV = -1;
 			linAccel[i] = ((f[i] - localDamping * abs(f[i]) * signV) / B->mass) * B->blockedDOFs[i];
 		}
 
-		if (B->rotVel > 0)	signM = 1; if (B->rotVel < 0)	signM = -1;
+		B->rotVel > 0 ? signM = 1 : signM = -1;
 		rotAccel = ((m - localDamping * abs(m) * signM) / B->inertiaMoment) * B->blockedMDOFs;
 
 		//Update velocity and position (LeapFrog method):
