@@ -3,9 +3,9 @@
 static Scene scene;
 Scene& Scene::getScene() { return scene; }
 
-void Scene::addCircle(double _mass, double _radius, Vector2r _pos, Vector2r _vel) {
+void Scene::addCircle(double _mass, double _radius, Vector2r _pos, Vector2r _vel, bool _fixed = false) {
 	int id = eIMB.eDEM.bodies.size();
-	eIMB.eDEM.bodies.push_back(std::make_shared<Body>(_mass, _radius, _pos, _vel, id));
+	eIMB.eDEM.bodies.push_back(std::make_shared<Body>(_mass, _radius, _pos, _vel, id, _fixed));
 }
 
 void Scene::setDomain() {

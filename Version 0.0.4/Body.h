@@ -15,13 +15,14 @@ class Interaction;
 class Body {
 public:
 	
-	Body(double _mass, double _radius, Vector2r _pos, Vector2r _vel, int _id) {
+	Body(double _mass, double _radius, Vector2r _pos, Vector2r _vel, int _id, bool _fixed) {
 		mass          = _mass;
 		radius        = _radius;
 		inertiaMoment = _mass * _radius * _radius * 0.5;
 		pos           = _pos;
 		vel           = _vel;
 		id            = _id;
+		if (_fixed) { blockedDOFs = Vector2r::Zero(); blockedMDOFs = 0; }
 	}
 
 	bool checkInteraction(int _bodyId);

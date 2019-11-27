@@ -19,7 +19,7 @@ public:
 	IMB eIMB;
 
 	//Scenario prepartion:
-	void addCircle(double _mass, double _radius, Vector2r _pos, Vector2r _vel);
+	void addCircle(double _mass, double _radius, Vector2r _pos, Vector2r _vel, bool _fixed);
 	void setDomain();
 	void prepareScenario();
 
