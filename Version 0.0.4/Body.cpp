@@ -15,6 +15,13 @@ bool Body::checkInteraction(int _bodyId) {
 	return false;
 }
 
+void Body::calculateEnergy() {
+	Vector2r gravity = { 0.0, -9.81 };
+	double velocity = vel.norm();
+	potEnergy = mass * std::abs(gravity[1]) * pos[1];
+	kinEnergy = mass * velocity * velocity / 2.;
+}
+
 bool Body::fluidInteraction(Vector2r _cellPos, double _dx) {
 	Vector2r Delta;
 	Delta[0] = pos[0] - std::max(_cellPos[0], std::min(pos[0], _cellPos[0] + _dx));

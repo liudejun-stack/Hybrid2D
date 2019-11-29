@@ -14,6 +14,7 @@ public:
 	void fluidVTK(std::string _fileName);
 	void solidVTK(std::string _fileName);
 	void fluidVelocityProfile(std::string _fileName, int _fixedPos);
+	void particleEnergy(std::string _fileName, int _bodyId);
 
 	int fluidVtkCounter = 0;
 	int solidVtkCounter = 0;

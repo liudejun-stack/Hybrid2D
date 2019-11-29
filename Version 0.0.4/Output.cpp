@@ -91,5 +91,16 @@ void Output::fluidVelocityProfile(std::string _fileName, int _fixedPos) {
 		auto C = S.eIMB.eLBM.cells[id];
 		out << C->cellPos[0] << ", " << C->cellPos[1] << ", " << C->vel[0] << ", " << C->vel[1] << ", " << C->vel.norm() << "\n";
 	}
+}
+
+void Output::particleEnergy(std::string _fileName, int _bodyId) {
+	Scene& S = S.getScene();
+	auto body = S.eIMB.eDEM.bodies[_bodyId];
+	body->calculateEnergy();
+
+	std::ofstream out;
+	out.open("VTK_Solid/" + _fileName, std::ios_base::app);
+	out << body->pos[0] << ", " << body->pos[1] << ", " << body->vel.norm() << ", " << body->potEnergy << ", " << body->kinEnergy << "\n";
+	out.close();
 
 }

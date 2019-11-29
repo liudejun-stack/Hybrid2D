@@ -26,6 +26,7 @@ public:
 	}
 
 	bool checkInteraction(int _bodyId);
+	void calculateEnergy();
 	bool fluidInteraction(Vector2r _cellPos, double _dx);
 
 	//Body variables:
@@ -39,19 +40,18 @@ public:
 	std::vector<std::weak_ptr<Interaction>> inter;
 	std::vector<int> fluidSolidInteraction;
 
-	//Vectors:
 	Vector2r pos         = Vector2r::Zero();
 	Vector2r vel         = Vector2r::Zero();
 	Vector2r force       = Vector2r::Zero();
 	Vector2r forceLBM    = Vector2r::Zero();
 	Vector2r torqueLBM   = Vector2r::Zero();
 	Vector2r blockedDOFs = { 1,1 };
-
-	//Body motion variables:
-	double rot          = 0.0;
-	double rotVel       = 0.0;
-	double moment       = 0.0;
-	double blockedMDOFs = 1;
+	double rot           = 0.0;
+	double rotVel        = 0.0;
+	double moment        = 0.0;
+	double blockedMDOFs  = 1;
+	double kinEnergy     = 0.0;
+	double potEnergy     = 0.0;
 
 	~Body() {};
 };
