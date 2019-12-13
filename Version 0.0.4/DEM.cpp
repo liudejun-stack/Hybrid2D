@@ -50,7 +50,7 @@ void DEM::forceCalculation() {
 	//Force calculation:
 	for (auto& B : bodies) {
 		//Force Resetter:
-		B->force  = Vector2r::Zero();
+		B->force = Vector2r::Zero();
 		B->moment = 0.0;
 
 		//Contact force
@@ -82,11 +82,11 @@ void DEM::updateVelPos() {
 
 		//Calculate accelaration from forces:
 		Vector2r  linAccel = Vector2r::Zero();
-		Vector2r  f        = B->force;
-		double    m        = B->moment;
+		Vector2r  f = B->force;
+		double    m = B->moment;
 		double    rotAccel = 0.0;
-		int       signV    = 0;
-		int       signM    = 0;
+		int       signV = 0;
+		int       signM = 0;
 
 		for (int i = 0; i < linAccel.size(); ++i) {
 			B->vel[i] > 0 ? signV = 1 : signV = -1;

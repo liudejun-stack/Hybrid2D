@@ -2,8 +2,9 @@
 #define OUTPUT_H
 
 //Standard Library
-#include <string>
+#include <iomanip>
 #include <fstream>
+#include <string>
 
 //Hybrid Library
 #include "Scene.h"

@@ -31,24 +31,23 @@ public:
 	void stream();
 
 	bool setVelNorth = false;
-	bool setVelEast  = false;
-	bool setVelWest  = false;
+	bool setVelEast = false;
+	bool setVelWest = false;
 	bool setVelSouth = false;
 
 	bool setDenNorth = false;
-	bool setDenEast  = false;
-	bool setDenWest  = false;
+	bool setDenEast = false;
+	bool setDenWest = false;
 	bool setDenSouth = false;
 
 	std::vector<std::shared_ptr<Lattice>> cells;
 
-	Vector2r  gravity       = { 0.0, -9.81 };
-	Vector2r  domainSize    = Vector2r::Zero();
-	double dx            = 1.0;
-	double dtLBM         = 1.0;
-	double tau           = 1.0;
-	double latticeSpeed  = 1.0;
-	double kinViscosity  = 1.0;
+	Vector2r  gravity = { 0.0, -9.81 };
+	Vector2r  domainSize = Vector2r::Zero();
+	double dx = 1.0;
+	double dtLBM = 1.0;
+	double tau = 1.0;
+	double latticeSpeed = 1.0;
+	double kinViscosity = 1.0;
 };
 #endif // !LBM_H
-

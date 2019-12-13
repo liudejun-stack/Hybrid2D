@@ -1,6 +1,6 @@
 #include "LBM.h"
 
-int LBM::getCell(int i, int j) {return i + domainSize[0] * j;}
+int LBM::getCell(int i, int j) { return i + domainSize[0] * j; }
 
 void LBM::setVelBC(int i, int j, Vector2r _vel) {
 	int id = getCell(i, j);
@@ -70,7 +70,7 @@ void LBM::setZouBC() {
 				}
 			}
 		}
-	
+
 		//Prescribed density
 		//North Side
 		if (setDenNorth) {
@@ -205,11 +205,11 @@ void LBM::setBounceBack() {
 
 void LBM::stream() {
 	double Ncells = domainSize[0] * domainSize[1];
-	for (int i = 0; i < Ncells; ++i) 
-	for (int k = 0; k < cells[0]->Q; k++) {
-		cells[cells[i]->nCell[k]]->fTemp[k] = cells[i]->f[k];
-	}
-	
+	for (int i = 0; i < Ncells; ++i)
+		for (int k = 0; k < cells[0]->Q; k++) {
+			cells[cells[i]->nCell[k]]->fTemp[k] = cells[i]->f[k];
+		}
+
 	//Swap distribution function:
 	for (auto& C : cells) {
 		std::vector<double> Temp = C->f;

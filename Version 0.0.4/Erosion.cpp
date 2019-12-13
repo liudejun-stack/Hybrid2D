@@ -8,18 +8,16 @@
 //	Output Out;
 //
 //	//General Information
-//	Vector2r  domainSize = { 500, 100 };
+//	Vector2r  domainSize = { 50, 50 };
 //	double particleRadius = domainSize[1] / 20 + 1;
-//	Vector2r  cylinderCoord = { 2*particleRadius, particleRadius };
+//	Vector2r  cylinderCoord = { particleRadius, particleRadius };
 //	double uMax = 0.1;
 //	double Re = 100;
 //
 //	S.domainSize = domainSize;
-//	S.eIMB.eLBM.setVelWest = true;
-//	S.eIMB.eLBM.setDenEast = true;
 //
 //	//Bodies:
-//	S.addCircle(1, particleRadius, cylinderCoord, Vector2r::Zero());
+//	S.addCircle(1, particleRadius, cylinderCoord, Vector2r::Zero(), false);
 //
 //	//Fluid Properties:
 //	S.kinViscosity = uMax * (2 * particleRadius) / Re;
@@ -33,20 +31,10 @@
 //	S.factorOfSafety = 0.1;
 //	S.normalStiffness = 1.0e6;
 //	S.shearStiffness = 0.5e6;
-//	S.simDuration = 30000;
+//	S.simDuration = 10000;
 //
 //	//Prepare Scenario
 //	S.prepareScenario();
-//
-//	for (int j = 0; j < domainSize[1]; ++j) {
-//		double L = domainSize[1] - 2;
-//		double yp = j - 1.5;
-//		Vector2r Vel = Vector2r::Zero();
-//		Vel[0] = uMax * 4 / (L * L) * (L * yp - yp * yp);
-//		Vel[1] = 0.0;
-//		S.eIMB.eLBM.setVelBC(0, j, Vel);
-//		S.eIMB.eLBM.setDenBC(domainSize[0] - 1, j, 1.0);
-//	}
 //
 //	int ignore = system("mkdir VTK_Fluid");
 //	    ignore = system("mkdir VTK_Solid");
@@ -54,20 +42,23 @@
 //	double tlbm = 0.0;
 //	int i = 0;
 //	while (S.Time < S.simDuration) {
-//		if (i % 1000 == 0)	Out.displaySimulationInfo();
+//		if (i % 100000 == 0)	Out.displaySimulationInfo();
+//		S.eIMB.eLBM.resetSolidFraction();
 //		S.eIMB.defineLinkedCells();
 //		S.eIMB.calculateForceAndTorque();
 //		S.DEMEngine();
 //		if (S.Time >= tlbm) {
-//			S.LBMEngine();
-//			tlbm += S.eIMB.eLBM.dtLBM;
+//			S.eIMB.eLBM.setZouBC();
+//			S.eIMB.eLBM.collisionNT();
+//			S.eIMB.eLBM.setBounceBack();
+//			S.eIMB.eLBM.stream();
+//			tlbm += S.dtLBM;
 //		}
-//		S.eIMB.eLBM.resetSolidFraction();
-//		if (i % 1000 == 0) {
+//		if (i % 100000 == 0) {
 //			Out.fluidVTK("LBM");
 //			Out.solidVTK("DEM");
 //		}
-//		S.Time += S.eIMB.eDEM.dtDEM;
+//		S.Time += S.dtDEM;
 //		++i;
 //	}
 //

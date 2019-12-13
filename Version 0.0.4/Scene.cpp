@@ -62,24 +62,24 @@ void Scene::setDomain() {
 void Scene::prepareScenario() {
 
 	//Boundary definition:
-	eIMB.eLBM.domainSize      = domainSize;
-	eIMB.eDEM.domainSize      = domainSize;
+	eIMB.eLBM.domainSize = domainSize;
+	eIMB.eDEM.domainSize = domainSize;
 
 	//Fluid parameters definition:
-	eIMB.eLBM.dx              = latticeSpacing;
-	eIMB.eLBM.tau             = relaxationTime;
-	eIMB.eLBM.kinViscosity    = kinViscosity;
+	eIMB.eLBM.dx = latticeSpacing;
+	eIMB.eLBM.tau = relaxationTime;
+	eIMB.eLBM.kinViscosity = kinViscosity;
 
 	//Particle parameters definition:
-	eIMB.eDEM.factorOfSafety  = factorOfSafety;
-	eIMB.eDEM.localDamping    = localDamping;
-	eIMB.eDEM.frictionAngle   = frictionAngle;
+	eIMB.eDEM.factorOfSafety = factorOfSafety;
+	eIMB.eDEM.localDamping = localDamping;
+	eIMB.eDEM.frictionAngle = frictionAngle;
 	eIMB.eDEM.normalStiffness = normalStiffness;
-	eIMB.eDEM.shearStiffness  = shearStiffness;
+	eIMB.eDEM.shearStiffness = shearStiffness;
 
 	//Calculate DEM TimeStep
 	eIMB.eDEM.calculateParticleTimeStep();
-	subCycleNumber  = (int)(eIMB.eLBM.dtLBM / eIMB.eDEM.dtDEM) + 1;
+	subCycleNumber = (int)(eIMB.eLBM.dtLBM / eIMB.eDEM.dtDEM) + 1;
 	eIMB.eDEM.dtDEM = (eIMB.eLBM.dtLBM / subCycleNumber);
 
 	//Cell initialization for LBM simualtion:

@@ -11,7 +11,7 @@
 
 class Scene {
 public:
-	
+
 	//Scene constructor:
 	Scene() : eIMB() {};
 
@@ -31,31 +31,30 @@ public:
 	Scene& getScene();
 
 	//Geometry parameters:
-	Vector2r domainSize       = Vector2r::Zero();
-	bool topIsSolid        = false;
-	bool botIsSolid        = false;
-	bool leftIsSolid       = false;
-	bool rightIsSolid      = false;
-	bool bodiesAreSolid    = false;
-	
+	Vector2r domainSize = Vector2r::Zero();
+	bool topIsSolid = false;
+	bool botIsSolid = false;
+	bool leftIsSolid = false;
+	bool rightIsSolid = false;
+	bool bodiesAreSolid = false;
+
 	//Fluid parameters:
-	double latticeSpacing  = 1.0;
-	double kinViscosity    = 1e-6;
-	double relaxationTime  = 1.0;
-	double rhoInit         = 1.0;
-	Vector2r  velInit         = { 0.08, 0.0 };
+	double latticeSpacing = 1.0;
+	double kinViscosity = 1e-6;
+	double relaxationTime = 1.0;
+	double rhoInit = 1.0;
+	Vector2r  velInit = { 0.08, 0.0 };
 
 	//Particle parameters:
-	double frictionAngle   = 30;
-	double localDamping    = 0.0;
-	double factorOfSafety  = 0.3;
+	double frictionAngle = 30;
+	double localDamping = 0.0;
+	double factorOfSafety = 0.3;
 	double normalStiffness = 1e6;
-	double shearStiffness  = 0.5e6;
+	double shearStiffness = 0.5e6;
 
-	double Time            = 0.0;
-	int    simDuration     = 10000;
-	int    subCycleNumber  = 0;
+	double Time = 0.0;
+	int    simDuration = 10000;
+	int    subCycleNumber = 0;
 };
 
 #endif // !SCENE_H
-

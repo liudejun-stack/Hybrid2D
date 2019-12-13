@@ -5,9 +5,9 @@ void IMB::defineLinkedCells() {
 		//Reset Interaction Vector:
 		B->fluidSolidInteraction.clear();
 
-		Vector2r cellInitPos = B->pos - (int)B->radius * Vector2r::Ones() - 0.5 * eLBM.dx * Vector2r::Ones();
-		for (int j = 0; j < 2 * (int)B->radius; ++j) {
-			for (int i = 0; i < 2 * (int)B->radius; ++i) {
+		Vector2r cellInitPos = B->pos - 2 * (int)B->radius * Vector2r::Ones() - 0.5 * eLBM.dx * Vector2r::Ones();
+		for (int j = 0; j < 4 * (int)B->radius; ++j) {
+			for (int i = 0; i < 4 * (int)B->radius; ++i) {
 				Vector2r aux = { i,j };
 				Vector2r cellCurrentPos = cellInitPos + aux;
 				if (B->fluidInteraction(cellCurrentPos, eLBM.dx)) {
@@ -71,21 +71,21 @@ void IMB::calculateForceAndTorque() {
 	for (auto& B : eDEM.bodies) {
 		B->forceLBM = Vector2r::Zero();
 		for (auto& ID : B->fluidSolidInteraction) {
-			auto cell = eLBM.cells[ID];
-			Vector2r cellPos = cell->cellPos;
+			Vector2r cellPos = eLBM.cells[ID]->cellPos;
 			double len = calculateSolidFraction(B->pos, cellPos, B->radius, eLBM.dx);
 			if (std::abs(len) < 1.0e-12)	continue;
 			double gamma = len / (4.0 * eLBM.dx);
 			ASSERT(gamma >= 0.0 && gamma <= 1.0);
-			cell->solidFraction = std::min(gamma + cell->solidFraction, 1.0);
+			eLBM.cells[ID]->solidFraction = std::min(gamma + eLBM.cells[ID]->solidFraction, 1.0);
+			//std::cout << eLBM.cells[ID]->solidFraction << std::endl;
 			double Bn = (gamma * (eLBM.tau - 0.5)) / ((1.0 - gamma) + (eLBM.tau - 0.5));
 			Vector2r velP = B->vel;
-			for (int k = 0; k < cell->Q; ++k) {
-				double Fvpp = cell->setEqFun(cell->rho, cell->vel, cell->opNode[k]);
-				double Fvp = cell->setEqFun(cell->rho, velP, k);
-				double Omega = cell->f[cell->opNode[k]] - Fvpp - (cell->f[k] - Fvp);
-				cell->omega[k] += Omega;
-				B->forceLBM += -Bn * Omega * cell->latticeSpeed * eLBM.dx * cell->discreteVelocity[k];
+			for (int k = 0; k < eLBM.cells[ID]->Q; ++k) {
+				double Fvpp = eLBM.cells[ID]->setEqFun(eLBM.cells[ID]->rho, eLBM.cells[ID]->vel, eLBM.cells[ID]->opNode[k]);
+				double Fvp = eLBM.cells[ID]->setEqFun(eLBM.cells[ID]->rho, velP, k);
+				double Omega = eLBM.cells[ID]->f[eLBM.cells[ID]->opNode[k]] - Fvpp - (eLBM.cells[ID]->f[k] - Fvp);
+				eLBM.cells[ID]->omega[k] += Omega;
+				B->forceLBM += -Bn * Omega * eLBM.cells[ID]->latticeSpeed * eLBM.dx * eLBM.cells[ID]->discreteVelocity[k];
 			}
 		}
 	}
