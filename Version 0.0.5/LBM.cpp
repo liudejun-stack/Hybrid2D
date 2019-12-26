@@ -141,6 +141,7 @@ void LBM::setInitCond(double _rhoInit, Vector2r _vel) {
 		for (int k = 0; k < C->Q; k++) {
 			C->f[k] = C->setEqFun(_rhoInit, _vel, k);
 		}
+		C->updateMacro();
 	}
 }
 

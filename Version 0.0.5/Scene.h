@@ -2,7 +2,6 @@
 #define SCENE_H
 
 //Standard Libary
-#include <iomanip>
 
 //Hybrid Libary
 #include "IMB.h"

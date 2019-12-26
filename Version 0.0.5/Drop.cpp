@@ -7,8 +7,8 @@
 //	
 //	//Geometry
 //	S.domainSize = { 10, 10 };
-//	S.addCircle(0.5, 0.5, { 5, 5 }, { 0.0, 0.0 }, false);
-//	//S.addCircle(0.5, 0.5, { 5, 0.5 }, { 0.0, 0.0 }, false);
+//	S.addCircle(1.0, 0.5, { 2, 0.5 }, { 4.0, 0.0 }, false);
+//	S.addCircle(1.0, 0.5, { 5, 0.5 }, { 0.0, 0.0 }, false);
 //
 //	//Solid Properties:
 //	S.frictionAngle = 30;
@@ -28,7 +28,7 @@
 //		if (i % 1000 == 0) {
 //			Out.solidVTK("DEM");
 //			Out.particleEnergy("Body1.csv", 0);
-//			//Out.particleEnergy("Body2.csv", 1);
+//			Out.particleEnergy("Body2.csv", 1);
 //		}
 //		S.DEMEngine();
 //	}

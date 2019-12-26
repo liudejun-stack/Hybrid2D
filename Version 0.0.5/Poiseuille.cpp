@@ -1,63 +1,61 @@
-/*
-#include "Scene.h"
-
-double uMax = 0.1;
-double re = 100;
-Vector2r dim = { 100, 200 };
-double radius = dim[0] / 20 + 1;
-Vector2r cylinderCoord = { dim[0] / 2, dim[0] / 2 };
-
-
-double calcVisc() {
-	double kinVisc = uMax * (2 * radius) / re;
-	return 3.0 * kinVisc + 0.5;
-}
-
-void calcInitSpeed(int x, int y, Vector2r& _vel) {
-	double L = dim[1] - 2;
-	double yp = y - 1.5;
-	_vel[0] = uMax * 4 / (L * L) * (L * yp - yp * yp);
-	_vel[1] = 0.0;
-}
-
-int main() {
-	
-	Timer Time;
-	Scene S;
-
-	//Geometry
-	S.domainSize = dim;
-	S.left_isSolid = true;
-	S.right_isSolid = true;
-
-	//Fluid Parameters:
-	S.relaxationTime = calcVisc();
-	S.rhoInit = 1.0;
-	S.velInit = { 0.0, 0.08 };
-
-	//Prepare Scenario
-	S.prepareScenario();
-	
-	for (int i = 0; i < dim[0]; ++i) {
-		Vector2r vel;
-		calcInitSpeed(i, dim[1]-1, vel);
-		S.eIMB.eLBM.setVelBC(i, dim[1]-1, vel);
-		S.eIMB.eLBM.setDenBC(i, 0, 1.0);
-	}
-	S.eIMB.eLBM.setZouBC();
-
-	for (int i = 0; i != 10000; ++i) {
-		S.moveToNextTimeStep_LBM();
-		if (i % 100 == 0) {
-			S.fluidVTK("LBM");
-			//S.solidVTK("DEM");
-		}
-		if (i % 1000 == 0) {
-			S.eIMB.eDEM.calculateEnergy();
-			S.simulationInfo(i);
-		}
-	}
-
-	return 0;
-}
-*/
+//#include "Scene.h"
+//#include "Timer.h"
+//#include "Output.h"
+//
+//int main() {
+//	
+//	Timer Time;
+//	Scene& S = S.getScene();
+//	Output out;
+//
+//	//Geometry
+//	S.domainSize = { 500 , 100 };
+//	S.botIsSolid = true;
+//	S.topIsSolid = true;
+//	S.eIMB.eLBM.setVelWest = true;
+//	S.eIMB.eLBM.setDenWest = true;
+//
+//	//Fluid Properties
+//	double Re = 5;
+//	double uMax = 0.1;
+//	S.relaxationTime = 1.0;
+//	S.kinViscosity = (S.relaxationTime - 0.5) / 3;
+//	S.velInit = { 0.08, 0.0 };
+//	S.rhoInit = 1.0;
+//
+//	S.prepareScenario();
+//
+//	for (int j = 0; j < S.domainSize[1]; ++j) {
+//		double L = S.domainSize[1] - 2;
+//		double yp = j - 1.5;
+//		Vector2r Vel = Vector2r::Zero();
+//		Vel[0] = uMax * 4 / (L * L) * (L * yp - yp * yp);
+//		Vel[1] = 0.0;
+//		S.eIMB.eLBM.setVelBC(0, j, Vel);
+//		S.eIMB.eLBM.setDenBC(S.domainSize[0] - 1, j, 1.0);
+//	}
+//
+//	int ignore = system("mkdir VTK_Fluid");
+//	int i = 0;
+//	while (S.Time < S.simDuration) {
+//		if (i % 1000 == 0) {
+//			out.displaySimulationInfo();
+//		}
+//
+//		S.LBMEngine();
+//		if (i % 100 == 0) {
+//			out.fluidVTK("LBM");
+//			for (int j = 0; j < S.domainSize[1] - 1; ++j) {
+//				out.fluidVelocityProfile("inlet.csv", S.eIMB.eLBM.getCell(0, j));
+//				out.fluidVelocityProfile("mid.csv", S.eIMB.eLBM.getCell(S.domainSize[0] / 2, j));
+//				out.fluidVelocityProfile("Outlet.csv", S.eIMB.eLBM.getCell(S.domainSize[0], j));
+//			}
+//		}
+//
+//		S.Time += S.eIMB.eLBM.dtLBM;
+//		++i;
+//	}
+//
+//
+//	return 0;
+//}

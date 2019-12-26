@@ -82,25 +82,26 @@ void Output::solidVTK(std::string _fileName) {
 	solidVtkCounter++;
 }
 
-void Output::fluidVelocityProfile(std::string _fileName, int _fixedPos) {
+void Output::fluidVelocityProfile(std::string _fileName, int _cellId) {
 	Scene& S = S.getScene();
+	std::shared_ptr<Lattice> cell = S.eIMB.eLBM.cells[_cellId];
+
 	std::ofstream out;
-	out.open("VTK_Fluid/" + _fileName + std::to_string(S.Time) + ".csv");
-	for (int j = 0; j < S.domainSize[1]; ++j) {
-		int id = S.eIMB.eLBM.getCell(_fixedPos, j);
-		auto C = S.eIMB.eLBM.cells[id];
-		out << C->cellPos[0] << ", " << C->cellPos[1] << ", " << C->vel[0] << ", " << C->vel[1] << ", " << C->vel.norm() << "\n";
-	}
+	out.open("VTK_Fluid/" + std::to_string(fluidVtkCounter) + "_" + _fileName, std::ios_base::app);
+	out << std::setprecision(3) << cell->ID << ", " << cell->cellPos[0] << ", " << cell->cellPos[1] << ", " 
+		<< cell->vel[0] << ", " << cell->vel[1] << ", " << cell->vel.norm() << ", " << cell->rho << "\n";
+	out.close();
+
 }
 
 void Output::particleEnergy(std::string _fileName, int _bodyId) {
 	Scene& S = S.getScene();
-	auto body = S.eIMB.eDEM.bodies[_bodyId];
+	std::shared_ptr<Body> body = S.eIMB.eDEM.bodies[_bodyId];
 	body->calculateEnergy();
 
 	std::ofstream out;
 	out.open("VTK_Solid/" + _fileName, std::ios_base::app);
-	out << body->pos[0] << ", " << body->pos[1] << ", " << body->vel.norm() << ", " << body->potEnergy << ", " << body->kinEnergy << "\n";
+	out << body->pos[0] << ", " << body->pos[1] << ", " << body->vel[0] << ", " << body->vel[1] << ", "
+		<< body->vel.norm() << ", " << body->potEnergy << ", " << body->kinEnergy << "\n";
 	out.close();
-
 }
