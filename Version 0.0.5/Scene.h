@@ -50,6 +50,7 @@ public:
 	double factorOfSafety = 0.3;
 	double normalStiffness = 1e6;
 	double shearStiffness = 0.5e6;
+	double borderStiffness = 1e6;
 
 	double Time = 0.0;
 	int    simDuration = 10000;

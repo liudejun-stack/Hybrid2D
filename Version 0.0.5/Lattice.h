@@ -43,37 +43,38 @@ public:
 	friend class IMB;
 
 	//Cell variables:
-	int    ID;                  //Cell ID               
-	double dx;                  //Lattice Spacing
-	double dt;                  //Time step
-	double tau;                 //Relaxation Time
-	double latticeSpeed;        //Speed of the model
-	double rhoBC;               //Prescribed Density for Zou & He Boundary Condition
+	int       ID;                  //Cell ID               
+	double    dx;                  //Lattice Spacing
+	double    dt;                  //Time step
+	double    tau;                 //Relaxation Time
+	double    latticeSpeed;        //Speed of the model
+	double    rhoBC;               //Prescribed Density for Zou & He Boundary Condition
 	Vector2r  velBC;               //Prescribed Velocity for Zou & He Boundary Condition
 	Vector2r  aux;                 //Auxiliar vector to calculate neighbour node
 	Vector2r  dim;                 //Domain size
 	Vector2r  cellPos;             //Cell position
 
-	Vector2r  sourceForce           = Vector2r::Zero();
-	Vector2r  vel                   = Vector2r::Zero();
-	double solidFraction         = 0.0;
-	double previousSolidFraction = 0.0;
-	double rho                   = 0.0;
-	int    particleFluidID       = 0;
-	int    node                  = 0;
-	int    isSolid               = 1;
-	int    isFluid               = 0;
+	Vector2r sourceForce           = Vector2r::Zero();
+	Vector2r vel                   = Vector2r::Zero();
+	double   solidFraction         = 0.0;
+	double   previousSolidFraction = 0.0;
+	double   rho                   = 0.0;
+	int      particleFluidID       = 0;
+	int      node                  = 0;
+	int      isSolid               = 1;
+	int      isFluid               = 0;
 
 private:
 	//D2Q9 Variables:
 	const int Q = 9;
-	const std::vector<int>    opNode           = { 0, 3, 4, 1, 2, 7, 8, 5, 6 };
-	const std::vector<double> weight           = { 4.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0, 1.0 / 36.0, 1.0 / 36.0, 1.0 / 36.0, 1.0 / 36.0 };
-	const std::vector<Vector2r>  discreteVelocity = { {0,0}, {1,0}, {0,1}, {-1,0}, {0,-1}, {1,1}, {-1,1}, {-1,-1}, {1,-1} };
+	const std::vector<int>      opNode           = { 0, 3, 4, 1, 2, 7, 8, 5, 6 };
+	const std::vector<double>   weight           = { 4.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0, 1.0 / 9.0, 1.0 / 36.0, 1.0 / 36.0, 1.0 / 36.0, 1.0 / 36.0 };
+	const std::vector<Vector2r> discreteVelocity = { {0,0}, {1,0}, {0,1}, {-1,0}, {0,-1}, {1,1}, {-1,1}, {-1,-1}, {1,-1} };
 	
 	std::vector<double> f     = { 0,0,0,0,0,0,0,0,0 };
 	std::vector<double> fTemp = { 0,0,0,0,0,0,0,0,0 };
 	std::vector<double> omega = { 0,0,0,0,0,0,0,0,0 };
 	std::vector<double> nCell;
 };
+
 #endif // !LATTICE_H

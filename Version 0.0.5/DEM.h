@@ -41,7 +41,6 @@ public:
 	double borderStifness = 1e6;
 	double dtDEM = 0.0;
 	double factorOfSafety = 0.1;
-	int    vtkCounter = 0;
 	int    nIter = 0;
 };
 

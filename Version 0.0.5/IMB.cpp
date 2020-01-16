@@ -79,14 +79,16 @@ void IMB::calculateForceAndTorque() {
 			eLBM.cells[ID]->solidFraction = std::min(gamma + eLBM.cells[ID]->solidFraction, 1.0);
 			//std::cout << eLBM.cells[ID]->solidFraction << std::endl;
 			double Bn = (gamma * (eLBM.tau - 0.5)) / ((1.0 - gamma) + (eLBM.tau - 0.5));
-			Vector2r velP = B->vel;
+			Vector2r velP = B->vel + B->rotVel * (cellPos - B->pos);
 			for (int k = 0; k < eLBM.cells[ID]->Q; ++k) {
 				double Fvpp = eLBM.cells[ID]->setEqFun(eLBM.cells[ID]->rho, eLBM.cells[ID]->vel, eLBM.cells[ID]->opNode[k]);
 				double Fvp = eLBM.cells[ID]->setEqFun(eLBM.cells[ID]->rho, velP, k);
 				double Omega = eLBM.cells[ID]->f[eLBM.cells[ID]->opNode[k]] - Fvpp - (eLBM.cells[ID]->f[k] - Fvp);
 				eLBM.cells[ID]->omega[k] += Omega;
 				B->forceLBM += -Bn * Omega * eLBM.cells[ID]->latticeSpeed * eLBM.dx * eLBM.cells[ID]->discreteVelocity[k];
+				/*B->torqueLBM += (cellPos - B->pos).cross(B->forceLBM);*/
 			}
+
 		}
 	}
 }

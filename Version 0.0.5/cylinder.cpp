@@ -35,7 +35,7 @@
 //
 //	//Prepare Scenario
 //	S.prepareScenario();
-//
+//	
 //	for (int j = 0; j < domainSize[1]; ++j) {
 //		double L = domainSize[1] - 2;
 //		double yp = j - 1.5;
@@ -60,6 +60,7 @@
 //				Out.fluidVelocityProfile("inlet.csv", S.eIMB.eLBM.getCell(10, j));
 //				Out.fluidVelocityProfile("mid.csv", S.eIMB.eLBM.getCell(70, j));
 //				Out.fluidVelocityProfile("Outlet.csv", S.eIMB.eLBM.getCell(domainSize[0]-10, j));
+//				Out.fluidVelocityProfile("Cilindro.csv", S.eIMB.eLBM.getCell(cylinderCoord[0], j));
 //			}
 //			Out.fluidVTK("LBM");
 //		}

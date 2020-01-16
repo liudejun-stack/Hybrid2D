@@ -94,7 +94,7 @@ void Output::fluidVelocityProfile(std::string _fileName, int _cellId) {
 
 }
 
-void Output::particleEnergy(std::string _fileName, int _bodyId) {
+void Output::particleInfo(std::string _fileName, int _bodyId) {
 	Scene& S = S.getScene();
 	std::shared_ptr<Body> body = S.eIMB.eDEM.bodies[_bodyId];
 	body->calculateEnergy();
@@ -102,6 +102,6 @@ void Output::particleEnergy(std::string _fileName, int _bodyId) {
 	std::ofstream out;
 	out.open("VTK_Solid/" + _fileName, std::ios_base::app);
 	out << body->pos[0] << ", " << body->pos[1] << ", " << body->vel[0] << ", " << body->vel[1] << ", "
-		<< body->vel.norm() << ", " << body->potEnergy << ", " << body->kinEnergy << "\n";
+		<< body->vel.norm() << ", " << body->potEnergy << ", " << body->kinEnergy << ", " << body->forceLBM[0] << ", " << body->forceLBM[1] << "\n";
 	out.close();
 }
