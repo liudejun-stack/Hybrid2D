@@ -9,21 +9,25 @@ int main() {
 
 	//General Information
 	Vector2r  domainSize = { 500, 100 };
-	double particleRadius = domainSize[1] / 20 + 1;
-	Vector2r  cylinderCoord = { particleRadius, particleRadius };
+	double particleRadius = domainSize[1] / 20 ;
+	Vector2r  cylinderCoord = { 25, 25 };
 	double uMax = 0.1;
 	double Re = 100;
 
 	S.domainSize = domainSize;
 
 	//Bodies:
-	S.addCircle(1, particleRadius, cylinderCoord, Vector2r::Zero(), true);
+	S.addCircle(1, particleRadius, cylinderCoord, Vector2r::Zero(), false);
 
 	//Fluid Properties:
 	S.kinViscosity = uMax * (2 * particleRadius) / Re;
 	S.relaxationTime = 3.0 * S.kinViscosity + 0.5;
 	S.velInit = { 0.1, 0.0 };
 	S.rhoInit = 1.0;
+	//S.topIsSolid     = true;
+	//S.botIsSolid     = true;
+	//S.eIMB.eLBM.setVelWest = true;
+	//S.eIMB.eLBM.setDenEast = true;
 
 	//Particle Properties:
 	S.frictionAngle = 30;
@@ -35,6 +39,18 @@ int main() {
 
 	//Prepare Scenario
 	S.prepareScenario();
+	S.eIMB.eDEM.dtDEM = 0.00001;
+
+	//for (int j = 0; j < domainSize[1]; ++j) {
+	//	double L = domainSize[1] - 2;
+	//	double yp = j - 1.5;
+	//	Vector2r Vel = Vector2r::Zero();
+	//	/*Vel[0] = uMax * 4 / (L * L) * (L * yp - yp * yp);*/
+	//	Vel[0] = 0.1;
+	//	Vel[1] = 0.0;
+	//	S.eIMB.eLBM.setVelBC(0, j, Vel);
+	//	S.eIMB.eLBM.setDenBC(domainSize[0] - 1, j, 1.0);
+	//}
 
 	int ignore = system("mkdir VTK_Fluid");
 	    ignore = system("mkdir VTK_Solid");

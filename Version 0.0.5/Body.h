@@ -44,8 +44,8 @@ public:
 	Vector2r vel         = Vector2r::Zero();
 	Vector2r force       = Vector2r::Zero();
 	Vector2r forceLBM    = Vector2r::Zero();
-	Vector2r torqueLBM   = Vector2r::Zero();
 	Vector2r blockedDOFs = { 1,1 };
+	double torqueLBM     = 0.0;
 	double rot           = 0.0;
 	double rotVel        = 0.0;
 	double moment        = 0.0;

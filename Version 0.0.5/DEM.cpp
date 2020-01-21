@@ -74,6 +74,7 @@ void DEM::forceCalculation() {
 		B->force += B->mass * gravity;
 		B->force += applyBorderForce(B);
 		B->force += B->forceLBM;
+		B->moment += B->torqueLBM;
 	}
 }
 

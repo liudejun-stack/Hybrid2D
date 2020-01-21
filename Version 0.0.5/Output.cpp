@@ -101,7 +101,8 @@ void Output::particleInfo(std::string _fileName, int _bodyId) {
 
 	std::ofstream out;
 	out.open("VTK_Solid/" + _fileName, std::ios_base::app);
-	out << body->pos[0] << ", " << body->pos[1] << ", " << body->vel[0] << ", " << body->vel[1] << ", "
-		<< body->vel.norm() << ", " << body->potEnergy << ", " << body->kinEnergy << ", " << body->forceLBM[0] << ", " << body->forceLBM[1] << "\n";
+	out << body->pos[0]      << ", " << body->pos[1]      << ", " << body->vel[0] << ", " << body->vel[1] << ", "
+		<< body->vel.norm()  << ", " << body->potEnergy   << ", " << body->kinEnergy                      << ", " 
+		<< body->forceLBM[0] << ", " << body->forceLBM[1] << ", " << body->rot << ", " << body->rotVel  << "\n";
 	out.close();
 }
