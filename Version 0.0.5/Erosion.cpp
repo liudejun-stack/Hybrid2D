@@ -10,7 +10,7 @@ int main() {
 	//General Information
 	Vector2r  domainSize = { 500, 100 };
 	double particleRadius = domainSize[1] / 20 ;
-	Vector2r  cylinderCoord = { 25, 25 };
+	Vector2r  cylinderCoord = { particleRadius, 30 };
 	double uMax = 0.1;
 	double Re = 100;
 
@@ -22,7 +22,7 @@ int main() {
 	//Fluid Properties:
 	S.kinViscosity = uMax * (2 * particleRadius) / Re;
 	S.relaxationTime = 3.0 * S.kinViscosity + 0.5;
-	S.velInit = { 0.1, 0.0 };
+	S.velInit = { 0.0, 0.0 };
 	S.rhoInit = 1.0;
 	//S.topIsSolid     = true;
 	//S.botIsSolid     = true;
@@ -39,7 +39,6 @@ int main() {
 
 	//Prepare Scenario
 	S.prepareScenario();
-	S.eIMB.eDEM.dtDEM = 0.00001;
 
 	//for (int j = 0; j < domainSize[1]; ++j) {
 	//	double L = domainSize[1] - 2;
@@ -72,7 +71,7 @@ int main() {
 		}
 		if (i % 10000 == 0) {
 			Out.fluidVTK("LBM");
-			Out.solidVTK("DEM");
+			Out.solidVTK("DEM_" + std::to_string(S.Time));
 			Out.particleInfo("bodyInfo.csv", 0);
 		}
 		S.Time += S.eIMB.eDEM.dtDEM;

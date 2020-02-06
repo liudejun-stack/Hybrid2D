@@ -86,9 +86,8 @@ void IMB::calculateForceAndTorque() {
 				double Omega = eLBM.cells[ID]->f[eLBM.cells[ID]->opNode[k]] - Fvpp - (eLBM.cells[ID]->f[k] - Fvp);
 				eLBM.cells[ID]->omega[k] += gamma*Omega;
 				B->forceLBM += -Bn * Omega * eLBM.cells[ID]->latticeSpeed * eLBM.dx * eLBM.cells[ID]->discreteVelocity[k];
-				/*B->torqueLBM += ((cellPos - B->pos).cross(B->forceLBM)).norm();*/
 			}
-
+			/*B->torqueLBM += (cellPos - B->pos).dot(B->forceLBM);*/
 		}
 	}
 }
