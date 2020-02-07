@@ -1,0 +1,42 @@
+#include "Interaction.h"
+#include "Body.h"
+
+bool Interaction::checkContact() {
+	auto b1 = body1.lock();
+	auto b2 = body2.lock();
+	if ((b2->pos - b1->pos).norm() < b1->radius + b2->radius) {
+		return true;
+	}
+	return false;
+}
+
+void Interaction::calculateUnitVectorandContact() {
+	auto b1 = body1.lock();
+	auto b2 = body2.lock();
+
+	unitNormal = (b2->pos - b1->pos) / (b2->pos - b1->pos).norm();
+	unitShear = { unitNormal[1], -unitNormal[0] };
+
+	contact = (b1->pos + b2->pos) * 0.5;
+}
+
+void Interaction::calculateForceAndShearIncrements(double _dt, double _kn, double _ks) {
+	auto b1 = body1.lock();
+	auto b2 = body2.lock();
+
+	Vector2r relVel = (b1->vel - b2->vel) - (b1->rotVel * b1->radius + b2->rotVel * b2->radius) * unitShear;
+
+	double normalIncrement = (relVel.dot(unitNormal)) * _dt;
+	double shearIncrement = (relVel.dot(unitShear)) * _dt;
+
+	normalForce += _kn * normalIncrement;
+	shearForce += _ks * shearIncrement;
+}
+
+void Interaction::applyFrictionLaw(double _phi) {
+	double maxShearForce = normalForce * tan(_phi * M_PI / 180.0);
+	if (abs(shearForce) > maxShearForce) {
+		if (shearForce > 0)  shearForce = maxShearForce;
+		if (shearForce < 0)  shearForce = -maxShearForce;
+	}
+}
